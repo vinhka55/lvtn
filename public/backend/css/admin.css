@@ -1,0 +1,9 @@
+.ck-editor__editable {
+    min-height: 300px !important;
+}
+.table-visitors thead tr th, .table-visitors tbody tr td {
+    color: black;
+}
+.disable-input{
+    pointer-events:none;
+}
