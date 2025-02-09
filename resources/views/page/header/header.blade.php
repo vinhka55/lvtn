@@ -52,38 +52,31 @@
     <!-- <div class="slider-top mt-3">
         <img width="100%" src="https://thucphamhuunghi.com/plugins/hinh-anh/banner/horizontal-404x-768-768-q1.webp" alt="top banner">
     </div> -->
-    <div class="top-content row mx-0 px-0">
-        
+    <div class="slide">
+        <div class="one-slide one-slide--active" style="background-image: url('{{url('/')}}/public/assets/img/slide/index_slider_img_1.png');">
+        </div>
+        <div class="one-slide" style="background-image: url('{{url('/')}}/public/assets/img/slide/index_slider_img_2.webp');">
+        </div>
+        <div class="one-slide" style="background-image: url('{{url('/')}}/public/assets/img/slide/index_slider_img_4.webp');">
+        </div>
+        <ul class="slide__list">
+            <li class="slide__item slide__item--active">1</li>
+            <li class="slide__item">2</li>
+            <li class="slide__item">3</li>
+        </ul>
+    </div>
+    <div class="mt-3">
+        @include("components.category-list")
+    </div>
+{{--    <div class="top-content row mx-0 px-0">--}}
         <!-- <div class="col-12 col-md-6">
             <img class="img-fluid" src="{{url('/')}}/public/frontend/images/main-2022-1280-400-qbanner.jpg" width="100%" alt="">
         </div> -->
-        <div class="slide col-12">
-            <div class="one-slide one-slide--active" style="background-image: url('{{url('/')}}/public/assets/img/slide/index_slider_img_1.png');">                      
-            </div>
-            <div class="one-slide" style="background-image: url('{{url('/')}}/public/assets/img/slide/index_slider_img_2.webp');">
-            </div>
-            <div class="one-slide" style="background-image: url('{{url('/')}}/public/assets/img/slide/index_slider_img_4.webp');">              
-            </div>
-            <ul class="slide__list">
-                <li class="slide__item slide__item--active">1</li>
-                <li class="slide__item">2</li>
-                <li class="slide__item">3</li>
-            </ul>
-        </div>
-        <div class="cate col-12 mt-5">
-            <h3 class="p-3 bg-success text-white m-0">DANH MỤC</h3>
-            <ul class="p-3 bg-white text-dark">
-                @foreach ($category as $cate)
-                    <a href="{{route('show_product_with_category',$cate->slug)}}"><li>{{$cate->name}}</li></a>
-                @endforeach
-            </ul>
-        </div>
-        
         <!-- mpape -->
         <!-- <div class="col-12 col-md-3">
             <a href=""><img src="{{url('/')}}/public/assets/img/top-page/giphy.webp" class="img-fluid" width="100%" alt="gif image"></a>
         </div> -->
-    </div>
+{{--    </div>--}}
 </div>
 <script>
     document.addEventListener("DOMContentLoaded",function(){
@@ -99,10 +92,10 @@
 
                 var btnActive=this
                 var indexBtnActive=0
-                for ( indexBtnActive = 0; btnActive = btnActive.previousElementSibling; indexBtnActive++) {                      
+                for ( indexBtnActive = 0; btnActive = btnActive.previousElementSibling; indexBtnActive++) {
                 }
                 for (let index = 0; index < slides.length; index++) {
-                    slides[index].classList.remove('one-slide--active')            
+                    slides[index].classList.remove('one-slide--active')
                 }
                 slides[indexBtnActive].classList.add('one-slide--active')
             }
@@ -115,13 +108,13 @@
             setInterval(() => {
                 var currentSlide=document.querySelector('.one-slide--active')
                 var indexSlideActive=0
-                for ( indexSlideActive = 0; currentSlide = currentSlide.previousElementSibling; indexSlideActive++) {                      
+                for ( indexSlideActive = 0; currentSlide = currentSlide.previousElementSibling; indexSlideActive++) {
                 }
-                
+
                 // console.log(indexSlideActive);
                 for (let index = 0; index < slides.length; index++) {
-                    slides[index].classList.remove('one-slide--active')    
-                    btnSlide[index].classList.remove('slide__item--active')        
+                    slides[index].classList.remove('one-slide--active')
+                    btnSlide[index].classList.remove('slide__item--active')
                 }
                 if(indexSlideActive==slides.length-1){
                     slides[0].classList.add('one-slide--active')
@@ -131,7 +124,7 @@
                     slides[indexSlideActive].nextElementSibling.classList.add('one-slide--active')
                     btnSlide[indexSlideActive].nextElementSibling.classList.add('slide__item--active')
                 }
-                
+
             }, 5000);
         }
     })
