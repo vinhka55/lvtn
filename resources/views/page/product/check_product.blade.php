@@ -202,8 +202,8 @@
     </div>
     <div class="col-12">
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane fade show active text-center" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                <div class="text-center">
+            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                <div class="desciption-content">
                     <?php echo htmlspecialchars_decode($item->description); ?>
                 </div>
             </div>
