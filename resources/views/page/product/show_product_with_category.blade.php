@@ -1,4 +1,5 @@
 @extends("welcome")
+@section("title","Category")
 @section("content")
 @include("page.header.header")
 <div class="container-fluid body-content p-3">

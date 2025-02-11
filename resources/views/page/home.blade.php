@@ -17,13 +17,8 @@
                 @endphp
 
                 @include("components.category-item-list", ['name_category' => $categoryName, 'product' => $sports])
-{{--                <div class="cool-chicken product row m-0 p-0 m-0 p-0">--}}
-{{--                    @foreach($categoryProduct as $one)--}}
-{{--                        <?php--}}
-{{--                        if($one->id === $sports[0]->category_id)--}}
-{{--                        echo '<h1 class="title-hot-product p-2 m-0 bg-success text-white">'.$one->name. '</h1>';--}}
-{{--                        ?>--}}
-{{--                    @endforeach--}}
+{{--                <div class="cool-chicken product row m-0 p-0 m-0 p-0">--}}                 
+                        <h1 class="title-hot-product p-2 m-0 bg-success text-white">{{$categoryName}}</h1>
 {{--                    <div class="test-reponsive">--}}
 {{--                        @foreach($sports as $key => $sport)--}}
 {{--                        <div class="col-12 col-md-2 my-2 ok">--}}
