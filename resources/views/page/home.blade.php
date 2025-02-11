@@ -17,7 +17,8 @@
                 @endphp
 
                 @include("components.category-item-list", ['name_category' => $categoryName, 'product' => $sports])
-{{--                <div class="cool-chicken product row m-0 p-0 m-0 p-0">--}}                 
+{{--                <div class="cool-chicken product row m-0 p-0 m-0 p-0">--}}
+{{--                    
                         <h1 class="title-hot-product p-2 m-0 bg-success text-white">{{$categoryName}}</h1>
 {{--                    <div class="test-reponsive">--}}
 {{--                        @foreach($sports as $key => $sport)--}}

@@ -18,9 +18,10 @@ class HomeController extends Controller
         $bong_ro=DB::table('product')->where('category_id',20)->limit(6)->get();
         $tennis=DB::table('product')->where('category_id',21)->limit(6)->get();
         $gym=DB::table('product')->where('category_id',22)->limit(6)->get();
+        $boi=DB::table('product')->where('category_id',23)->limit(6)->get();
        
         $data= [];
-        array_push($data,$bong_da,$bong_ro,$tennis,$gym);
+        array_push($data,$bong_da,$bong_ro,$tennis,$gym,$boi);
         $categoryProduct = CategoryProduct::all();
         // foreach (CategoryProduct::all() as $key => $value) {
         //     // echo $value->name;

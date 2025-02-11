@@ -31,7 +31,6 @@ class ProductController extends Controller
 
     public function handle_add(Request $req)
     {
-        echo $req->file("image")->image->getClientOriginalName();return;
         $this->AuthLogin();
         $product=new Product;
         $product->name=$req->name;
