@@ -93,6 +93,16 @@
     .demo:hover {
     opacity: 1;
     }
+    /* css for img in description content  */
+    .description-content{
+        padding: 12px;
+    }
+    .description-content img{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 65%;
+    }
 </style>
 <div id="fb-root"></div>
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v13.0" nonce="HPaXPNLU"></script>
@@ -203,7 +213,7 @@
     <div class="col-12">
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                <div class="desciption-content">
+                <div class="description-content">
                     <?php echo htmlspecialchars_decode($item->description); ?>
                 </div>
             </div>
@@ -242,6 +252,7 @@
         </div>
     </div>
     @endforeach
+    @include("components.related-products",["product" => $productSameCategory])
 </div>
 <script>
     let slideIndex = 1;

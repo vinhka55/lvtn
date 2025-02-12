@@ -25,6 +25,12 @@ body {
     left: 0;
     right: 0;
 }
+.main-color {
+    background-color: #198754;
+}
+.white {
+    color: white;
+}
 /* css for card */
 .card-body {
     display: flex;
