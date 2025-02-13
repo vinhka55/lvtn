@@ -23,8 +23,23 @@ class CategoryController extends Controller
     {
         $slug = SlugService::createSlug(CategoryProduct::class, 'slug', $req->name);
         $data['name']=$req->name;
+        $data['image'] = $req->file("image");
         $data['status']=$req->status;
         $data['slug']=$slug;
+        if($req->hasfile('image')){
+            $file = $req->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $fileName = $slug.'.'.$extension;
+            $file->move('public/assets/img/category',$fileName);
+            $data['image'] = $fileName;
+            if(DB::table('category')->insert($data)){
+                return redirect('admin/danh-sach-danh-muc');
+            }
+            else{
+                echo 'that bai';
+            }
+        }
+        $data['image'] = "";
         if(DB::table('category')->insert($data)){
             return redirect('admin/danh-sach-danh-muc');
         }

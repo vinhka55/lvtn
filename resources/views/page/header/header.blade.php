@@ -68,15 +68,7 @@
     <div class="mt-3">
         @include("components.category-list")
     </div>
-{{--    <div class="top-content row mx-0 px-0">--}}
-        <!-- <div class="col-12 col-md-6">
-            <img class="img-fluid" src="{{url('/')}}/public/frontend/images/main-2022-1280-400-qbanner.jpg" width="100%" alt="">
-        </div> -->
-        <!-- mpape -->
-        <!-- <div class="col-12 col-md-3">
-            <a href=""><img src="{{url('/')}}/public/assets/img/top-page/giphy.webp" class="img-fluid" width="100%" alt="gif image"></a>
-        </div> -->
-{{--    </div>--}}
+
 </div>
 <script>
     document.addEventListener("DOMContentLoaded",function(){

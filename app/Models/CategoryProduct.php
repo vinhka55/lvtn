@@ -12,7 +12,7 @@ class CategoryProduct extends Model
     use Sluggable;
     public $timestamps=false;
     protected $fillable=[
-        'id','name','status','slug','created_at',
+        'id','name','image','status','slug','created_at',
     ];
     protected $table="category";
     public function sluggable(): array

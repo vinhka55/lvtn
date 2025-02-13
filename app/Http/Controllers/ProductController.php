@@ -39,7 +39,7 @@ class ProductController extends Controller
         $product->exp=$req->exp;
         $product->category_id=$req->category_id;
         $product->description=$req->description;
-        $product->image=$req->file("image");
+        $product->image=$req->file("image"); 
         $product->count=$req->count;
         $product->status=$req->status;
         $product->note=$req->note;
