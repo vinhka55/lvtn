@@ -22,6 +22,16 @@ class CouponController extends Controller
         $coupon->amount=$data['amount'];
         $coupon->condition=$data['condition'];
         $coupon->rate=$data['rate'];
+        $coupon->duration_start=$data['duration-start'];
+        $coupon->duration_end=$data['duration-end'];
+        //compare date
+        $now=date("Y/m/d h:i:s");
+        if(strtotime($now)>strtotime($coupon->duration_start) && strtotime($now)<strtotime($coupon->duration_end)){
+            $coupon->status = 1;
+        }
+        else{
+            $coupon->status = 0;
+        }
         $coupon->save();
         return redirect('admin/danh-sach-ma-giam-gia');
     }
@@ -41,7 +51,7 @@ class CouponController extends Controller
         ]);
         $data = $req->all();
         $now=date("Y/m/d h:i:s");
-        $duration=Coupon::where('code',$data['code_coupon'])->value('duration');
+        $duration=Coupon::where('code',$data['code_coupon'])->value('duration_end');
         // echo $duration;
         // var_dump($duration);
         // return
@@ -107,8 +117,23 @@ class CouponController extends Controller
         $coupon->amount=$data['amount'];
         $coupon->condition=$data['condition'];
         $coupon->rate=$data['rate'];
-        $coupon->duration=$data['duration'];
+        $coupon->duration_start=$data['duration-start'];
+        $coupon->duration_end=$data['duration-end'];
+        //compare date
+        $now=date("Y/m/d h:i:s");
+        if(strtotime($now)>strtotime($coupon->duration_start) && strtotime($now)<strtotime($coupon->duration_end)){
+            $coupon->status = 1;
+        }
+        else{
+            $coupon->status = 0;
+        }
         $coupon->save();
         return redirect('admin/danh-sach-ma-giam-gia');
+    }
+    function change_status(Request $req) {        
+        $id=$req->id;
+        $coupon= Coupon::find($id);
+        $coupon->status=!$coupon->status;
+        $coupon->save();
     }
 }

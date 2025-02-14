@@ -1,3 +1,15 @@
+<style>
+   .card-text.name-product:hover{
+        color: var(--main-color);
+        cursor: pointer;
+   }
+   .card-body{
+     color: var(--main-color)
+   }
+   .card-body a{
+     color: var(--main-color)
+   }
+</style>
 <div class="col-12 col-md-8 p-2 width-tag-wrap-card">
     <div class="row m-0 p-2">
         <h1 style="background-color:#198754;color:white;">{{$name_category}}</h1>
@@ -6,7 +18,7 @@
                 <div class="card">
                     <a href="{{route('detail_product',$item->id)}}"><img style="height:165px;" src="{{url('/')}}/public/uploads/product/{{$item->image}}" class="card-img-top" alt="product"></a>
                     <h3 class="card-text name-product">{{$item->name}}</h3>
-                    <p class="price-product">{{number_format($item->price)}} VND</p>
+                    <p class="price-product red">{{number_format($item->price)}} VND</p>
                     <div class="card-body">
                         <a href="{{route('detail_product',$item->id)}}">Chi tiết</a>
                         <i type="button" class="fas fa-eye ms-3" data-bs-toggle="modal" data-bs-target="#quickview-{{$item->id}}"></i>
@@ -16,24 +28,21 @@
                                 <div class="modal-content">
                                     <img width="100%" src="{{url('/')}}/public/uploads/product/{{$item->image}}" alt="hot product">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Tên sản phẩm: {{$item->name}}</h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">{{$item->name}}</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        Giá: <?php echo number_format($item->price) ?> VND
+                                        <?php echo number_format($item->price) ?> VND
                                     </div>
                                     <div class="modal-body">
                                         Xuất xứ: {{$item->origin}}
-                                    </div>
-                                    <div class="modal-body">
-                                        Hạn dùng: {{ \Carbon\Carbon::parse($item->exp)->format('d/m/Y')}}
-                                    </div>
+                                    </div>                              
                                     <div class="modal-body">
                                         Đã bán: {{$item->count_sold}}
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary"><a class="text-white" href="{{route('detail_product',$item->id)}}">Xem nhiều hơn</a></button>
+                                        <button type="button" class="btn main-color"><a class="text-white" href="{{route('detail_product',$item->id)}}">Xem nhiều hơn</a></button>
                                     </div>
                                 </div>
                             </div>
@@ -46,7 +55,7 @@
                             <input type="hidden" value="{{$item->image}}" class="cart_product_image_{{$item->id}}">
                             <input type="hidden" value="{{$item->price}}" class="cart_product_price_{{$item->id}}">
                             <input type="hidden" value="1" class="cart_product_qty_{{$item->id}}">
-                            <button type="button" name="add-to-cart" class="btn btn-primary add-to-cart" data-id_product="{{$item->id}}"><i class="fa fa-shopping-cart"></i></button>
+                            <button type="button" name="add-to-cart" class="btn btn-primary add-to-cart main-color" data-id_product="{{$item->id}}"><i class="fa fa-shopping-cart"></i></button>
                         </form>
                         <!-- end add to cart by ajax -->
                     </div>

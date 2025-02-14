@@ -103,6 +103,7 @@
         margin-right: auto;
         width: 65%;
     }
+    
 </style>
 <div id="fb-root"></div>
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v13.0" nonce="HPaXPNLU"></script>
@@ -159,12 +160,13 @@
                         <p>Giá: {{number_format($item->price)}} VND</p>
 
                         <label>Số lượng:</label>
-                        <input width="50%" type="number" name="quantity" value="1" min="1" max="{{$item->count}}"
+                        <input class="text-center" width="50%" type="number" name="quantity" value="1" min="1" max="{{$item->count}}"
                             size="2" />
                         <input type="hidden" name="id" id="id-product-hidden" value="{{$item->id}}" />
                         <input type="hidden" name="name" value="{{$item->name}}" />
                         <input type="hidden" name="price" value="{{$item->price}}" />
                         <input type="hidden" name="image" value="{{$item->image}}" />
+                       
                         
                         <div style="margin-top:12px;">
                             <button type="submit" class="btn btn-info">
@@ -256,35 +258,35 @@
 </div>
 <script>
     let slideIndex = 1;
-showSlides(slideIndex);
+    showSlides(slideIndex);
 
-// Next/previous controls
-function plusSlides(n) {
-  showSlides(slideIndex += n);
-}
+    // Next/previous controls
+    function plusSlides(n) {
+    showSlides(slideIndex += n);
+    }
 
-// Thumbnail image controls
-function currentSlide(n) {
-  showSlides(slideIndex = n);
-}
+    // Thumbnail image controls
+    function currentSlide(n) {
+    showSlides(slideIndex = n);
+    }
 
-function showSlides(n) {
-  let i;
-  let slides = document.getElementsByClassName("mySlides");
-  let dots = document.getElementsByClassName("demo");
-  let captionText = document.getElementById("caption");
-  if (n > slides.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = slides.length}
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = "none";
-  }
-  for (i = 0; i < dots.length; i++) {
-    dots[i].className = dots[i].className.replace(" active", "");
-  }
-  slides[slideIndex-1].style.display = "block";
-  dots[slideIndex-1].className += " active";
-  captionText.innerHTML = dots[slideIndex-1].alt;
-}
+    function showSlides(n) {
+    let i;
+    let slides = document.getElementsByClassName("mySlides");
+    let dots = document.getElementsByClassName("demo");
+    let captionText = document.getElementById("caption");
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length}
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex-1].style.display = "block";
+    dots[slideIndex-1].className += " active";
+    captionText.innerHTML = dots[slideIndex-1].alt;
+    }
 </script>
 <!-- {{-- Trang check_product --}} -->
 <script>
@@ -338,9 +340,9 @@ function showSlides(n) {
             }
         })
     })
-    </script>
+</script>
     
-    <script>
+<script>
     function handle_send_rep(id_comment) {
         $(".empty-rep").html("")
         var content_reply = $(".txtarea-content-rep").val()
@@ -398,5 +400,6 @@ function showSlides(n) {
             )
         }
     }
-    </script>
+</script>
+
 @stop

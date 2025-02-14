@@ -11,9 +11,11 @@ li {
 .justify-content-center {
     justify-content: center;
 }
-
+:root {
+    --main-color: #198754;
+}
 body {
-    margin-top: 9rem !important;
+    margin-top: 5rem !important;
 }
 .img-user-rep-comment {
     width: 100%;
@@ -26,10 +28,16 @@ body {
     right: 0;
 }
 .main-color {
-    background-color: #198754;
+    background-color: var(--main-color);
 }
 .white {
     color: white;
+}
+.red {
+    color: red;
+}
+.black {
+    color: black;
 }
 /* css for card */
 .card-body {
@@ -44,18 +52,23 @@ body {
 }
 /* end css for card */
 .hover-cart {
-    width: 126px;
+    width: 320px;
     position: absolute;
     display: none;
     right: 10%;
     top: 38px;
+    box-shadow: 5px 10px 18px #888888;
+}
+.hover-cart li.text-center p {
+    margin-bottom: 1px;
 }
 li.text-center {
-    background-color: #0dcaf0;
+    background-color: white;
     margin-top: 1px;
+    border-bottom: 1px solid gray;
 }
 li.text-center a {
-    color: white;
+    color: black;
 }
 .content-cart-menu {
     position: relative;
@@ -235,6 +248,24 @@ ul.status-order li {
 .list-unstyled li {
     display: flex;
     justify-content: center;
+}
+.phone-social-hover {
+    position: absolute;
+    top: 44%;
+    left: -116px;
+    font-size: 24px;
+    background-color: var(--main-color);
+    border: 1px solid;
+    border-radius: 24px;
+    padding: 0 24px;
+    color: white;
+    height: 48px;
+    line-height: 2;
+    display: none;
+    animation: fadeInOpacity 0.5s linear;
+}
+.coccoc-alo-phone.coccoc-alo-green.coccoc-alo-show:hover .phone-social-hover {
+    display: inherit;
 }
 /* css for phone animation */
 .coccoc-alo-ph-circle {
@@ -712,7 +743,7 @@ ul.status-order li {
 }
 
 .or {
-    background: #198754;
+    background: var(--main-color);
     border-radius: 40px;
     color: #ffffff;
     font-family: "Roboto", sans-serif;

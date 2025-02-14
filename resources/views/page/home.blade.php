@@ -1,6 +1,7 @@
 @extends("welcome")
 @section("title","Sport VN")
 @section("content")
+@include("components.coupon")
 @include("page.header.header")
 <style>
     .watch-all-product{
@@ -13,14 +14,14 @@
         justify-content: center;
         width: 25%;
         font-size: 18px;
-        color: #198754;
+        color: var(--main-color);
         height: 38px;
         border-radius: 24px;
-        border: 1px solid #198754;
+        border: 1px solid var(--main-color);
         margin-bottom: 12px;
     }
     .link-watch-all-product:hover{
-        background: #198754;    
+        background: var(--main-color);    
         color:white;  
         border: none;
     }

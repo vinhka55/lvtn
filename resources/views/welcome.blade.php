@@ -49,6 +49,9 @@
             </li>
         </ul>
         <div class="coccoc-alo-phone coccoc-alo-green coccoc-alo-show">
+            @foreach($setting as $item)
+                <p class="phone-social-hover">{{$item->phone}}</p>
+            @endforeach
             <div class="coccoc-alo-ph-circle"></div>
             <div class="coccoc-alo-ph-circle-fill"></div>
             <div class="coccoc-alo-ph-img-circle">

@@ -20,7 +20,9 @@
         width: 100%;
         border-radius: 5px;
     }
-    
+    .product .related-product{
+        color: var(--main-color)
+    }
     /* Responsive styles */
     @media screen and (max-width: 768px) {
         .product {
@@ -43,9 +45,11 @@
 <div class="related-products">
     @foreach($product as $item)
         <div class="product">
-            <img src="{{url('/')}}/public/uploads/product/{{$item->image}}" alt="related product">
-            <p>{{$item->name}}</p>
-            <p>{{$item->price}}</p>
+            <a href="{{route('detail_product',$item->id)}}">
+                <img src="{{url('/')}}/public/uploads/product/{{$item->image}}" alt="related product">
+                <p class="related-product">{{$item->name}}</p>
+                <p class="red">{{number_format($item->price, 0, '', ',')}}đ</p>
+            </a>
         </div>
     @endforeach
 </div>

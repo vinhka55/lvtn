@@ -27,8 +27,12 @@
         <input type="text" name="rate" class="form-control" id="rate" value="{{$item->rate}}">
     </div>
     <div class="form-group">
+        <label for="duration">Ngày bắt đầu</label>
+        <input type="datetime-local" name="duration-start" class="form-control" id="duration-start" value="{{ date('Y-m-d\TH:i', strtotime($item->duration_start)) }}">
+    </div>
+    <div class="form-group">
         <label for="duration">Hạn sử dụng</label>
-        <input type="datetime-local" name="duration" class="form-control" id="duration" value="{{ date('Y-m-d\TH:i', strtotime($item->duration)) }}">
+        <input type="datetime-local" name="duration-end" class="form-control" id="duration-end" value="{{ date('Y-m-d\TH:i', strtotime($item->duration_end)) }}">
     </div>
    
     <div class="form-group">

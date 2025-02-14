@@ -122,7 +122,7 @@ class CartController extends Controller
                         $product_id = $value->product;
                         $product_image = $value->thumb;
                         $product_qty = $value->qty;
-                        $product_price = $value->price;           
+                        $product_price = $value->price;;           
                         Cart::add($product_id, $product_name, $product_qty, $product_price,0,$product_image);                       
                     }
                     //Session::put('added_cart_hover','ok');
@@ -132,7 +132,7 @@ class CartController extends Controller
                 if(count($content)>0){
                     //$output.= '<ul>';
                     foreach ($content as $key => $value) {
-                        $output.='<li class="text-center"><a href="http://localhost/lvtn/gio-hang">'.$value['name'].'</a></li>';
+                        $output.='<li class="text-center"><a href="http://localhost/lvtn/gio-hang">'.$value['name'].'</a><p class="red">'.number_format($value['price'], 0, '', ',').'đ</p></li>';
                     }
                     //$output.= '</ul>';
                     $output.='<li class="text-center"><a href="http://localhost/lvtn/gio-hang">Xem tất cả</a></li>';
@@ -147,11 +147,9 @@ class CartController extends Controller
                 $content=Cart::items()->original;
                 $output='';
                 if(count($content)>0){
-                    //$output.= '<ul>';
                     foreach ($content as $key => $value) {
-                        $output.='<li class="text-center"><a href="http://localhost/lvtn/gio-hang">'.$value['name'].'</a></li>';
+                        $output.='<li class="text-center"><a href="http://localhost/lvtn/gio-hang">'.$value['name'].'</a><p class="red">'.number_format($value['price'], 0, '', ',').'đ</p></li>';
                     }
-                    //$output.= '</ul>';
                     $output.='<li class="text-center"><a href="http://localhost/lvtn/gio-hang">Xem tất cả</a></li>';
         
                 }

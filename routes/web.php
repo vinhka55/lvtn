@@ -99,6 +99,7 @@ Route::group(['prefix'=>'admin','middleware'=>['auth.AdminAndAuthor']],function(
     Route::get('sua-ma-giam-gia/{id}','App\Http\Controllers\CouponController@edit')->name('edit_coupon');
     Route::post('xu-ly-sua-ma-giam-gia','App\Http\Controllers\CouponController@handle_edit')->name('handle_edit_coupon');
     Route::get('xoa-ma-giam-gia/{id}','App\Http\Controllers\CouponController@delete')->name('delete_coupon');
+    Route::post('doi-trang-thai-coupon}','App\Http\Controllers\CouponController@change_status')->name('change_status');
 });
 Route::post('giam-gia','App\Http\Controllers\CouponController@discount')->name('discount');
 
