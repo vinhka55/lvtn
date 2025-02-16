@@ -159,7 +159,7 @@
                 <th>Giá</th>
                 <th>Số lượng</th> 
                 @if($order_status=='Đang chờ xử lý')      
-                <th class="action-delete-product">Action</th>           
+                <th class="action-delete-product text-center">Action</th>           
                 @endif     
             </tr>
             </thead>
@@ -175,16 +175,16 @@
                             
                             <td>
                                 <form action="">
-                                    <input type="number" <?php if($order_status!="Đang chờ xử lý") echo "disabled" ?> class="order_product_qty_{{$item->id}} qty-product-detail-order" name="product_sales_quantity" value="{{$item->product_quantyti}}" min="1">
+                                    <input type="number" <?php if($order_status!="Đang chờ xử lý") echo "disabled" ?> class="order_product_qty_{{$item->id}} qty-product-detail-order text-center" name="product_sales_quantity" value="{{$item->product_quantyti}}" min="1">
                                     <input type="hidden" name="order_product_id" class="order_product_id" value="{{$item->product_id}}">
-                                    @if($order_status=='Đang chờ xử lý')
+                                    <!-- @if($order_status=='Đang chờ xử lý')
                                     <button class="btn btn-default update-amount-product-in-order" data-price_product={{$item->product_price}} data-count_product={{$item->product->count}} data-id_product="{{$item->product->id}}" data-id_detail="{{$item->id}}" data-initial_value="{{$item->product_quantyti}}">Cập nhật số lượng</button>
-                                    @endif
+                                    @endif -->
                                 </form>
                             </td>
                             <td class="action-delete-product">
                                 @if($order_status=='Đang chờ xử lý')
-                                <p class="text-ellipsis name"><a href="{{route('delete_product_in_order',[$item->id,$item->product_quantyti])}}"><i class="fa fa-trash" aria-hidden="true"></i></a></p>
+                                <p class="text-ellipsis name text-center"><a href="{{route('delete_product_in_order',[$item->id,$item->product_quantyti])}}"><i class="fa fa-trash" style="color:red;" aria-hidden="true"></i></a></p>
                                 @endif
                             </td>        
                             <?php $total_money=$total_money+$item->product_price*$item->product_quantyti;?>                
@@ -201,6 +201,18 @@
                    @csrf
                   <select class="form-control order_details select-status-order">                  
                     <option id="{{$or->id}}" selected value="Đang chờ xử lý">Đang chờ xử lý</option>
+                    <option id="{{$or->id}}" value="Đang vận chuyển">Đang vận chuyển</option>
+                    <option id="{{$or->id}}" value="Đã thanh toán-chờ nhận hàng">Đã thanh toán-chờ nhận hàng</option>
+                    <option id="{{$or->id}}" value="Đã xử lý">Đã xử lý</option>
+                    <option id="{{$or->id}}" value="Đơn đã hủy">Hủy đơn</option>
+                  </select>
+                </form>
+                @elseif($or->status=="Đang vận chuyển")
+                <form>
+                  @csrf
+                  <select class="form-control order_details select-status-order">                    
+                    <option id="{{$or->id}}" value="Đang chờ xử lý">Đang chờ xử lý</option>
+                    <option id="{{$or->id}}" selected value="Đang vận chuyển">Đang vận chuyển</option>
                     <option id="{{$or->id}}" value="Đã thanh toán-chờ nhận hàng">Đã thanh toán-chờ nhận hàng</option>
                     <option id="{{$or->id}}" value="Đã xử lý">Đã xử lý</option>
                     <option id="{{$or->id}}" value="Đơn đã hủy">Hủy đơn</option>
@@ -211,6 +223,7 @@
                   @csrf
                   <select class="form-control order_details select-status-order" disabled>                    
                     <option id="{{$or->id}}" value="Đang chờ xử lý">Đang chờ xử lý</option>
+                    <option id="{{$or->id}}" value="Đang vận chuyển">Đang vận chuyển</option>
                     <option id="{{$or->id}}" value="Đã thanh toán-chờ nhận hàng">Đã thanh toán-chờ nhận hàng</option>
                     <option id="{{$or->id}}" selected value="Đã xử lý">Đã xử lý</option>
                     <option id="{{$or->id}}" value="Đơn đã hủy">Hủy đơn</option>
@@ -221,6 +234,7 @@
                   @csrf
                   <select class="form-control order_details select-status-order" disabled>                    
                     <option id="{{$or->id}}" value="Đang chờ xử lý">Đang chờ xử lý</option>
+                    <option id="{{$or->id}}" value="Đang vận chuyển">Đang vận chuyển</option>
                     <option id="{{$or->id}}" selected value="Đã thanh toán-chờ nhận hàng">Đã thanh toán-chờ nhận hàng</option>
                     <option id="{{$or->id}}" value="Đã xử lý">Đã xử lý</option>
                     <option id="{{$or->id}}" value="Đơn đã hủy">Hủy đơn</option>
@@ -232,6 +246,7 @@
                   <select class="form-control order_details select-status-order" disabled>
                     
                     <option id="{{$or->id}}" value="Đang chờ xử lý">Đang chờ xử lý</option>
+                    <option id="{{$or->id}}" value="Đang vận chuyển">Đang vận chuyển</option>
                     <option id="{{$or->id}}" value="Đã thanh toán-chờ nhận hàng">Đã thanh toán-chờ nhận hàng</option>
                     <option id="{{$or->id}}" value="Đã xử lý">Đã xử lý</option>
                     <option id="{{$or->id}}" selected value="Đơn đã hủy">Hủy đơn</option>
@@ -247,8 +262,6 @@
         </div>
         <span>Tổng tiền: </span><span class="total-money-order">{{number_format($total_money)}} VND</span>
         <br>
-        <span>Thuế VAT 10%: </span><span class="vat-order">{{number_format($total_money*10/100)}} VND</span>
-        <br>
         <?php
         
             // if(Session::get('discount')){
@@ -259,10 +272,10 @@
             //     $discount=0;
             //     echo "Giảm giá: 0 VND";
             // }
-            echo "Giảm giá: ".$discount." VND";
+            echo "Giảm giá: ".number_format($discount)." VND";
         ?>
         <br>
-        <span>Số tiền cần thanh toán: </span><span class="all-this-order">{{number_format($total_money+$total_money*10/100-$discount)}} VND</span>
+        <span>Số tiền cần thanh toán: </span><span class="all-this-order">{{number_format($total_money-$discount)}} VND</span>
     </div>
     </div>
 </div>

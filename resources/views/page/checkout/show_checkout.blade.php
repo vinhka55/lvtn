@@ -40,15 +40,13 @@
 		</div>
 		<div class="col-md-4 col-12">
 			<div class="row p-2 mx-0 mb-2 bg-warning bg-opacity-25">
-				<p class="p-0 m-0 fw-bold fs-6 text-secondary">TỔNG CỘNG (CHƯA VAT)</p>
+				<p class="p-0 m-0 fw-bold fs-6 text-secondary">TỔNG CỘNG</p>
 				<p class="h3 fw-bolder"><?php echo number_format(Cart::total()).' VND' ?></p>
-				<hr>
-				<p class="h3 fw-bolder"><span class="badge bg-light text-dark">VAT</span><?php echo number_format(0.1*Cart::total()).' VND' ?></p>
-				<p class="h3 fw-bolder"><span class="badge bg-light text-dark">Giảm giá</span><?php echo number_format(Session::get('discount')).' VND' ?></p>
+				<p class="h3 fw-bolder"><span class="badge bg-light text-dark" style="margin-right:4px;">Giảm giá</span><?php echo number_format(Session::get('discount')).' VND' ?></p>
 				<hr>
 				<p class="p-0 m-0 fw-bold fs-6 text-secondary">THÀNH TIỀN</p>
 				<p class="h3 fw-bolder text-danger">
-					<?php $total=Cart::total()+0.1*Cart::total()-Session::get('discount'); 
+					<?php $total=Cart::total()-Session::get('discount'); 
 					echo number_format($total).' VND' ?>
 				</p>
 			</div>

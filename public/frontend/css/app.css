@@ -634,6 +634,9 @@ ul.status-order li {
     }
 }
 @media (max-width: 968px) {
+    body {
+        margin-top: 8rem !important;
+    }
     .md-card-width {
         width: 33%;
     }

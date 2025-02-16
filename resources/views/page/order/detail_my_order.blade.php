@@ -86,11 +86,9 @@
         </div>
         <?php echo "Tổng tiền: ".number_format($total_money).' VND' ; ?>
         <br>
-        <?php echo "Thuế VAT 10%: ".number_format($total_money*10/100).' VND' ; ?>
-        <br>
         <p>Giảm giá: <?php echo number_format($discount).' VND'; ?></p>
         <br>
-        <?php echo "Số tiền cần thanh toán: ".number_format($total_money+$total_money*10/100-$discount).' VND' ;
+        <?php echo "Số tiền cần thanh toán: ".number_format($total_money-$discount).' VND' ;
         ?>
     </div>
     </div>

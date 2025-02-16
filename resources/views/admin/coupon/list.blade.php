@@ -65,7 +65,7 @@
                 <input type="checkbox"><i></i>
               </label>
             </th>
-            <th>Tên mã</th>
+            <th>Nội dung</th>
             <th>Mã</th>
             <th>Số lượng</th>
             <th>Đã dùng</th>

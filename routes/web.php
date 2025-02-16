@@ -73,7 +73,7 @@ Route::group(['prefix'=>'admin','middleware'=>['auth.AdminAndAuthor']],function(
     Route::get('tim-kiem-don-hang-theo-status/{status}','App\Http\Controllers\OrderController@search_with_status')->name('search_with_status');
 });
 Route::post('dat-hang','App\Http\Controllers\OrderController@order_place')->name('order_place');
-Route::post('cap-nhat-trang-thai-san-pham-cua-don-hang','App\Http\Controllers\OrderController@update_status_of_product')->name('update_status_of_product_in_order');
+Route::post('cap-nhat-trang-thai-san-pham-cua-don-hang','App\Http\Controllers\OrderController@update_status_of_order')->name('update_status_of_order');
 Route::get('xoa-san-pham-trong-don-hang/{id}/{quantyti}','App\Http\Controllers\OrderController@delete_product_in_order')->name('delete_product_in_order');
 Route::post('cap-nhat-so-luong-san-pham-trong-don-hang','App\Http\Controllers\OrderController@update_qty_product_in_order')->name('update_qty_product_in_order');
 Route::get('don-hang-cua-toi','App\Http\Controllers\OrderController@my_order')->name('my_order');

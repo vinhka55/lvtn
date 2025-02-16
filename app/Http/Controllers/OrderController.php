@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use Session;
 use Cart;
+use Toastr;
 use App\Models\Order;
 use App\Models\Coupon;
 use App\Models\OrderDetails;
@@ -55,9 +56,10 @@ class OrderController extends Controller
         $data_order['customer_id']=Session::get('user_id');
         $data_order['shipping_id']=Session::get('shipping_id');
         $data_order['payment']=$req->pay;
-        $data_order['total_money']=Cart::total()+Cart::total()*0.1;
+        $data_order['total_money']=Cart::total();
         if(Session::has('discount')){
             $data_order['discount']=Session::get('discount');
+            $data_order['total_money'] = $data_order['total_money'] - $data_order['discount'];
         }else{
             $data_order['discount']=0;
         }
@@ -137,13 +139,14 @@ class OrderController extends Controller
         if(DB::table('order')->where('id',$orderId)->delete()){
             $messege=["Đơn hàng của bạn: <b>".$order_code."</b> đã xóa bởi Admin"];
             event(new InboxPusherEvent($messege));
+            Toastr::success('Xóa thành công', 'Thành công');
             return redirect('admin/danh-sach-don-hang');
         }
         else{
             echo 'Xóa không thành công, vui lòng thử lại';
         }
     }
-    public function update_status_of_product(Request $req)
+    public function update_status_of_order(Request $req)
     {
         //cập nhật trạng thái đơn hàng
         $data=$req->all();
@@ -198,7 +201,7 @@ class OrderController extends Controller
         
         $order_detail = OrderDetails::find($id);
         $order=Order::find($order_detail->order_id);
-        $order->total_money=$order->total_money-$order_detail->product_price*$quantyti-($order_detail->product_price*$quantyti)*0.1;
+        $order->total_money=$order->total_money-$order_detail->product_price*$quantyti;
         $order->save();// update price of order
         $order_detail->delete();
 
@@ -208,6 +211,8 @@ class OrderController extends Controller
     public function update_qty_product_in_order(Request $req)
     {
         $data=$req->all();
+        echo $data['initial_value'];
+        echo $data['order_product_qty'];
         $product_in_order=OrderDetails::find($data['id_detail']);
 
         $order_id=OrderDetails::where('id',$data['id_detail'])->value('order_id');
@@ -220,7 +225,7 @@ class OrderController extends Controller
             $product->count=$product->count-($data['order_product_qty']-$data['initial_value']);
             //cập nhật lại giá tiền đơn hàng
             $money_extra=($data['order_product_qty']-$data['initial_value'])*$product->price;
-            $order->total_money=$order->total_money + $money_extra + 0.1*$money_extra;
+            $order->total_money=$order->total_money + $money_extra;
             $product->save();
         }else{
             //cập nhật lại tổng sản phẩm còn lại trong kho
@@ -228,14 +233,14 @@ class OrderController extends Controller
             $product->count=$product->count+($data['initial_value']-$data['order_product_qty']);
             //cập nhật lại giá tiền đơn hàng
             $money_extra=($data['initial_value']-$data['order_product_qty'])*$product->price;
-            $order->total_money=$order->total_money - $money_extra - 0.1*$money_extra;
+            $order->total_money=$order->total_money - $money_extra;
             $product->save();
         }
         $product_in_order->save();
         $order->save();
-
         //xuất thông báo ra UI người dùng
         event(new InboxPusherEvent("Đơn hàng: <b>".$order->order_code."</b> có sự thay đổi. Số lượng sản phẩm <b>".$product_in_order->product_name."</b> được cập nhật bằng: <b class='text-danger'>".$data['order_product_qty']."</b>" ));
+        return $order;
     }
     public function my_order(Request $req)
     {

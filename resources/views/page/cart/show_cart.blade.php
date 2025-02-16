@@ -41,7 +41,7 @@
                         ?>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-warning"><a class="cart_quantity_delete" href="{{route('delete_product_in_cart',$item['uid'])}}">Xóa</a></button>
+                        <button type="button" class="btn p-0"><a class="cart_quantity_delete" href="{{route('delete_product_in_cart',$item['uid'])}}"><i class="fas fa-trash-alt red"></i></a></button>
                     </td>
                   </tr>
                   <?php $index=$index+1; ?>
@@ -56,15 +56,8 @@
         </div>
         <div class="col-md-4 col-12">
             <div class="row p-2 mx-0 mb-2 bg-warning bg-opacity-25">
-                <p class="p-0 m-0 fw-bold fs-6 text-secondary">TỔNG CỘNG (CHƯA VAT)</p>
+                <p class="p-0 m-0 fw-bold fs-6 text-secondary">TỔNG CỘNG</p>
                 <p class="h3 fw-bolder">{{number_format(Cart::total())}} VND</p>
-                <hr>
-                <p class="h3 fw-bolder"> <span class="badge bg-light text-dark">VAT</span>
-                    <?php 
-                        $tax= 0.1*Cart::total();
-                        echo number_format($tax).' VND';
-                    ?>
-                </p>
                 <p class="h3 fw-bolder">Phí vận chuyển: 0 VND</p>
                 @if($coupon)
                         <p class="h3 fw-bolder">Giảm giá <span>
@@ -91,13 +84,13 @@
                         @endif
                 <hr>
                 <p class="p-0 m-0 fw-bold fs-6 text-secondary">THÀNH TIỀN</p>
-                    <p class="p-0 m-0 fw-bold fs-6 text-secondary">
-                        <?php
-                            $total=Cart::total()+$tax-$discount;
-                            echo number_format($total).' VND';
-                        ?>
-                    </p>
-                <button type="button" class="btn btn-danger"><a href="{{route('pay_product')}}" class="text-white">Tiếp Tục ></a></button>
+                <p class="p-0 m-0 fw-bold fs-6 red" style="font-size:2rem !important;">
+                    <?php
+                        $total=Cart::total()-$discount;
+                        echo number_format($total).' VND';
+                    ?>
+                </p>
+                <button type="button" class="btn main-color"><a href="{{route('pay_product')}}" class="text-white">Tiếp Tục ></a></button>
             </div>
             <div class="row p-2 mx-0 mb-2 bg-info bg-opacity-25">
                 <div class="input-group mb-3">
@@ -114,7 +107,7 @@
                             @endforeach
                         </ul>
                         <input type="text" name="code_coupon" class="form-control" placeholder="Nhập Mã Khuyến Mãi">
-                        <button class="btn btn-danger text-light" type="submit" id="button-addon2" style="z-index:0">Áp Dụng</button>
+                        <button class="btn main-color text-light mt-1" type="submit" id="button-addon2" style="z-index:0">Áp Dụng</button>
                     </form>
                 </div>
             </div>

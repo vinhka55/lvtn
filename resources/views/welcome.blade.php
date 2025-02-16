@@ -44,7 +44,7 @@
             </li>
 
             <li class="zaloSF">
-                <a href="https://zalo.me/0981247888" title="0981247888" class="mb-lg-2" target="blank">
+                <a href="https://zalo.me/0981247888" title="0398855888" class="mb-lg-2" target="blank">
                 <img src="{{url('/')}}/public/assets/img/social_contact/zalo.png" alt="" width="45" height="45">        </a>
             </li>
         </ul>
