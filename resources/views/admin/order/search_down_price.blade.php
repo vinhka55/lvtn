@@ -65,7 +65,7 @@
                             <td>{{$item->reason}}</td>                     
                             <td>
                             <a title="click to edit" href=""><i class="fa fa-pencil-square-o text-success text-active"></i></a>
-                            <a title="click to delete" onclick="return confirm('Are you sure?')" href="{{route('delete_order',$item->id)}}"><i class="fa fa-times text-danger text"></i></a>
+                            <a title="click to delete" onclick="return confirm('Are you sure?')" href="{{route('delete_order',$item->id)}}"><i class="fas fa-trash-alt text-danger text-center"></i></a>
                             </td>
                             <td><a href="{{route('detail_order',$item->id)}}"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
                         </tr>

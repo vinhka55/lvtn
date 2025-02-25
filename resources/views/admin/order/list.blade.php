@@ -33,6 +33,7 @@
                     <th>Tình trạng <select id="search-with-status" width="20%" class="form-select form-select-sm" aria-label=".form-select-sm example">
                                         <option selected>====Chọn tình trạng====</option>
                                         <option value="{{route('search_with_status','dang-cho-xu-ly')}}">Đang chờ xử lý</option>
+                                        <option value="{{route('search_with_status','dang-van-chuyen')}}">Đang vận chuyển</option>
                                         <option value="{{route('search_with_status','da-xu-ly')}}">Đã xử lý</option>
                                         <option value="{{route('search_with_status','da-thanh-toan-cho-nhan-hang')}}">Đã thanh toán-chờ nhận hàng</option>
                                         <option value="{{route('search_with_status','don-da-huy')}}">Đơn đã hủy</option>

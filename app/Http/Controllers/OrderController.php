@@ -299,6 +299,9 @@ class OrderController extends Controller
         if($status=='dang-cho-xu-ly'){
             $order=Order::where('status','Đang chờ xử lý')->get();
         }
+        else if($status=='dang-van-chuyen'){
+            $order=Order::where('status','Đang vận chuyển')->get();
+        }
         else if($status=='da-xu-ly'){
             $order=Order::where('status','Đã xử lý')->get();
         }

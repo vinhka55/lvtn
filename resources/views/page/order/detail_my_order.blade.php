@@ -88,10 +88,10 @@
         <br>
         <p>Giảm giá: <?php echo number_format($discount).' VND'; ?></p>
         <br>
-        <?php echo "Số tiền cần thanh toán: ".number_format($total_money-$discount).' VND' ;
+        <?php echo "<h2>Số tiền cần thanh toán: ".number_format($total_money-$discount).' VND </h2>' ;
         ?>
     </div>
     </div>
-    <a href="{{url('/')}}/in-don-hang/<?php echo $order_id; ?>" class="btn btn-info">In đơn hàng</a>
+    <a href="{{url('/')}}/in-don-hang/<?php echo $order_id; ?>" class="btn btn-info main-color" style="border:none">In đơn hàng</a>
 </div>
 @stop

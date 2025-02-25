@@ -9,6 +9,26 @@
    .card-body a{
      color: var(--main-color)
    }
+   
+   /* css sản phẩm hết hàng  */
+   .card .sold-out {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: red;
+        font-size: 18px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border: 3px solid red;
+        padding: 5px 15px;
+        border-radius: 8px;
+        background: white;
+        letter-spacing: 2px;
+        opacity: 0.9;
+        transform: rotate(-10deg); /* Xoay nhẹ giống dấu triện */
+        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    
 </style>
 <div class="col-12 col-md-8 p-2 width-tag-wrap-card">
     <div class="row m-0 p-2">
@@ -16,9 +36,12 @@
         @foreach($product as $item)
             <div class="col-12 col-md-4 md-card-width">
                 <div class="card">
-                    <a href="{{route('detail_product',$item->id)}}"><img style="height:165px;" src="{{url('/')}}/public/uploads/product/{{$item->image}}" class="card-img-top" alt="product"></a>
-                    <h3 class="card-text name-product">{{$item->name}}</h3>
-                    <p class="price-product red">{{number_format($item->price)}} VND</p>
+                    <a href="{{route('detail_product',$item->id)}}"><img style="height:165px;" src="{{url('/')}}/public/uploads/product/{{$item->image}}" class="card-img-top" alt="product"></a>               
+                    <?php 
+                        if($item->count < 1) echo '<span class="sold-out">Hết hàng</span>';
+                    ?>
+                    <h3 class="card-text name-product text-center">{{$item->name}}</h3>
+                    <p class="price-product red text-center">{{number_format($item->price)}} VND</p>
                     <div class="card-body">
                         <a href="{{route('detail_product',$item->id)}}">Chi tiết</a>
                         <i type="button" class="fas fa-eye ms-3" data-bs-toggle="modal" data-bs-target="#quickview-{{$item->id}}"></i>
@@ -48,15 +71,19 @@
                             </div>
                         </div>
                         <!-- add to cart by ajax -->
-                        <form>
-                            @csrf
-                            <input type="hidden" value="{{$item->id}}" class="cart_product_id_{{$item->id}}">
-                            <input type="hidden" value="{{$item->name}}" class="cart_product_name_{{$item->id}}">
-                            <input type="hidden" value="{{$item->image}}" class="cart_product_image_{{$item->id}}">
-                            <input type="hidden" value="{{$item->price}}" class="cart_product_price_{{$item->id}}">
-                            <input type="hidden" value="1" class="cart_product_qty_{{$item->id}}">
-                            <button type="button" name="add-to-cart" class="btn btn-primary add-to-cart main-color" data-id_product="{{$item->id}}"><i class="fa fa-shopping-cart"></i></button>
-                        </form>
+                        
+                            @if($item->count >= 1)
+                                <form>
+                                    @csrf
+                                    <input type="hidden" value="{{$item->id}}" class="cart_product_id_{{$item->id}}">
+                                    <input type="hidden" value="{{$item->name}}" class="cart_product_name_{{$item->id}}">
+                                    <input type="hidden" value="{{$item->image}}" class="cart_product_image_{{$item->id}}">
+                                    <input type="hidden" value="{{$item->price}}" class="cart_product_price_{{$item->id}}">
+                                    <input type="hidden" value="1" class="cart_product_qty_{{$item->id}}">
+                                    <button type="button" name="add-to-cart" class="btn btn-primary add-to-cart main-color" data-id_product="{{$item->id}}"><i class="fa fa-shopping-cart"></i></button>
+                                </form>
+                            @endif
+                        
                         <!-- end add to cart by ajax -->
                     </div>
                 </div>

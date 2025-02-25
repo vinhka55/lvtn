@@ -388,47 +388,7 @@ $('.delete-user').click(function(e) {
         $(".content-reply-"+id_comment).addClass('hidden')
     })
 </script>
-<script>
-function remove_comment(id_comment){
-    var cf=confirm("Bạn muốn xóa?");
-    if(cf){
-        var _token = $('input[name="_token"]').val();
-        $.ajax({
-        url : "{{route('delete_comment')}}",
-            method: 'post',
-            data:{id_comment:id_comment,_token:_token},
-            success:function(){
-                $('#tr-comment-'+id_comment).remove()
-                toastr.success('Xóa comment thành công', 'Thành công');
-            },
-            error: (xhr) => {
-                console.log(xhr.responseText); 
-                }
-        });
-    }
-}
-</script>
-<script>
-    function remove_sub_comment(id_sub_comment) { 
-        var cf=confirm("Bạn muốn xóa?");
-        if(cf){
-            var _token = $('input[name="_token"]').val();
-            $.ajax({
-            url : "{{route('delete_sub_comment')}}",
-                method: 'post',
-                data:{id_sub_comment:id_sub_comment,_token:_token},
-                success:function(){
-                    $('#sub-comment-'+id_sub_comment).remove()
-                    toastr.success('Xóa comment thành công', 'Thành công');
-                },
-                error: (xhr) => {
-                    console.log(xhr.responseText); 
-                    }
-            });
-        }
-        
-    }
-</script>
+
 <script type="text/javascript">
     function select_gallery() {
         var product_id=$('#product_id').val()

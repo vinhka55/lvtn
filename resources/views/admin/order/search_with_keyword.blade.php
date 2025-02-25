@@ -33,7 +33,15 @@
                 </th>
                 <th>Mã đơn hàng</td>
                 <th>Tổng giá tiền <a href="{{route('down_price_order')}}"><i class="fas fa-arrow-down"></i></a> <a href="{{route('up_price_order')}}"><i class="fas fa-arrow-up"></i></a></th>
-                <th>Tình trạng</th> 
+                <th>Tình trạng
+                    <select id="search-with-status" width="20%" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                        <option selected>====Chọn tình trạng====</option>
+                        <option value="{{route('search_with_status','dang-cho-xu-ly')}}">Đang chờ xử lý</option>
+                        <option value="{{route('search_with_status','da-xu-ly')}}">Đã xử lý</option>
+                        <option value="{{route('search_with_status','da-thanh-toan-cho-nhan-hang')}}">Đã thanh toán-chờ nhận hàng</option>
+                        <option value="{{route('search_with_status','don-da-huy')}}">Đơn đã hủy</option>
+                    </select>
+                </th> 
                 <th>Lý do hủy</th>          
                 <th>Hiển thị</th>
                 <th></th>
@@ -59,7 +67,7 @@
                             <td>{{$item->reason}}</td>                     
                             <td>
                             <a title="click to edit" href=""><i class="fa fa-pencil-square-o text-success text-active"></i></a>
-                            <a title="click to delete" onclick="return confirm('Are you sure?')" href="{{route('delete_order',$item->id)}}"><i class="fa fa-times text-danger text"></i></a>
+                            <a title="click to delete" onclick="return confirm('Are you sure?')" href="{{route('delete_order',$item->id)}}"><i class="fas fa-trash-alt text-danger text-center"></i></a>
                             </td>
                             <td><a href="{{route('detail_order',$item->id)}}"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
                         </tr>

@@ -1,32 +1,31 @@
 @extends("admin.admin_layout")
 @section("admin_page")
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+<style>
+    canvas {
+        max-width: 600px;
+        margin: auto;
+    }
+    select {
+        margin: 10px;
+        padding: 5px;
+    }
+</style>
 <div class="row">
     <h3 class="text-center">Thống kế doanh số</h3>
     <div class="content mt-3">
-        <form action="">
-            @csrf
-            <div class="col-md-2">
-                <p><input type="text" id="datepickerFrom" class="form-control"></p>
-            </div>
-            <div class="col-md-2">
-                <p><input type="text" id="datepickerTo" class="form-control"></p>
-            </div>
-            <input type="button" id="btn-dashboard-filter" class="btn btn-primary btn-sm" value="Tìm kiếm">
-    
-            <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="time-statistic">
-                <option selected>Chọn khoảng thời gian</option>
-                <option value="sub_seven_day">7 Ngày trước</option>
-                <option value="this_month">Tháng này</option>
-                <option value="last_month">Tháng trước</option>
-            </select>
-        </form>
-    
-        <div class="col-md-12">
-            <div id="my-top-chart" style="height: 250px;">
+        <!-- code from chat gpt  -->
+        <label for="timeRange">Chọn khoảng thời gian:</label>
+        <select id="timeRange">
+            <option value="daily">Ngày</option>
+            <option value="weekly">Tuần</option>
+            <option value="monthly" selected>Tháng</option>
+            <option value="yearly">Năm</option>
+        </select>
 
-            </div>
-        </div>
+        <!-- Canvas chứa biểu đồ -->
+        <canvas id="revenueChart"></canvas>
+        <!-- end  -->
     </div>
     <div class="col-md-12">
         <h3 class="text-center">Thống kế truy cập</h3>
@@ -75,24 +74,6 @@
 </div>
 
 <script>
-    $( function() {
-        $( "#datepickerFrom" ).datepicker({
-            prevText:"Tháng trước",
-            nextText:"Tháng sau",
-            dateFormat:"yy-mm-dd",
-            dayNamesMin:["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"],
-            duration:"slow"
-        })
-        $( "#datepickerTo" ).datepicker({
-            prevText:"Tháng trước",
-            nextText:"Tháng sau",
-            dateFormat:"yy-mm-dd",
-            dayNamesMin:["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"],
-            duration:"slow"
-        })
-    } );
-</script>
-<script>
     
     var chart=new Morris.Bar({
     // ID of the element in which to draw the chart.
@@ -131,7 +112,7 @@
                 }
         })
     }
-    getStatistic30Days()
+    // getStatistic30Days()
     $('#btn-dashboard-filter').click(function(){
         fromDay=$('#datepickerFrom').val();
         toDay=$('#datepickerTo').val();
@@ -171,30 +152,51 @@
     });
 </script>
 <script>
-    $('#time-statistic').change(function(){
-        var value_time=$('#time-statistic').val()
-        console.log(value_time)
-        $.ajax({
-        url : "{{route('get_statistic_with_time')}}",
-            method: 'post',
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            data:{value_time:value_time},
-            success:function(data){
-                //console.log(data)
-                if(data=='empty')
-                {
-                    $('#my-top-chart').html('')
-                    $('#my-top-chart').append('<p class="text-center">empty record</p>')
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        let revenueChart;
+
+        // Hàm gọi API và cập nhật biểu đồ
+        async function fetchAndRenderChart(timeRange) {
+            try {
+                const response = await fetch(`api/revenue?range=${timeRange}`);
+                const fetchedData = await response.json();
+
+                if (revenueChart) {
+                    revenueChart.destroy(); // Xóa biểu đồ cũ
                 }
-                else{
-                    data=JSON.parse(data)
-                    chart.setData(data)
-                }
-            }, 
-            error: (xhr) => {
-                console.log(xhr.responseText); 
-                }
-        })
-    })
-</script>
+
+                revenueChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: fetchedData.labels,
+                        datasets: [{
+                            label: 'Doanh thu (VNĐ)',
+                            data: fetchedData.data,
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Lỗi khi gọi API doanh thu:", error);
+            }
+        }
+
+        // Khi người dùng chọn khoảng thời gian khác
+        document.getElementById('timeRange').addEventListener('change', function () {
+            fetchAndRenderChart(this.value);
+        });
+
+        // Gọi API lần đầu với dữ liệu mặc định (monthly)
+        fetchAndRenderChart('monthly');
+    </script>
 @stop

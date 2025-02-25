@@ -114,20 +114,20 @@
   </div>
 </div>
 <script>
-        function toggleButton(button, id) {
-            button.classList.toggle("on");
-            $.ajax({
+    function toggleButton(button, id) {
+        button.classList.toggle("on");
+        $.ajax({
             url: "{{route('change_status')}}",
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             method: 'POST',
             data: {id:id},
             success:function(data){
-              toastr.success('Thay đổi tình trạng thành công', 'Thành công');         
+            toastr.success('Thay đổi tình trạng thành công', 'Thành công');         
             },
             error:function(xhr){
                 console.log(xhr.responseText);
             }
         });
-        }
-    </script>
+    }
+</script>
 @stop

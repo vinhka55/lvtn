@@ -30,6 +30,9 @@ body {
 .main-color {
     background-color: var(--main-color);
 }
+.text-main-color {
+    color: var(--main-color);
+}
 .white {
     color: white;
 }

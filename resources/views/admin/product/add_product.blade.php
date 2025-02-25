@@ -20,12 +20,17 @@
         <label for="price-product">Giá sản phẩm</label>
         <input type="number" name="price" class="form-control" id="price-categoty" placeholder="Giá sản phẩm">
     </div>
+    <!-- Bảo hành -->
+    <div class="form-group" style="width: 50%;">
+            <label for="guarantee">Thời gian bảo hành (tháng)</label>
+        <input type="number" value="0" name="guarantee" class="form-control" id="guarantee" placeholder="Thời gian bảo hành">
+    </div>
 
     <!-- Hạn sử dụng -->
-    <div class="form-group" style="width: 50%;">
+    <!-- <div class="form-group" style="width: 50%;">
         <label for="exp">Hạn sử dụng</label>
         <input type="date" name="exp" class="form-control" id="exp">
-    </div>
+    </div> -->
 
     <!-- Sản phẩm thuộc danh mục nào? -->
     <div class="form-group" style="width: 50%;">
