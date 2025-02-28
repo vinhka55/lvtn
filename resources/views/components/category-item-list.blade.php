@@ -28,7 +28,14 @@
         transform: rotate(-10deg); /* Xoay nhẹ giống dấu triện */
         box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
     }
-    
+    .price-product .new-price{
+        font-size: 24px;
+    }
+    .price-product .old-price{
+        text-decoration: line-through;
+        color: gray;
+        font-size: 18px;
+    }
 </style>
 <div class="col-12 col-md-8 p-2 width-tag-wrap-card">
     <div class="row m-0 p-2">
@@ -41,7 +48,9 @@
                         if($item->count < 1) echo '<span class="sold-out">Hết hàng</span>';
                     ?>
                     <h3 class="card-text name-product text-center">{{$item->name}}</h3>
-                    <p class="price-product red text-center">{{number_format($item->price)}} VND</p>
+                    <p class="price-product red text-center">
+                        <span class="new-price">{{ number_format($item->price)}}đ</span> <span class="old-price">{{ number_format($item->old_price)}}đ</span>
+                    </p>
                     <div class="card-body">
                         <a href="{{route('detail_product',$item->id)}}">Chi tiết</a>
                         <i type="button" class="fas fa-eye ms-3" data-bs-toggle="modal" data-bs-target="#quickview-{{$item->id}}"></i>

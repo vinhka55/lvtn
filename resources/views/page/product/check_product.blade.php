@@ -274,7 +274,7 @@
                         @endif
                     </span>
                     <div class="price-box">
-                        <h2>{{number_format($item->price)}}đ <span>8,750,000đ</span></h2>
+                        <h2>{{number_format($item->price)}}đ <span>{{number_format($item->old_price)}}đ</span></h2>
                     </div>
                     <ul class="product-details">
                         <li>🔴 Xuất xứ: <strong>{{$item->origin}}</strong></li>
@@ -302,10 +302,15 @@
                     <input type="hidden" name="price" value="{{$item->price}}" />
                     <input type="hidden" name="image" value="{{$item->image}}" />
                     <div class="action-buttons">
+                        @if($item->count >0)
                         <button type="submit" class="buy-now">MUA NGAY, GIAO TẬN NƠI</button>
                         <button class="installment">TRẢ GÓP QUA THẺ</button>
+                        @else
+                        <button type="submit" class="buy-now" style="opacity:25%;cursor:auto;" disabled>MUA NGAY, GIAO TẬN NƠI</button>
+                        <button class="installment" style="opacity:25%;cursor:auto;" disabled>TRẢ GÓP QUA THẺ</button>
+                        @endif
                         @foreach($setting as $one_info)
-                        <button class="hotline">HOTLINE: {{$one_info->phone}}</button>
+                        <button class="hotline" disabled>HOTLINE: {{$one_info->phone}}</button>
                         @endforeach
                     </div>
                 </div>
