@@ -22,22 +22,19 @@ class HomeController extends Controller
        
         $data= [];
         array_push($data,$bong_da,$bong_ro,$tennis,$gym,$boi);
-        $categoryProduct = CategoryProduct::all();
-        // foreach (CategoryProduct::all() as $key => $value) {
-        //     // echo $value->name;
-        //     $dataProduct = DB::table('product')->where('category_id',$value->id)->limit(6)->get();
-        //     array_push($data,$dataProduct);
-        // }
-        //count visitor 
-        $check_visitor=Visitors::where('ip_address',$req->ip());
-        if($check_visitor->count()<1){
-            $now=Carbon::now('Asia/Ho_Chi_Minh')->toDateString();
-            $visitor=new Visitors();
-            $visitor->ip_address=$req->ip();
-            $visitor->date_visitor=$now;
-            $visitor->save(); 
+        $categoryProduct = CategoryProduct::all(); 
+        $date = Carbon::today()->toDateString();
+        // Kiểm tra xem đã có bản ghi của ngày hôm nay chưa
+        $visit = Visitors::where('date_visitor', $date)->first();
+        if ($visit) {
+            $visit->increment('count'); // Nếu có thì tăng count
+        } else {
+            Visitors::create([
+                'date_visitor' => $date,
+                'count' => 1 // Nếu chưa có thì tạo mới
+            ]);
         }
-
+        
         return view('page.home',['categoryProduct'=>$categoryProduct,'data'=>$data]);
         // return view('page.home',['data'=>$data]);
     }

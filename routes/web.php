@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 //trang chủ
 Route::get('/','App\Http\Controllers\HomeController@index');
 
+Route::get('/visits', [VisitController::class, 'index']);
 //hiển thị sản phẩm theo danh mục
 //Route::get('danh-muc-san-pham/{slug}','App\Http\Controllers\CategoryController@index')->name('danh_muc_san_pham');
 

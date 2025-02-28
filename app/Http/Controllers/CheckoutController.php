@@ -18,9 +18,15 @@ class CheckoutController extends Controller
     public function pay()
     {
         $id_customer=Session::get('user_id');
-        $data=DB::table('user')->where('id',$id_customer)->get();
-        //return view('page.checkout.show_checkout',['info'=>$data]);
-        return view('page.checkout.show_checkout',['info'=>$data]);
+        // echo gettype($id_customer);
+        // return;
+        if($id_customer != null){
+            $data=DB::table('user')->where('id',$id_customer)->get();
+            return view('page.checkout.show_checkout',['info'=>$data]);
+        }
+        else{
+            return view('page.login.login_user');
+        }
     }
     public function payment_method(Request $req)
     {

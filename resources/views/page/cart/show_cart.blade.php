@@ -1,6 +1,19 @@
 @extends("welcome")
 @section("title","Cart")
 @section("content")
+<style>
+    .cart-empty {
+        text-align: center;
+        padding: 20px;
+        color: #888;
+    }
+
+    .cart-empty img {
+        width: 234px;
+        opacity: 0.5;
+    }
+</style>
+@if(count(Cart::items()->original) > 0)
 <div class="container mx-auto my-5 py-4">
     <div class="row m-0 p-0">
         <div class="col-md-8 col-12 table-responsive">
@@ -114,4 +127,10 @@
         </div>
     </div>
 </div>
+@else
+<div class="cart-empty">
+    <img src="{{url('/')}}/public/assets/img/cart/empty-cart.png" alt="Giỏ hàng trống">
+    <p>Giỏ hàng của bạn đang trống!</p>
+</div>
+@endif
 @stop
