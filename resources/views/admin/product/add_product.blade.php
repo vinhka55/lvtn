@@ -61,14 +61,29 @@
         <label for="count">Số lượng</label>
         <input type="number" name="count" class="form-control" id="count">
     </div>
+    <label>Chọn Size & Số Lượng:</label>
+    <div id="size-container">
+        <div class="size-group">
+            <select name="sizes[]">
+                <option value="38">38</option>
+                <option value="39">39</option>
+                <option value="40">40</option>
+                <option value="41">41</option>
+                <option value="42">42</option>
+            </select>
+            <input type="number" name="quantities[]" placeholder="Số lượng" min="1" required>
+            <button type="button" onclick="removeSize(this)">X</button>
+        </div>
+    </div>
 
+    <button type="button" onclick="addSize()">+ Thêm Size</button>
     <!-- Hiện thị hoặc ẩn sản phẩm -->
-    <div class="form-group" style="width: 50%;">
+    <!-- <div class="form-group" style="width: 50%;">
         <select class="form-control input-sm m-bot15" name="status">
             <option value="1">Hiển thị</option>
             <option value="0">Ẩn</option>           
         </select>
-    </div>
+    </div> -->
 
     <!-- Ghi chú sản phẩm -->
     <div class="form-group">
@@ -86,5 +101,28 @@
 <script>
     var editor=CKEDITOR.replace( 'description-by-ckeditor' );
     CKFinder.setupCKEditor( editor );
+</script>
+<script>
+    function addSize() {
+        let container = document.getElementById('size-container');
+        let div = document.createElement('div');
+        div.classList.add('size-group');
+        div.innerHTML = `
+            <select name="sizes[]">
+                <option value="38">38</option>
+                <option value="39">39</option>
+                <option value="40">40</option>
+                <option value="41">41</option>
+                <option value="42">42</option>
+            </select>
+            <input type="number" name="quantities[]" placeholder="Số lượng" min="1" required>
+            <button type="button" onclick="removeSize(this)">X</button>
+        `;
+        container.appendChild(div);
+    }
+
+    function removeSize(button) {
+        button.parentElement.remove();
+    }
 </script>
 @stop

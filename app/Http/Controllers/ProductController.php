@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use App\Models\Product;
+use App\Models\ProductSize;
 use App\Models\Comment;
 use App\Models\CategoryProduct;
 use App\Models\Gallery;
@@ -36,19 +37,28 @@ class ProductController extends Controller
         $product->name=$req->name;
         $product->origin=$req->origin;
         $product->price=$req->price;
+        $product->old_price=$req->price + rand(10,25) * 50000;
         $product->guarantee=$req->guarantee;
         $product->category_id=$req->category_id;
         $product->description=$req->description;
         $product->image=$req->file("image"); 
         $product->count=$req->count;
-        $product->status=$req->status;
         $product->note=$req->note;
-        //echo $req->file("image");return;
         if($product->image){
             $name_image= $product->image->getClientOriginalName();
             $product->image->move("public/uploads/product",$name_image);
             $product->image=$name_image;
             $product->save();
+            // add size and quantities of one size
+            if ($req->has('sizes') && $req->has('quantities')) {
+                foreach ($req->sizes as $key => $size) {
+                    ProductSize::create([
+                        'product_id' => $product->id,
+                        'size' => $size,
+                        'quantity' => $req->quantities[$key]
+                    ]);
+                }
+            }
             return redirect('admin/danh-sach-san-pham');
         }
         $product->image="";
@@ -62,17 +72,12 @@ class ProductController extends Controller
         
         return view('admin.product.list_product',['product'=>$product]);
     }
-    public function edit_status($id)
+    public function edit_status(Request $req)
     {
-        $status=DB::table('product')->where('id',$id)->value('status');
-        $bool_status=(Boolean)$status;
-        $status=(int)!$bool_status;
-        if(DB::table('product')->where('id', $id)->update(['status' =>$status ])){
-            return redirect('admin/danh-sach-san-pham');
-        }
-        else{
-            echo 'Update status không thành công, vui lòng thử lại';
-        }
+        $id=$req->id;
+        $product= Product::find($id);
+        $product->status=!$product->status;
+        $product->save();
     }
     public function delete($id)
     {

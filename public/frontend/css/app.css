@@ -13,6 +13,7 @@ li {
 }
 :root {
     --main-color: #198754;
+    --delete-color: #f3283d;
 }
 body {
     margin-top: 5rem !important;
@@ -61,6 +62,11 @@ body {
     right: 10%;
     top: 38px;
     box-shadow: 5px 10px 18px #888888;
+    text-align: center;
+    background-color: white;
+}
+.empty-cart-hover {
+    color: black;
 }
 .hover-cart li.text-center p {
     margin-bottom: 1px;

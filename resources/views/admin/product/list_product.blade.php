@@ -1,5 +1,37 @@
 @extends("admin.admin_layout")
 @section("admin_page")
+<style>
+.toggle-button {
+        display: inline-block;
+        width: 60px;
+        height: 30px;
+        background: #ccc;
+        border-radius: 15px;
+        position: relative;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .toggle-button::before {
+        content: "";
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        background: white;
+        border-radius: 50%;
+        top: 2px;
+        left: 2px;
+        transition: transform 0.3s;
+    }
+    
+    .toggle-button.on {
+        background: #4CAF50;
+    }
+    
+    .toggle-button.on::before {
+        transform: translateX(30px);
+    }
+</style>
 <div class="table-agile-info">
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -53,9 +85,13 @@
                         <td><p class="text-ellipsis name">{{$item->name}}</p></td>
                         <td><p class="text-ellipsis name">{{number_format((int)$item->price)}}</p></td>                       
                         <td><span class="text-ellipsis desc">
-                            @if($item->status=='1')<a title="click to edit" href="{{route('edit_status_product',$item->id)}}"><i class="far fa-thumbs-up"></i></a>
+                            <!-- @if($item->status=='1')<a title="click to edit" href="{{route('edit_status_product',$item->id)}}"><i class="far fa-thumbs-up"></i></a>
                             @else <a title="click to edit" href="{{route('edit_status_product',$item->id)}}"><i class="far fa-thumbs-down"></i></a>
-                            @endif
+                            @endif -->
+                            @php
+                                if($item->status == 1 ) echo '<div class="toggle-button on" onclick="toggleButton(this,'.$item->id.')"></div>';
+                                else echo '<div class="toggle-button" onclick="toggleButton(this,'.$item->id.')"></div>'; 
+                            @endphp
                         </span></td>
                         <td><span class="text-ellipsis desc">
                             @foreach($category as $cate)
@@ -78,5 +114,21 @@
     <div class="text-center">{{ $product->links() }}</div> 
   </div>
 </div>
-
+<script>
+    function toggleButton(button, id) {
+        button.classList.toggle("on");
+        $.ajax({
+            url: "{{route('edit_status_product')}}",
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            method: 'POST',
+            data: {id:id},
+            success:function(data){
+            toastr.success('Thay đổi tình trạng sản phẩm thành công', 'Thành công');         
+            },
+            error:function(xhr){
+                console.log(xhr.responseText);
+            }
+        });
+    }
+</script>
 @stop

@@ -16,6 +16,7 @@ class CartController extends Controller
     {
         $cart=C::where('user_id',Session::get('user_id'))->first();
         $cart=json_decode($cart);
+        // dd($cart);
         //Session::forget('incorrect_coupon');
         if(Session::has('id_coupon')){
 
@@ -39,8 +40,16 @@ class CartController extends Controller
         $product_name = $req->name; // Required
         $product_qty = $req->quantity; // Required
         $product_price = $req->price; // Required
-        $product_image=$req->image;
-        Cart::add($product_id, $product_name, $product_qty, $product_price,0,$product_image);
+        $product_image=$req->image; // Required
+        $product_size = $req->size; // Required
+        if($req->size) {
+            $product_size = $req->size;
+        }
+        else{
+            $product_size = 0;
+        }
+        Cart::add($product_id, $product_name, $product_qty, $product_price,0,$product_image,$product_size);
+
         if(Session::has('id_coupon')){
             Session::forget('id_coupon');
         }
@@ -77,7 +86,8 @@ class CartController extends Controller
         $product_image = $data['cart_product_image'];
         $product_qty = $data['cart_product_qty'];
         $product_price = $data['cart_product_price'];
-        Cart::add($product_id, $product_name, $product_qty, $product_price,0,$product_image);
+        $product_size = 0;
+        Cart::add($product_id, $product_name, $product_qty, $product_price,0,$product_image,0);
     }
     public function delete_all()
     {
@@ -154,9 +164,9 @@ class CartController extends Controller
         
                 }
                 else{
-                    $output.="<p class='text-center'>Không có sản phẩm nào</p>";
+                    $output.="<i class='text-center empty-cart-hover'>Giỏ hàng trống</i>";
                 }
-                return $output; 
+                return $output;
             }           
         }
     }

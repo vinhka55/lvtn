@@ -68,6 +68,7 @@
         align-items: center;
         gap: 10px;
         margin: 10px 0;
+
     }
     .quantity-box button {
         width: 30px;
@@ -98,6 +99,9 @@
     }
     .installment {
         background-color: #1976d2;
+    }
+    .buy-now-disabled, .installment-disabled{
+        opacity: 50%;
     }
     .hotline {
         background-color: #0044cc;
@@ -144,11 +148,17 @@
         font-weight: 400;
     }
     .decrease-btn, .increase-btn{
-        border: solid 1px;
         width: 24px;
         display: flex;
         justify-content: center;
         cursor: pointer;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        transition: all 0.3s ease-in-out;
+    }
+    .decrease-btn:hover, .increase-btn:hover{
+        /* border-color: var(--main-color); */
+        border: solid 2px var(--main-color);
     }
     /* mô tả sản phẩm  */
     .product-description {
@@ -249,6 +259,38 @@
     .btn-send-rep-comment:hover{
         background-color: #0056b3
     }
+    /* css chọn size giày  */
+    .size-selector {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .size-option {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        transition: all 0.3s ease-in-out;
+        user-select: none;
+    }
+
+    .size-option:hover {
+        border-color: var(--main-color);
+        background-color: #f0f8ff;
+    }
+
+    .size-option.selected {
+        border-color: var(--main-color);
+        background-color: var(--main-color);
+        color: white;
+    }
 </style>
 </head>
 <body>
@@ -262,7 +304,7 @@
                     @endforeach
                 </div>
             </div>
-            <form action="{{route('shopping_cart')}}" method="POST">
+            <form action="{{route('shopping_cart')}}" method="POST" id="product-form">
                 {{ csrf_field() }}
                 <div class="right">
                     <h1 class="text-main-color">{{$item->name}}</h1>
@@ -291,12 +333,26 @@
                             <p>Hiện không có chương trình khuyễn mãi nào</p>
                         @endif
                     </div>
+                    <div class="size-selector">
+                        @if(count($item->sizes)>0)
+                        <div style="display:flex;align-items:center;font-size:1.1rem">Size: </div style="aligns-item:center">
+                        @endif
+                        @foreach($item->sizes as $size)
+                            @if($size->quantity>0)
+                                <div class="size-option" data-id="{{$size->size}}">
+                                   {{ $size->size }}
+                                </div>
+                                <input type="hidden" id="size-{{$size->size}}" class="input-option" value="{{$size->size}}">
+                            @endif
+                        @endforeach
+                    </div>
                     <div class="quantity-box">
-                        <span><strong>Số lượng:</strong></span>
+                        <span>Số lượng:</span>
                         <span class="decrease-btn" onclick="decreaseQuantity()">-</span >
                         <input type="number" name="quantity" id="quantity" value="1" min="1">
                         <span class="increase-btn"  onclick="increaseQuantity()">+</span >
-                    </div>
+                    </div>                  
+
                     <input type="hidden" name="id" id="id-product-hidden" value="{{$item->id}}" />
                     <input type="hidden" name="name" value="{{$item->name}}" />
                     <input type="hidden" name="price" value="{{$item->price}}" />
@@ -306,8 +362,8 @@
                         <button type="submit" class="buy-now">MUA NGAY, GIAO TẬN NƠI</button>
                         <button class="installment">TRẢ GÓP QUA THẺ</button>
                         @else
-                        <button type="submit" class="buy-now" style="opacity:25%;cursor:auto;" disabled>MUA NGAY, GIAO TẬN NƠI</button>
-                        <button class="installment" style="opacity:25%;cursor:auto;" disabled>TRẢ GÓP QUA THẺ</button>
+                        <button type="submit" class="buy-now" style="opacity:50%;cursor:auto;" disabled>MUA NGAY, GIAO TẬN NƠI</button>
+                        <button class="installment" style="opacity:50%;cursor:auto;" disabled>TRẢ GÓP QUA THẺ</button>
                         @endif
                         @foreach($setting as $one_info)
                         <button class="hotline" disabled>HOTLINE: {{$one_info->phone}}</button>
@@ -506,4 +562,32 @@
             }
         }
     </script>
+    <script>
+        const sizeOptions = document.querySelectorAll(".size-option");
+        const inputOptions = document.querySelectorAll(".input-option");
+
+        sizeOptions.forEach(option => {
+            option.addEventListener("click", function () {
+                let sizeProduct = this.getAttribute('data-id');
+                let selectedSizeInput = document.getElementById('size-'+sizeProduct);
+                inputOptions.forEach(opt => opt.removeAttribute("name"));
+                selectedSizeInput.setAttribute('name', 'size');
+                sizeOptions.forEach(opt => opt.classList.remove("selected")); // Xóa class 'selected' ở tất cả
+                this.classList.add("selected"); // Thêm class 'selected' cho cái được chọn
+            });
+        });
+        document.getElementById('product-form').addEventListener('submit', function(event) {
+            const inputOptions = document.querySelectorAll(".input-option");
+
+            // Kiểm tra xem có input nào có thuộc tính name không
+            let hasName = Array.from(inputOptions).some(input => input.hasAttribute("name"));
+
+            if (!hasName) {
+                alert("Vui lòng chọn size trước khi mua!");
+                event.preventDefault(); // Chặn form submit
+            }
+        });
+
+    </script>
+
     @stop

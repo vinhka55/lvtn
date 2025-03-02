@@ -12,6 +12,20 @@
         width: 234px;
         opacity: 0.5;
     }
+    .btn-delete-all-cart{
+        border: none;
+        background-color: #eb3547;
+        color: white;
+    }
+    .btn-delete-all-cart:hover{       
+        background-color: var(--delete-color);
+    }
+    .cart-empty{
+        margin-bottom: 16px;
+    }
+    .cart-empty p{
+        margin-bottom: 0px;
+    }
 </style>
 @if(count(Cart::items()->original) > 0)
 <div class="container mx-auto my-5 py-4">
@@ -41,7 +55,13 @@
                   <tr>
                     <th scope="row">{{$index}}</th>
                     <td><img width="50" src="{{url('/')}}/public/uploads/product/{{$item['thumb']}}" alt=""></td>
-                    <td>{{$item['name']}}</td>
+                    <td>
+                        {{$item['name']}} 
+                        <br>
+                        @if($item['size'])
+                            Size: <span style="color:#eb3547;">{{$item['size']}}</span>
+                        @endif
+                    </td>
                     <td>{{number_format($item['price'])}} VNĐ</td>
                     <td class="text-center">
                         <input value="{{$item['qty']}}" class="w-25 me-1 form-control-sm border-1" style="width:48px !important" type="number" min="1" name="quantity[{{$item['uid']}}]">
@@ -63,7 +83,7 @@
               </table>
                 <div class="flex m-2">
                     <button type='submit' class='btn btn-primary'>Cập nhật giỏ hàng</button>
-                    <a href="{{route('delete-all-product-in-cart')}}" class="btn btn-primary">Xóa tất cả</a>
+                    <a href="{{route('delete-all-product-in-cart')}}" class="btn btn-primary btn-delete-all-cart">Xóa tất cả</a>
                 </div>
                 </form>
         </div>
@@ -131,6 +151,7 @@
 <div class="cart-empty">
     <img src="{{url('/')}}/public/assets/img/cart/empty-cart.png" alt="Giỏ hàng trống">
     <p>Giỏ hàng của bạn đang trống!</p>
+    <a href="{{url('/')}}">Tiếp tục mua sắm <i class="fas fa-arrow-alt-circle-right"></i></a>
 </div>
 @endif
 @stop

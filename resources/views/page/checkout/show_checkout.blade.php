@@ -5,7 +5,8 @@
 	<div class="row m-0 p-0">
 		<div class="col-md-8 col-12 bg-white">
 			<h1 class="text-light bg-success p-2 ps-3 m-0 fs-4"><i class="fa-solid fa-cart-shopping-fast"></i>THÔNG TIN GIAO HÀNG</h1>
-			<form class="row g-3">
+			<form class="row g-3" id="form-checkout">
+				@csrf
 			  <div class="col-md-6">
 			  @foreach($info as $item)
 				<label for="name" class="form-label">Họ & Tên</label>

@@ -18,4 +18,9 @@ class Product extends Model
     {
         return $this->belongsTo("App\Models\CategoryProduct");
     }
+    public function sizes()
+    {
+        return $this->hasMany("App\Models\ProductSize");
+    }
+
 }

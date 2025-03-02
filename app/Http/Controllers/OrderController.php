@@ -13,6 +13,7 @@ use App\Models\OrderDetails;
 use App\Models\Product;
 use Carbon\Carbon;
 use Mail;
+use Log;
 use App\Events\InboxPusherEvent;
 use App\Events\InboxAdminPusherEvent;
 class OrderController extends Controller
@@ -23,88 +24,105 @@ class OrderController extends Controller
     }
     public function order_place(Request $req)
     {
-        //Cập nhật lại số lượng coupon nếu có áp mã
-        if(Session::has('id_coupon')){        
-            $coupon_used=Coupon::where('id',Session::get('id_coupon'))->value('used');
-            $amount_coupon=Coupon::where('id',Session::get('id_coupon'))->value('amount');
-            //$id_user_used=$id_user_used.','.Session::get('user_id');
-            if($coupon_used<$amount_coupon){
-                $coupon_used=$coupon_used+1;
-                $coupon=Coupon::find(Session::get('id_coupon'));
-                $coupon->used=$coupon_used;
-                $coupon->id_user_used=$coupon->id_user_used.','.Session::get('user_id');
-                $coupon->save();
+        try {
+            DB::beginTransaction();
+            //Cập nhật lại số lượng coupon nếu có áp mã
+            if(Session::has('id_coupon')){        
+                $coupon_used=Coupon::where('id',Session::get('id_coupon'))->value('used');
+                $amount_coupon=Coupon::where('id',Session::get('id_coupon'))->value('amount');
+                //$id_user_used=$id_user_used.','.Session::get('user_id');
+                if($coupon_used<$amount_coupon){
+                    $coupon_used=$coupon_used+1;
+                    $coupon=Coupon::find(Session::get('id_coupon'));
+                    $coupon->used=$coupon_used;
+                    $coupon->id_user_used=$coupon->id_user_used.','.Session::get('user_id');
+                    $coupon->save();
+                }
+                //Session::forget('id_coupon');
             }
-            //Session::forget('id_coupon');
+            
+            //insert thông tin nhận hàng
+            $data_shipping=[];
+            $data_shipping['name']=$req->name;
+            $data_shipping['email']=$req->email;
+            $data_shipping['phone']=$req->phone;
+            $data_shipping['address']=$req->address_re;
+            $data_shipping['notes']=$req->notes;
+            $data_shipping['pay_method']=$req->pay;
+            
+            $shipping_id=DB::table('shipping')->insertGetId($data_shipping);
+            Session::put('shipping_id',$shipping_id);
+
+            //insert đơn hàng
+            $data_order=[]; 
+            
+            $data_order['order_code']=$req->order_code;
+            $data_order['customer_id']=Session::get('user_id');
+            $data_order['shipping_id']=Session::get('shipping_id');
+            $data_order['payment']=$req->pay;
+            $data_order['total_money']=Cart::total();
+            if(Session::has('discount')){
+                $data_order['discount']=Session::get('discount');
+                $data_order['total_money'] = $data_order['total_money'] - $data_order['discount'];
+            }else{
+                $data_order['discount']=0;
+            }
+            $data_order['status']="Đang chờ xử lý";
+            $order_id=DB::table('order')->insertGetId($data_order);
+            $order_code=$req->order_code;
+            
+            //thêm thông báo cho khách hàng khi mua thành công
+            $messege=["Cảm ơn bạn đã mua hàng, mã đơn hàng là: <b>".$data_order['order_code']."</b>","1 đơn hàng mới",$data_order["total_money"]];
+            // $messege="Cảm ơn bạn đã mua hàng, mã đơn hàng là: <b>".$data_order['order_code']."</b>";
+            event(new InboxPusherEvent($messege));
+            
+            event(new InboxAdminPusherEvent());
+            //thêm thông báo cho admin khi khách mua thành công
+            // $messege="1 đơn hàng mới giá";
+            // event(new InboxPusherEventAdmin($messege));
+            
+
+            //insert chi tiết đơn hàng      
+            $content=Cart::items()->original;
+            foreach($content as $item){
+                $data=[];
+                $data['order_id']=$order_id;
+                $data['product_id']=$item['product'];
+                $data['product_name']=$item['name'];
+                $data['product_price']=$item['price'];
+                $data['product_size']=$item['size'];
+                $data['product_quantyti']=$item['qty'];
+                DB::table('order_detail')->insert($data);
+                //Cập nhật lại số lượng sản phẩm còn trong kho
+                $count=DB::table('product')->where('id',$data['product_id'])->value('count');
+                $new_count=$count-$data['product_quantyti'];
+                DB::table('product')->where('id',$data['product_id'])->update(['count'=>$new_count]);
+            }
+
+            //send mail to customer
+            Session::put('dmm',$req->email);
+            Mail::send('emails.confirm_checkout',compact('data_shipping','data_order','content','order_id','order_code'),function ($email)
+            {           
+                $email->from('noreply@gmail.com', 'Công ty TNHH thực phẩm sạch Thiên An Phú');
+                $email->to(Session::get('dmm'),Session::get('name_user'))->subject('Đơn hàng của bạn!');
+            });
+
+
+            DB::commit();
+
+            //return view('page.checkout.payment_done');
+            Session::forget('discount');
+            Session::forget('id_coupon');
+            Cart::clear();
+            return response()->json(['success' => true]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error($th->getMessage());
+            return response()->json([
+                'msg' => $th->getMessage()
+            ],500);
         }
         
-        //insert thông tin nhận hàng
-        $data_shipping=[];
-        $data_shipping['name']=$req->name;
-        $data_shipping['email']=$req->email;
-        $data_shipping['phone']=$req->phone;
-        $data_shipping['address']=$req->address_re;
-        $data_shipping['notes']=$req->notes;
-        $data_shipping['pay_method']=$req->pay;
-        $shipping_id=DB::table('shipping')->insertGetId($data_shipping);
-        Session::put('shipping_id',$shipping_id);
-
-        //insert đơn hàng
-        $data_order=[]; 
-        
-        $data_order['order_code']=$req->order_code;
-        $data_order['customer_id']=Session::get('user_id');
-        $data_order['shipping_id']=Session::get('shipping_id');
-        $data_order['payment']=$req->pay;
-        $data_order['total_money']=Cart::total();
-        if(Session::has('discount')){
-            $data_order['discount']=Session::get('discount');
-            $data_order['total_money'] = $data_order['total_money'] - $data_order['discount'];
-        }else{
-            $data_order['discount']=0;
-        }
-        $data_order['status']="Đang chờ xử lý";
-        $order_id=DB::table('order')->insertGetId($data_order);
-        $order_code=$req->order_code;
-        
-        //thêm thông báo cho khách hàng khi mua thành công
-        $messege=["Cảm ơn bạn đã mua hàng, mã đơn hàng là: <b>".$data_order['order_code']."</b>","1 đơn hàng mới",$data_order["total_money"]];
-        // $messege="Cảm ơn bạn đã mua hàng, mã đơn hàng là: <b>".$data_order['order_code']."</b>";
-        event(new InboxPusherEvent($messege));
-        
-        event(new InboxAdminPusherEvent());
-        //thêm thông báo cho admin khi khách mua thành công
-        // $messege="1 đơn hàng mới giá";
-        // event(new InboxPusherEventAdmin($messege));
-
-        //insert chi tiết đơn hàng      
-        $content=Cart::items()->original;
-        foreach($content as $item){
-            $data=[];
-            $data['order_id']=$order_id;
-            $data['product_id']=$item['product'];
-            $data['product_name']=$item['name'];
-            $data['product_price']=$item['price'];
-            $data['product_quantyti']=$item['qty'];
-            DB::table('order_detail')->insert($data);
-            //Cập nhật lại số lượng sản phẩm còn trong kho
-            $count=DB::table('product')->where('id',$data['product_id'])->value('count');
-            $new_count=$count-$data['product_quantyti'];
-            DB::table('product')->where('id',$data['product_id'])->update(['count'=>$new_count]);
-        }
-
-        //send mail to customer
-        Session::put('dmm',$req->email);
-        Mail::send('emails.confirm_checkout',compact('data_shipping','data_order','content','order_id','order_code'),function ($email)
-        {           
-            $email->from('noreply@gmail.com', 'Công ty TNHH thực phẩm sạch Thiên An Phú');
-            $email->to(Session::get('dmm'),Session::get('name_user'))->subject('Đơn hàng của bạn!');
-        });
-
-        //return view('page.checkout.payment_done');
-        Session::forget('discount');
-        Session::forget('id_coupon');
-        Cart::clear();
 
     }
     

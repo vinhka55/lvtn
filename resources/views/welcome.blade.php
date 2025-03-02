@@ -138,7 +138,7 @@
                                 preg_match('/[^ ]*$/', Session::get('name_user'), $results);
                                 $last_word = $results[0];
                             ?>
-                                HI {{$last_word}}
+                                Hi {{$last_word}}
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                             <a href="{{route('info_user')}}"><button class="dropdown-item" type="button">Thông tin tài khoản</button></a>
@@ -245,8 +245,9 @@
         var cart_product_image = $('.cart_product_image_' + id).val();
         var cart_product_price = $('.cart_product_price_' + id).val();
         var cart_product_qty = $('.cart_product_qty_' + id).val();
+        var cart_product_size = $('.cart_product_size_' + id).val();
         var _token = $('input[name="_token"]').val();
-        var info_product={cart_product_id:cart_product_id,cart_product_name:cart_product_name,cart_product_image:cart_product_image,cart_product_price:cart_product_price,cart_product_qty:cart_product_qty,_token:_token};
+        var info_product={cart_product_id:cart_product_id,cart_product_name:cart_product_name,cart_product_image:cart_product_image,cart_product_price:cart_product_price,cart_product_qty:cart_product_qty,cart_product_size:cart_product_size,_token:_token};
         $.ajax({
             url: "{{route('add-cart-by-ajax')}}",
             method: 'POST',
@@ -429,12 +430,7 @@
 
 <!-- thông báo bên admin -->
 
-
-
-
-
 {{-- hủy đơn hàng --}}
-
 
     {{-- check-now page --}}
     <script>
@@ -448,6 +444,7 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function(){
+            let form = $('#form-checkout');
             $('.checkout-now').click(function(){ 
                 $("#error-name-null").html("")
                 $("#error-phone-null").html("")
@@ -492,7 +489,10 @@
                         $.ajax({
                             url: "{{route('order_place')}}",
                             method: 'POST',
-                            data:data,
+                            data: data,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Thêm token vào header
+                            },
                             success:function(data){
                                 console.log(data)
                             },
@@ -521,19 +521,6 @@
             })
         })
     </script>
-    <!-- <script>
-  $(document).ready(function() {
- 
-    $('#lightSlider').lightSlider({
-    gallery: true,
-    item: 1,
-    loop:true,
-    slideMargin: 0,
-    thumbItem: 9
-}); 
- 
-  });
-  </script> -->
   <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
   <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
   {!! Toastr::message() !!}

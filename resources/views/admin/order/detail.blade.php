@@ -157,6 +157,7 @@
                 <th>Tên sản phẩm</td>
                 <th>Còn trong kho</td>
                 <th>Giá</th>
+                <th>Size</th>
                 <th>Số lượng</th> 
                 @if($order_status=='Đang chờ xử lý')      
                 <th class="action-delete-product text-center">Action</th>           
@@ -172,6 +173,7 @@
                             <td><p class="text-ellipsis name amount-product-{{$item->product->id}}">{{$item->product->count}} 
                             </p></td>
                             <td><p class="text-ellipsis name">{{number_format($item->product_price)}}</p></td>
+                            <td><p class="text-ellipsis name">{{$item->product_size}}</p></td>
                             
                             <td>
                                 <form action="">

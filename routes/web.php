@@ -31,7 +31,7 @@ Route::group(['prefix'=>'admin','middleware'=>['auth.AdminAndAuthor']],function(
     //Route::get('them-san-pham','App\Http\Controllers\ProductController@add')->name('add_product');
     Route::post('xu-ly-them-san-pham','App\Http\Controllers\ProductController@handle_add')->name('handle_add_product');
     Route::get('danh-sach-san-pham','App\Http\Controllers\ProductController@list')->name('list_product');
-    Route::get('sua-trang-thai-san-pham/{id}','App\Http\Controllers\ProductController@edit_status')->name('edit_status_product');
+    Route::post('sua-trang-thai-san-pham','App\Http\Controllers\ProductController@edit_status')->name('edit_status_product');
     Route::get('xoa-san-pham/{id}','App\Http\Controllers\ProductController@delete')->name('delete_product');
     Route::get('sua-san-pham/{id}','App\Http\Controllers\ProductController@edit')->name('edit_product');
     Route::post('xu-ly-sua-san-pham','App\Http\Controllers\ProductController@handle_edit')->name('handle_edit_product');

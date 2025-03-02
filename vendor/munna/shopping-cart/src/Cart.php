@@ -89,7 +89,7 @@ class Cart{
         // return $this->items;
     }
     
-    public function add($unique_id, $product_name, $product_qty, $product_price, $product_weight = 0, $product_thumb = null, $discount = 0, $shipping_charge = 0, $tax = 0, $product_info = []){
+    public function add($unique_id, $product_name, $product_qty, $product_price, $product_weight = 0, $product_thumb = null,$size, $discount = 0, $shipping_charge = 0, $tax = 0, $product_info = []){
         if(!$unique_id || !$product_name || !$product_qty || !$product_price){
             throw new ShoppingCartException("Please provide all required fields");
         }
@@ -125,6 +125,7 @@ class Cart{
                         'tax' => $tax,
                         'shipping' => $shipping,
                         'thumb' => $product_thumb,
+                        'size' => $size,
                         'options' => $product_info,
                         'subtotal' => $calc["subtotal"],
                         'total' => $calc["total"],
@@ -151,6 +152,7 @@ class Cart{
                 'tax' => $tax,
                 'shipping' => $shipping,
                 'thumb' => $product_thumb,
+                'size' => $size,
                 'options' => $product_info,
                 'subtotal' => $calc["subtotal"],
                 'total' => $calc["total"],

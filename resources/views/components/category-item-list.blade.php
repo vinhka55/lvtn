@@ -88,6 +88,7 @@
                                     <input type="hidden" value="{{$item->name}}" class="cart_product_name_{{$item->id}}">
                                     <input type="hidden" value="{{$item->image}}" class="cart_product_image_{{$item->id}}">
                                     <input type="hidden" value="{{$item->price}}" class="cart_product_price_{{$item->id}}">
+                                    <input type="hidden" value="null" class="cart_product_size_{{$item->id}}">
                                     <input type="hidden" value="1" class="cart_product_qty_{{$item->id}}">
                                     <button type="button" name="add-to-cart" class="btn btn-primary add-to-cart main-color" data-id_product="{{$item->id}}"><i class="fa fa-shopping-cart"></i></button>
                                 </form>

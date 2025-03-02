@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use Session;
 use Cart;
+use Log;
 use App\Models\Order;
 use App\Models\Coupon;
 use App\Models\OrderDetails;
@@ -41,57 +42,68 @@ class CheckoutController extends Controller
         return view('page.checkout.payment');
     }
     public function order_place(Request $req)
-    {
+    {   
+        try {
+            DB::beginTransaction();
 
-        //Cập nhật lại số lượng coupon nếu có áp mã
-        if(Session::has('id_coupon')){        
-            $amount_coupon=Coupon::where('id',Session::get('id_coupon'))->value('amount');
-            if($amount_coupon>0){
-                $amount_coupon=$amount_coupon-1;
-                $coupon=Coupon::find(Session::get('id_coupon'));
-                $coupon->amount=$amount_coupon;
-                $coupon->save();
+            $content=Cart::items()->original;
+            //Cập nhật lại số lượng coupon nếu có áp mã
+            if(Session::has('id_coupon')){        
+                $amount_coupon=Coupon::where('id',Session::get('id_coupon'))->value('amount');
+                if($amount_coupon>0){
+                    $amount_coupon=$amount_coupon-1;
+                    $coupon=Coupon::find(Session::get('id_coupon'));
+                    $coupon->amount=$amount_coupon;
+                    $coupon->save();
+                }
             }
-        }
 
-        //insert thông tin nhận hàng
-        $data=[];
-        $data['name']=$req->name;
-        $data['email']=$req->email;
-        $data['phone']=$req->phone;
-        $data['address']=$req->address;
-        $data['notes']=$req->notes;
-        $data['pay_method']=$req->pay;
-        $shipping_id=DB::table('shipping')->insertGetId($data);
-        Session::put('shipping_id',$shipping_id);
-
-        // $data=[];
-        // $data['method']=$req->pay;
-        // $data['status']="Đang chờ xử lý";
-        // $payment_id=DB::table('payment')->insertGetId($data);
-
-        //insert đơn hàng
-        $data=[];
-        $data['customer_id']=Session::get('user_id');
-        $data['shipping_id']=Session::get('shipping_id');
-        $data['payment']=$req->pay;
-        $data['total_money']=Cart::total();
-        $data['status']="Đang chờ xử lý";
-        $order_id=DB::table('order')->insertGetId($data);
-
-        //insert chi tiết đơn hàng      
-        $content=Cart::items()->original;
-        foreach($content as $item){
+            //insert thông tin nhận hàng
             $data=[];
-            $data['order_id']=$order_id;
-            $data['product_id']=$item['product'];
-            $data['product_name']=$item['name'];
-            $data['product_price']=$item['price'];
-            $data['product_quantyti']=$item['qty'];
-            DB::table('order_detail')->insert($data);
+            $data['name']=$req->name;
+            $data['email']=$req->email;
+            $data['phone']=$req->phone;
+            $data['address']=$req->address;
+            $data['notes']=$req->notes;
+            $data['pay_method']=$req->pay;
+            $shipping_id=DB::table('shipping')->insertGetId($data);
+            Session::put('shipping_id',$shipping_id);
+
+            //insert đơn hàng
+            $data=[];
+            $data['customer_id']=Session::get('user_id');
+            $data['shipping_id']=Session::get('shipping_id');
+            $data['payment']=$req->pay;
+            $data['total_money']=Cart::total();
+            $data['status']="Đang chờ xử lý";
+            $order_id=DB::table('order')->insertGetId($data);
+
+            //insert chi tiết đơn hàng      
+            $content=Cart::items()->original;
+            
+            foreach($content as $item){
+                $data=[];
+                $data['order_id']=$order_id;
+                $data['product_id']=$item['product'];
+                $data['product_name']=$item['name'];
+                $data['product_price']=$item['price'];
+                $data['product_size']=$item['size'];
+                $data['product_quantyti']=$item['qty'];
+                Log::info($data);
+                DB::table('order_detail')->insert($data);
+                
+            }
+
+            DB::commit();
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            echo $th->getMessage();
+            die;
         }
+        
          
-        return view('page.checkout.payment_done');
+        // return view('page.checkout.payment_done');
     }
     public function list_order()
     {

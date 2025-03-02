@@ -1,36 +1,36 @@
 @extends("admin.admin_layout")
 @section("admin_page")
 <style>
-  .toggle-button {
-            display: inline-block;
-            width: 60px;
-            height: 30px;
-            background: #ccc;
-            border-radius: 15px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .toggle-button::before {
-            content: "";
-            position: absolute;
-            width: 26px;
-            height: 26px;
-            background: white;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.3s;
-        }
-        
-        .toggle-button.on {
-            background: #4CAF50;
-        }
-        
-        .toggle-button.on::before {
-            transform: translateX(30px);
-        }
+    .toggle-button {
+        display: inline-block;
+        width: 60px;
+        height: 30px;
+        background: #ccc;
+        border-radius: 15px;
+        position: relative;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .toggle-button::before {
+        content: "";
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        background: white;
+        border-radius: 50%;
+        top: 2px;
+        left: 2px;
+        transition: transform 0.3s;
+    }
+    
+    .toggle-button.on {
+        background: #4CAF50;
+    }
+    
+    .toggle-button.on::before {
+        transform: translateX(30px);
+    }
 </style>
 <div class="table-agile-info">
   <div class="panel panel-default">
@@ -95,12 +95,11 @@
                         </p></td> 
                         <td>{{date("d/m/Y h:i:s", strtotime($item->duration_start));}}</td>  
                         <td>{{date("d/m/Y h:i:s", strtotime($item->duration_end));}}</td>  
-                        <td>
-                          
-                          @php
-                            if($item->status == 1 ) echo '<div class="toggle-button on" onclick="toggleButton(this,'.$item->id.')"></div>';
-                            else echo '<div class="toggle-button" onclick="toggleButton(this,'.$item->id.')"></div>'; 
-                          @endphp
+                        <td> 
+                            @php 
+                                if($item->status == 1 ) echo '<div class="toggle-button on" onclick="toggleButton(this,'.$item->id.')"></div>';
+                                else echo '<div class="toggle-button" onclick="toggleButton(this,'.$item->id.')"></div>'; 
+                            @endphp
                         </td>
                         <td>
                             <a title="click to edit" href="{{route('edit_coupon',$item->id)}}" ><i class="fa fa-pencil" aria-hidden="true"></i></a>
@@ -122,7 +121,7 @@
             method: 'POST',
             data: {id:id},
             success:function(data){
-            toastr.success('Thay đổi tình trạng thành công', 'Thành công');         
+            toastr.success('Thay đổi tình trạng mã giảm giá thành công', 'Thành công');         
             },
             error:function(xhr){
                 console.log(xhr.responseText);

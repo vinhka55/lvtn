@@ -14,11 +14,11 @@ class HomeController extends Controller
     public function index(Request $req)
     {
         
-        $bong_da=DB::table('product')->where('category_id',19)->limit(6)->get();
-        $bong_ro=DB::table('product')->where('category_id',20)->limit(6)->get();
-        $tennis=DB::table('product')->where('category_id',21)->limit(6)->get();
-        $gym=DB::table('product')->where('category_id',22)->limit(6)->get();
-        $boi=DB::table('product')->where('category_id',23)->limit(6)->get();
+        $bong_da=Product::with('sizes')->where('category_id',19)->where('status',1)->limit(6)->get();
+        $bong_ro=DB::table('product')->where('category_id',20)->where('status',1)->limit(6)->get();
+        $tennis=DB::table('product')->where('category_id',21)->where('status',1)->limit(6)->get();
+        $gym=DB::table('product')->where('category_id',22)->where('status',1)->limit(6)->get();
+        $boi=DB::table('product')->where('category_id',23)->where('status',1)->limit(6)->get();
        
         $data= [];
         array_push($data,$bong_da,$bong_ro,$tennis,$gym,$boi);
