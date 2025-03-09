@@ -37,7 +37,7 @@
                                 <tr>
                                     <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
                                     <td><p class="text-ellipsis name">{{$item->order_code}}</p></td>
-                                    <td><p class="text-ellipsis name">{{number_format($item->total_money)}} VND</p></td>                       
+                                    <td><p class="text-ellipsis name">{{number_format($item->total_money, 0, ',', '.')}} đ</p></td>                       
                                     <td>{{date('d-m-Y h:i:s', strtotime($item->created_at))}}</td>
                                     <td><p <?php 
                                     if($item->status=="Đã xử lý")echo "class='text-success'";

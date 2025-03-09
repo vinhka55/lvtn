@@ -61,6 +61,22 @@
         width: 100%;
         padding: 4px 4px;
     }
+    .product .price {
+        font-size: 16px;
+        color: #dd2f2c;
+        font-weight: bold;
+    }
+    .product .old_price {
+        font-size: 14px;
+        color: #98a2b3;
+        text-decoration: line-through;
+    }
+    .product .count-sold {
+        width: 50%;
+        font-size: 12px;
+        color: #667085;
+        white-space: nowrap;
+    }
 </style>
 <!-- sản phẩm liên quan  -->
  <h3 class="main-color white title-related-products">Sản phẩm liên quan</h3>
@@ -70,8 +86,10 @@
             <a href="{{route('detail_product',$item->id)}}">
                 <img src="{{url('/')}}/public/uploads/product/{{$item->image}}" alt="related product">
                 <p class="related-product">{{$item->name}}</p>
-                <p class="red">{{number_format($item->price, 0, '', ',')}}đ</p>
+                <p class="price">{{number_format($item->price, 0, ',', '.')}}đ</p>
+                <p class="old_price">{{number_format($item->old_price, 0, ',', '.')}}đ</p>
             </a>
+            <p class="count-sold">Đã bán {{$item->count_sold}}</p>
             <?php 
                 if($item->count < 1) echo '<span class="sold-out">Hết hàng</span>';
             ?>

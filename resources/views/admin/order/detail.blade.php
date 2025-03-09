@@ -197,7 +197,10 @@
             <tr>
             <td colspan="3">
               @foreach($order as $key => $or)
-                <?php $discount=$or->discount ?>
+                <?php 
+                    $discount= $or->discount;
+                    $feeShip = $or->fee_ship;
+                ?>
                 @if($or->status=="Đang chờ xử lý")
                 <form>
                    @csrf
@@ -262,22 +265,15 @@
         
         <br>
         </div>
-        <span>Tổng tiền: </span><span class="total-money-order">{{number_format($total_money)}} VND</span>
+        <span>Tổng tiền: </span><span class="total-money-order">{{number_format($total_money)}} đ</span>
         <br>
         <?php
-        
-            // if(Session::get('discount')){
-            //     $discount=Session::get('discount');
-            //     echo "Giảm giá: ".number_format(Session::get('discount')).' VND' ; 
-            // }
-            // else{
-            //     $discount=0;
-            //     echo "Giảm giá: 0 VND";
-            // }
-            echo "Giảm giá: ".number_format($discount)." VND";
+            echo "Phí vận chuyển: ".number_format($feeShip)." đ";
+            echo "<br>";
+            echo "Giảm giá: ".number_format($discount)." đ";
         ?>
         <br>
-        <span>Số tiền cần thanh toán: </span><span class="all-this-order">{{number_format($total_money-$discount)}} VND</span>
+        <span>Số tiền cần thanh toán: </span><span class="all-this-order">{{number_format($total_money-$discount+$feeShip)}} đ</span>
     </div>
     </div>
 </div>

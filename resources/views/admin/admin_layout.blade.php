@@ -154,6 +154,16 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <li class="sub-menu">
                     <a href="javascript:;" class="collapsible">
                         <i class="fas fa-book-open"></i>
+                        <span>Quản lý phí ship</span>
+                    </a>
+                    <ul class="sub">
+						<li><a href="{{route('list_fee_ship')}}">Danh sách phí ship</a></li>
+						
+                    </ul>
+                </li>  
+                <li class="sub-menu">
+                    <a href="javascript:;" class="collapsible">
+                        <i class="fas fa-book-open"></i>
                         <span>Quản lý bình luận</span>
                     </a>
                     <ul class="sub">
@@ -331,7 +341,7 @@ $('.delete-user').click(function(e) {
     }
     else{
     $.ajax({
-        url : "{{url('/')}}/delete-user/"+id_remove.toString(),
+            url : "{{url('/')}}/delete-user/"+id_remove.toString(),
             method: 'get',
             success:function(data){
                 alert('Xoa thanh cong')
@@ -347,11 +357,11 @@ $('.delete-user').click(function(e) {
 <script>
     function ok(id_comment){
         var content_reply=$(".txtarea-content-admin-rep").val()
-        var _token = $('input[name="_token"]').val();
         $.ajax({
-        url : "{{route('rep_comment')}}",
+            url : "{{route('rep_comment')}}",
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             method: 'post',
-            data:{id_comment:id_comment,content_reply:content_reply,_token:_token},
+            data:{id_comment:id_comment,content_reply:content_reply},
             success:function(){
                 $(".all-reply-comment-"+id_comment).removeClass('hidden')
                 $(".content-reply-"+id_comment).addClass('hidden')
@@ -404,7 +414,7 @@ $('.delete-user').click(function(e) {
     select_gallery()
     function delete_gallery(id_gallery) {
         $.ajax({
-        url : "{{route('delete_gallery')}}",
+            url : "{{route('delete_gallery')}}",
             method: 'post',
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             data:{id_gallery:id_gallery},

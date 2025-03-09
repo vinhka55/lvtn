@@ -87,7 +87,7 @@ class CartController extends Controller
         $product_qty = $data['cart_product_qty'];
         $product_price = $data['cart_product_price'];
         $product_size = 0;
-        Cart::add($product_id, $product_name, $product_qty, $product_price,0,$product_image,0);
+        Cart::add($product_id, $product_name, $product_qty, $product_price,0,$product_image,$product_size);
     }
     public function delete_all()
     {

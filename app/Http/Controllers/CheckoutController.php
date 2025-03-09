@@ -47,6 +47,7 @@ class CheckoutController extends Controller
             DB::beginTransaction();
 
             $content=Cart::items()->original;
+            return $content;
             //Cập nhật lại số lượng coupon nếu có áp mã
             if(Session::has('id_coupon')){        
                 $amount_coupon=Coupon::where('id',Session::get('id_coupon'))->value('amount');

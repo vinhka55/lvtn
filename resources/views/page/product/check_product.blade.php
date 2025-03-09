@@ -316,7 +316,7 @@
                         @endif
                     </span>
                     <div class="price-box">
-                        <h2>{{number_format($item->price)}}đ <span>{{number_format($item->old_price)}}đ</span></h2>
+                        <h2>{{number_format($item->price, 0, ',', '.')}}đ <span>{{number_format($item->old_price, 0, ',', '.')}}đ</span></h2>
                     </div>
                     <ul class="product-details">
                         <li>🔴 Xuất xứ: <strong>{{$item->origin}}</strong></li>
@@ -493,6 +493,21 @@
     </script>
     
     <script>
+        function getVietnamTime() {
+            const now = new Date();
+            const vietnamTime = new Intl.DateTimeFormat("vi-VN", {
+                timeZone: "Asia/Ho_Chi_Minh",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false
+            }).format(now);
+
+            return vietnamTime.replace(/\//g, "-").replace(",", "");
+        }
         function handle_send_rep(id_comment) {
             $(".empty-rep").html("")
             var content_reply = $(".txtarea-content-rep").val()
@@ -508,27 +523,7 @@
                 id_comment: id_comment,
                 _token: _token
             }
-            //get time now in js
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            let mm = today.getMonth() + 1; // Months start at 0!
-            let dd = today.getDate();
-            let h=today.getHours();
-            console.log(h);
             
-            let i=today.getMinutes();
-            let s=today.getSeconds();
-        
-            if (dd < 10) dd = '0' + dd;
-            if (mm < 10) mm = '0' + mm;
-            
-            if(h < 10) h = '0' + h;
-            console.log(h);
-            
-            if(i < 10) h = '0' + i;
-            if(s < 10) h = '0' + s;
-            const date_now = dd + '-' + mm + '-' + yyyy;
-            const time_now = h + ':' + i + ':' + s;
             $.ajax({
                 url: "{{route('rep_comment')}}",
                 method: 'POST',
@@ -537,7 +532,7 @@
                     $(".comment-reply-" + id_comment).html("")
                     $(".comment-reply-" + id_comment).hide()
                     $(".append-reply-" + id_comment).append(
-                    '<div class="row mt-2"><div class="col-3"><a class="me-3" href="#"><img class="rounded-circle shadow-1-strong img-user-rep-comment" src="' + '{{url("/")}}/public/uploads/avatar/' + avatar + '"alt="avatar" width="65" height="65" /> </a></div> <div class="flex-grow-1 flex-shrink-1 col-9"><div class="d-flex justify-content-between align-items-center"> <p class="mb-1 text-success">' + name + ' <span class="small"> ' + date_now + ' Lúc ' + time_now + '</span> </p></div><p class="small mb-0"> ' + content_reply + '</p></div></div></div>')             
+                    '<div class="row mt-2"><div class="col-3"><a class="me-3" href="#"><img class="rounded-circle shadow-1-strong img-user-rep-comment" src="' + '{{url("/")}}/public/uploads/avatar/' + avatar + '"alt="avatar" width="65" height="65" /> </a></div> <div class="flex-grow-1 flex-shrink-1 col-9"><div class="d-flex justify-content-between align-items-center"> <p class="mb-1 text-success">' + name + ' <span class="small"> ' + getVietnamTime() + '</span> </p></div><p class="small mb-0"> ' + content_reply + '</p></div></div></div>')             
                 },
                 error: function(xhr) {
                     console.log(xhr.responseText);
@@ -580,14 +575,13 @@
             const inputOptions = document.querySelectorAll(".input-option");
 
             // Kiểm tra xem có input nào có thuộc tính name không
-            let hasName = Array.from(inputOptions).some(input => input.hasAttribute("name"));
-
-            if (!hasName) {
-                alert("Vui lòng chọn size trước khi mua!");
-                event.preventDefault(); // Chặn form submit
+            if(inputOptions.length > 0) {
+                let hasName = Array.from(inputOptions).some(input => input.hasAttribute("name"));
+                if (!hasName) {
+                    alert("Vui lòng chọn size trước khi mua!");
+                    event.preventDefault(); // Chặn form submit
+                }
             }
         });
-
     </script>
-
     @stop

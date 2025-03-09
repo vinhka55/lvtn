@@ -132,12 +132,37 @@ class ProductController extends Controller
         $product->save();
         return redirect('admin/danh-sach-san-pham');
     }
-    public function show_product_with_category($slug)
+    // public function show_product_with_category($slug)
+    // {
+    //     $id=CategoryProduct::where('slug',$slug)->value('id');
+    //     $name_category=CategoryProduct::where('slug',$slug)->value('name');
+    //     $product=Product::where('category_id',$id)->get();
+    //     return view('page.product.show_product_with_category',compact('product','name_category','slug'));
+    // }
+    public function show_product_with_category(Request $request, $slug)
     {
-        $id=CategoryProduct::where('slug',$slug)->value('id');
-        $name_category=CategoryProduct::where('slug',$slug)->value('name');
-        $product=Product::where('category_id',$id)->get();
-        return view('page.product.show_product_with_category',compact('product','name_category','slug'));
+        $id = CategoryProduct::where('slug', $slug)->value('id');
+        $name_category = CategoryProduct::where('slug', $slug)->value('name');
+
+        // Mặc định lấy tất cả sản phẩm theo category
+        $query = Product::where('category_id', $id);
+
+        // Kiểm tra nếu có yêu cầu sắp xếp từ AJAX
+        if ($request->ajax()) {
+            if ($request->sort == 'price_asc') {
+                $query->orderBy('price', 'asc');
+            } elseif ($request->sort == 'price_desc') {
+                $query->orderBy('price', 'desc');
+            } elseif ($request->sort == 'sold') {
+                $query->orderBy('count_sold', 'desc');
+            }
+            $products = $query->get();
+            return view('page.product.product_list_sort', compact('products'))->render();
+        }
+
+        $products = $query->get();
+
+        return view('page.product.show_product_with_category', compact('products', 'name_category', 'slug'));
     }
     public function add_gallery($id)
     {
@@ -248,5 +273,19 @@ class ProductController extends Controller
             $product=Product::where('category_id',$category_id)->orderBy('count_sold','desc')->get();
         }
         return view('page.product.show_product_sort',compact('product','slug','name_category'));
+    }
+    public function sortProducts(Request $request)
+    {
+        $sortType = $request->get('sort');
+
+        if ($sortType == 'price') {
+            $products = Product::orderBy('price', 'asc')->get();
+        } elseif ($sortType == 'sold') {
+            $products = Product::orderBy('sold', 'desc')->get();
+        } else {
+            $products = Product::all();
+        }
+
+        return view('page.product.show_product_with_category', compact('products'));
     }
 }

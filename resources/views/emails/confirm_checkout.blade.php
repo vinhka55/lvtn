@@ -10,11 +10,12 @@
 <body>
     <div class="container">
         <div class="header">
-            <p class="">Đơn vị: <b>Công ty TNHH Thiên An Phú</b></p>
-            <p >Mã đơn hàng: <b> {{$order_code}}</b></p>
-            <p class="">Địa chỉ: <b>Số 9, Nam Hòa, Phước Long A, Quận 9, Hồ Chí Minh</b></p>
-            <p class="">Mã số thuế: <b>032441200</b></p>
-            
+            @foreach($setting as $item)
+              <p class="">Đơn vị: <b>Công ty TNHH {{$item->name}}</b></p>
+              <p >Mã đơn hàng: <b> {{$order_code}}</b></p>
+              <p class="">Địa chỉ: <b>{{$item->address}}</b></p>
+              <p class="">Mã số thuế: <b>{{$item->tax}}</b></p>
+            @endforeach
         </div>
         <div class="body ">
             <h2 style="text-align:center;">Xin chào: {{Session::get('name_user')}}</h2>
@@ -73,7 +74,7 @@
                     <td>
                         <?php 
                             $sub_money= $item['price']*$item['qty'];
-                            echo number_format($sub_money).' VND';
+                            echo number_format($sub_money).' đ';
                             $money_total=$money_total+$sub_money;
                         ?>
                     </td>                  
@@ -83,18 +84,25 @@
                 </tbody>
               </table>
         </div>
-        <p>Tổng tiền: <?php echo number_format($money_total) ?> VND</p>
-        <p>Thuế VAT: <?php $tax=$money_total*10/100; echo number_format($money_total*10/100).' VND'; ?></p>
+        <p>Tổng tiền: <?php echo number_format($money_total) ?> đ</p>
+        <p>Phí ship: 
+            <?php
+              if($data_order['fee_ship']==0) echo "Miễn phí";
+              else echo number_format($data_order['fee_ship']).' đ';
+              $fee_ship=$data_order['fee_ship'];
+            ?>
+          
+         </p>
         <?php $discount=0 ?>
         
             <?php $discount=Session::get('discount');
-            if($discount==0) echo "Giảm giá: 0 VND";
+            if($discount==0) echo "Giảm giá: 0 đ";
               else{
-                echo "Giảm giá: ".number_format($discount).' VND';
+                echo "Giảm giá: ".number_format($discount).' đ';
               }
             ?>
             
-        <p>Thực thanh toán: <?php echo number_format($money_total+$tax-$discount).' VND'; ?></p>
+        <p>Thực thanh toán: <?php echo number_format($money_total-$discount+$fee_ship).' đ'; ?></p>
     </div>
 
 </body>

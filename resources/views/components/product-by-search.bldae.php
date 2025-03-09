@@ -67,7 +67,7 @@
             <a href="{{route('detail_product',$item->id)}}">
                 <img src="{{url('/')}}/public/uploads/product/{{$item->image}}" alt="related product">
                 <p class="related-product">{{$item->name}}</p>
-                <p class="red">{{number_format($item->price, 0, '', ',')}}đ</p>
+                <p class="red">{{number_format($item->price, 0, ',', '.')}}đ</p>
             </a>
             <?php 
                 if($item->count < 1) echo '<span class="sold-out">Hết hàng</span>';
@@ -86,7 +86,7 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    Giá: <?php echo number_format($item->price) ?> VND
+                                    Giá: <?php echo number_format($item->price, 0, ',', '.') ?> VND
                                 </div>
                                 <div class="modal-body">
                                     Xuất xứ: {{$item->origin}}

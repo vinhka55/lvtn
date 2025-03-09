@@ -1,80 +1,214 @@
 @extends("welcome")
 @section("title","Checkout")
 @section("content")
+<style>
+    .form-group {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    select, input {
+        flex: 2;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+</style>
 <div class="container mx-auto my-5 py-4">
-	<div class="row m-0 p-0">
-		<div class="col-md-8 col-12 bg-white">
-			<h1 class="text-light bg-success p-2 ps-3 m-0 fs-4"><i class="fa-solid fa-cart-shopping-fast"></i>THÔNG TIN GIAO HÀNG</h1>
-			<form class="row g-3" id="form-checkout">
-				@csrf
-			  <div class="col-md-6">
-			  @foreach($info as $item)
-				<label for="name" class="form-label">Họ & Tên</label>
-				<input type="text" class="form-control" id="name" name="name" value="{{$item->name}}">
-			  </div>
-			  <div class="col-md-6">
-				<label for="email" class="form-label">Email</label>
-				<input type="email" class="form-control" name="email" id="email" value="{{$item->email}}">
-			  </div>
-			  <div class="col-12">
-				<label for="phone" class="form-label">Số Điện Thoại</label>
-				<input type="text" class="form-control" name="phone" id="phone" value="{{$item->phone}}">
-			  </div>
-			  <div class="col-12">
-				<label for="address-re" class="form-label">Địa Chỉ</label>
-				<input type="text" class="form-control" id="address-re" name="address_re" placeholder="Apartment, studio, or floor">
-				<p><small id="error-address-null" class="text-danger"></small></p>
-			  </div>
-			  <div class="col-12">
-				<label for="notes" class="form-label">Ghi chú</label>
-				<textarea  type="textarea" class="form-control" id="notes" name="notes"> </textarea>
-			  </div>
-			  <div class="col-12">
-				<div class="form-check">
-				  <input class="form-check-input" type="checkbox" id="gridCheck">
-				  <label class="form-check-label" for="gridCheck">
-					Lưu hồ sơ
-				  </label>
-				</div>
-			  </div>
-			</form>
-		</div>
-		<div class="col-md-4 col-12">
-			<div class="row p-2 mx-0 mb-2 bg-warning bg-opacity-25">
-				<p class="p-0 m-0 fw-bold fs-6 text-secondary">TỔNG CỘNG</p>
-				<p class="h3 fw-bolder"><?php echo number_format(Cart::total()).' VND' ?></p>
-				<p class="h3 fw-bolder"><span class="badge bg-light text-dark" style="margin-right:4px;">Giảm giá</span><?php echo number_format(Session::get('discount')).' VND' ?></p>
-				<hr>
-				<p class="p-0 m-0 fw-bold fs-6 text-secondary">THÀNH TIỀN</p>
-				<p class="h3 fw-bolder text-danger">
-					<?php $total=Cart::total()-Session::get('discount'); 
-					echo number_format($total).' VND' ?>
-				</p>
-			</div>
-			<div class="row p-2 mx-0 mb-2 bg-info bg-opacity-25">
-			  <div class="btn-group btn-group-vertical text-start" role="group">
-				<p>Chọn phương thức thanh toán</p>
-				<form id="pay_online_method">
-					<input type="radio" id="cash" name="pay" value="cash">
-					<label for="cash"> Tiền mặt</label><br>
-					<input type="radio" id="atm" name="pay" value="atm">
-					<label for="atm"> ATM</label><br>
-					<?php
-						//đoạn code tạo unique mã đơn hàng lấy trên mạng
-						$stamp = strtotime("now");
-						$order_code = 'order_'.$stamp;
-					?>	 
-					<input type="hidden" value="{{$order_code}}" id="order_code">							 
-				</form>			
-				<p><small id="error-pay-null" class="text-danger"></small></p>
-				@endforeach
-					<div class="nut-thanh-toan" style="display:flex;">
-						<!-- Thanh toán bình thường -->
-						<button class="btn btn-primary checkout-now">Thanh toán ngay</button>
-					</div>
-			  </div>
-			</div>
-		</div>
-	</div>
+    <div class="row m-0 p-0">
+        <div class="col-md-8 col-12 bg-white">
+            <h1 class="text-light bg-success p-2 ps-3 m-0 fs-4"><i class="fa-solid fa-cart-shopping-fast"></i>THÔNG TIN GIAO HÀNG</h1>
+            <form class="row g-3" id="form-checkout">
+                @csrf
+                <div class="col-md-6">
+                    @foreach($info as $item)
+                    <label for="name" class="form-label">Họ & Tên</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{$item->name}}">
+                </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" id="email" value="{{$item->email}}">
+                </div>
+                <div class="col-12">
+                    <label for="phone" class="form-label">Số Điện Thoại</label>
+                    <input type="text" class="form-control" name="phone" id="phone" value="{{$item->phone}}">
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="tinh">Chọn Tỉnh/Thành phố:</label>
+                        <select id="tinh">
+                            <option value="">Chọn tỉnh/thành phố</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="huyen">Chọn Quận/Huyện:</label>
+                        <select id="huyen" disabled>
+                            <option value="">Chọn quận/huyện</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="xa">Chọn Xã/Phường/Thị trấn:</label>
+                        <select id="xa" disabled>
+                            <option value="">Chọn xã/phường/thị trấn</option>
+                        </select>
+                    </div>
+
+                    <label for="address-re" class="form-label">Địa chỉ chi tiết</label>
+                    <input type="text" class="form-control" id="address-re" name="address_re" placeholder="Thôn, xóm, làng, ...">
+                </div>
+                <div class="col-12">
+                    <label for="notes" class="form-label">Ghi chú</label>
+                    <textarea type="textarea" class="form-control" id="notes" name="notes"></textarea>
+                </div>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="gridCheck">
+                        <label class="form-check-label" for="gridCheck">
+                            Lưu hồ sơ
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="row p-2 mx-0 mb-2 bg-warning bg-opacity-25">
+                <p class="p-0 m-0 fw-bold fs-6 text-secondary">TỔNG CỘNG</p>
+                <p class="h3 fw-bolder"><span id="cartSubTotal"><?php echo number_format(Cart::total(), 0, ',', '.'). ' đ' ?></span></p>
+				<div id="fee-ship-div"></div>
+                <p class="h3 fw-bolder">Giảm giá<span class="badge bg-light text-dark" style="margin-right:4px;" id="discount-order"><?php echo number_format(Session::get('discount'), 0, ',', '.') . ' đ' ?></span></p>
+                <hr>
+                <p class="p-0 m-0 fw-bold fs-6 text-secondary">THÀNH TIỀN</p>
+                <p class="h3 fw-bolder text-danger order-final-price">
+                    <span id="totalAmount">
+                        <?php $total=Cart::total()-Session::get('discount'); 
+                        echo number_format($total, 0, ',', '.') . ' ₫' ?>
+                    </span>
+                </p>
+            </div>
+            <div class="row p-2 mx-0 mb-2 bg-info bg-opacity-25">
+                <div class="btn-group btn-group-vertical text-start" role="group">
+                    <p>Chọn phương thức thanh toán</p>
+                    <form id="pay_online_method">
+                        <input type="radio" id="cash" name="pay" value="cash">
+                        <label for="cash"> Tiền mặt</label><br>
+                        <input type="radio" id="atm" name="pay" value="atm">
+                        <label for="atm"> ATM</label><br>
+                        <?php
+                            //đoạn code tạo unique mã đơn hàng lấy trên mạng
+                            $stamp = strtotime("now");
+                            $order_code = 'order_'.$stamp;
+                        ?>	 
+                        <input type="hidden" value="{{$order_code}}" id="order_code">							 
+                    </form>			
+                    <p><small id="error-pay-null" class="text-danger"></small></p>
+                    @endforeach
+                    <div class="nut-thanh-toan" style="display:flex;">
+                        <!-- Thanh toán bình thường -->
+                        <button class="btn btn-primary checkout-now">Thanh toán ngay</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<script>
+$(document).ready(function() {
+    // Load danh sách tỉnh/thành phố
+    $.get("api/tinhthanhpho", function(data) {
+        data.forEach(function(item) {
+            $("#tinh").append(`<option value="${item.matp}" name="${item.name}">${item.name}</option>`);
+        });
+    });
+
+    // Khi chọn tỉnh/thành phố, load quận/huyện
+    $("#tinh").change(function() {
+        let matp = $(this).val();
+        $("#huyen").html('<option value="">Chọn quận/huyện</option>').prop("disabled", true);
+        $("#xa").html('<option value="">Chọn xã/phường/thị trấn</option>').prop("disabled", true);
+        
+        if (matp) {
+            $.get(`api/quanhuyen/${matp}`, function(data) {
+                data.forEach(function(item) {
+                    $("#huyen").append(`<option value="${item.maqh}">${item.name}</option>`);
+                });
+                $("#huyen").prop("disabled", false);
+            });
+        }
+    });
+
+    // Khi chọn quận/huyện, load xã/phường/thị trấn
+    $("#huyen").change(function() {
+        let maqh = $(this).val();
+        $("#xa").html('<option value="">Chọn xã/phường/thị trấn</option>').prop("disabled", true);
+        
+        if (maqh) {
+            $.get(`api/xaphuongthitran/${maqh}`, function(data) {
+                data.forEach(function(item) {
+                    $("#xa").append(`<option value="${item.xaid}">${item.name}</option>`);
+                });
+                $("#xa").prop("disabled", false);
+            });
+        }
+    });
+    function cleanNumber(value) {
+        return value.replace(/\./g, '').replace('₫', '').trim(); // Loại bỏ dấu . và ký hiệu ₫
+    }
+    function updateTotal() {
+        // Lấy tổng tiền hàng từ giao diện (đảm bảo giá trị dạng số)
+        var subTotal = parseFloat(cleanNumber($('#cartSubTotal').text()));
+        console.log(subTotal);
+        
+        // Lấy phí ship từ giao diện
+        var shippingFee = parseFloat(cleanNumber($('#shippingFee').text()));
+        console.log(shippingFee);
+
+        var discount = parseFloat(cleanNumber($('#discount-order').text()));
+        console.log(discount);
+        
+        
+        // Tính tổng thành tiền
+        var total = subTotal + shippingFee - discount;
+        // Hiển thị thành tiền, format số nếu cần
+        $('#totalAmount').text(parseFloat(total).toLocaleString('vi-VN') + ' ₫');
+    }
+
+	$('#xa').change(function() {
+        let cityId = $('#tinh').val(); // Lấy ID tỉnh
+        let districtId = $('#huyen').val(); // Lấy ID huyện
+        let wardId = $(this).val(); // Lấy ID xã
+
+        if (!cityId || !districtId || !wardId) {
+            $('#shipping_fee').val('Vui lòng chọn đầy đủ địa chỉ');
+            return;
+        }
+
+        // Gửi AJAX để lấy phí ship
+        $.ajax({
+            url: "{{route('count_fee_ship')}}",
+            method: 'POST',
+            data: {
+                city_id: cityId,
+                district_id: districtId,
+                ward_id: wardId,
+                _token: $('meta[name="csrf-token"]').attr('content') // CSRF Token
+            },
+            success: function(response) {
+                if (response.success) {
+                    // $('.order-final-price').html('25000' + ' VND');
+					$('#fee-ship-div').html('<p class="h3 fw-bolder ">Phí Ship:<span style="margin-right:4px;" id="shippingFee">' + parseFloat(response.fee).toLocaleString('vi-VN') + '</span>đ</p>');
+                    updateTotal();
+                } else {
+                    $('#shippingFee').text(0);
+                    updateTotal();
+                }
+            },
+            error: function(xhr) {
+                console.log("Error:", xhr.responseText);
+                $('#shipping_fee').val("Lỗi khi lấy phí ship");
+            }
+        });
+    });
+})
+</script>
 @stop

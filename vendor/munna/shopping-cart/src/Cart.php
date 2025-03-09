@@ -192,13 +192,15 @@ class Cart{
                     $tax = $item['tax'];
                     $shipping = $item['shipping'];
                     $price = $item['price'];
-                    $calc = $this->calculate_price($price, $newqty, $discount, $tax, $shipping);
+                    $size = $item['size'];
+                    $calc = $this->calculate_price($price, $newqty, $discount, $tax, $shipping,$size);
                     $cart_array = [
                         'uid' => $item['uid'],
                         'product' => $item['product'],
                         'name' => $item['name'],
                         'price' => $price,
                         'qty' => $newqty,
+                        'size' => $size,
                         'weight' => $item['weight'],
                         'discount' => $item['discount'],
                         'tax' => $tax,

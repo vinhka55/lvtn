@@ -270,7 +270,7 @@
     });
   });
 </script>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     $(document).ready(function(){
         $('.checkout-now').click(function(){ 
             $("#error-name-null").html("")
@@ -297,12 +297,15 @@
                 var name=$('#name').val()
                 var phone=$('#phone').val()
                 var email=$('#email').val()
-                var address_re=$('#address-re').val()
                 var notes=$('#notes').val()
+                // var address_re = $('#xa').val() + ', ' + $('#huyen').val() + ', ' + $('#tinh').val()
+                var delivery_address = "1235"
                 var _token = $('input[name="_token"]').val()
                 var order_code=$('#order_code').val()
                 var pay=$('input[name="pay"]:checked','#pay_online_method').val()
-                var data={name:name,email:email,phone:phone,address_re:address_re,notes:notes,_token:_token,pay:pay,order_code:order_code}
+                
+                var data={name:name,email:email,phone:phone,delivery_address:"12344",notes:notes,_token:_token,pay:pay,order_code:order_code}
+                console.log(data);
             
                 swal({
                 title: "Bạn chắc chắn đặt hàng?",
@@ -313,17 +316,20 @@
                 })
                 .then((willDelete) => {
                 if (willDelete) {
-                    $.ajax({
-                        url: "{{route('order_place')}}",
-                        method: 'POST',
-                        data:data,
-                        success:function(data){
-                            console.log("ok")
-                        },
-                        error:function(xhr){
-                            console.log(xhr.responseText);
-                        }
-                    });
+                    // $.ajax({
+                    //     url: "{{route('order_place')}}",
+                    //     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),'Content-Type': 'application/json'},
+                    //     method: 'POST',
+                    //     data:JSON.stringify(data),
+                        
+                    //     success:function(data){
+                    //         console.log(data);
+                            
+                    //     },
+                    //     error:function(xhr){
+                    //         console.log(xhr.responseText);
+                    //     }
+                    // });
                     swal("Cảm ơn bạn đã mua hàng!", {
                     icon: "success",
                     });
@@ -333,7 +339,7 @@
             }    
         })
     })
-</script>
+</script> -->
 <script>
     $('#pay_online_method input').on('change', function() {       
         var order_code=$('#order_code').val()
@@ -428,11 +434,6 @@
     })
 </script>
 
-<!-- thông báo bên admin -->
-
-{{-- hủy đơn hàng --}}
-
-    {{-- check-now page --}}
     <script>
         $('#pay_online_method input').on('change', function() {
             var order_code=$('#order_code').val()
@@ -449,7 +450,6 @@
                 $("#error-name-null").html("")
                 $("#error-phone-null").html("")
                 $("#error-email-null").html("")
-                $("#error-address-null").html("")
                 $("#error-pay-null").html("")
                 if($('#name').val()==""){
                     $("#error-name-null").html("Tên không được bỏ trống")    
@@ -460,9 +460,6 @@
                 else if($('#email').val()==""){
                     $("#error-email-null").html("Email không được bỏ trống")
                 }
-                else if($('#address-re').val()==""){
-                    $("#error-address-null").html("Địa chỉ không được bỏ trống")
-                }
                 else if($('input[name="pay"]:checked','#pay_online_method').val()==undefined){
                     $("#error-pay-null").html("Chọn 1 phương thức thanh toán")
                 }
@@ -470,12 +467,15 @@
                     var name=$('#name').val()
                     var phone=$('#phone').val()
                     var email=$('#email').val()
-                    var address_re=$('#address-re').val()
+                    var address =$('#address-re').val() ? $('#address-re').val() + ', ' + $('#xa option:selected').text() + ', ' + $('#huyen option:selected').text() + ', ' + $('#tinh option:selected').text() : $('#xa option:selected').text() + ', ' + $('#huyen option:selected').text() + ', ' + $('#tinh option:selected').text()
                     var notes=$('#notes').val()
                     var _token = $('input[name="_token"]').val()
                     var order_code=$('#order_code').val()
                     var pay=$('input[name="pay"]:checked','#pay_online_method').val()
-                    var data={name:name,email:email,phone:phone,address_re:address_re,notes:notes,_token:_token,pay:pay,order_code:order_code}
+                    var ship = $('#shippingFee').text().replace(/\./g, '').replace('₫', '').trim()
+                    console.log(ship);
+                    
+                    var data={name:name,email:email,phone:phone,address:address,notes:notes,_token:_token,pay:pay,order_code:order_code,ship:ship}
                 
                     swal({
                     title: "Bạn chắc chắn đặt hàng?",
@@ -509,9 +509,9 @@
                             })
                             .then((willDelete) => {
                             if (willDelete) {
-                                window.location.href = "{{url('/')}}/don-hang-cua-toi"
+                                window.location.href = "{{route('my_order')}}";
                             } else {
-                                window.location.href = "{{url('/')}}"
+                                window.location.href = "{{route('home')}}";
                             }
                             });
                         //window.location.href = "{{url('/')}}/don-hang-cua-toi";

@@ -70,11 +70,11 @@
                         
                         <tr>                            
                             <td><p class="text-ellipsis name">{{$item->product_name}}</p></td>
-                            <td><p class="text-ellipsis name">{{number_format($item->product_price)}} VND</p></td>                     
+                            <td><p class="text-ellipsis name">{{number_format($item->product_price, 0, ',', '.')}} đ</p></td>                     
                             <td>      
                                 <input type="number" disabled class="order_product_qty_{{$item->id}}" name="product_sales_quantity" value="{{$item->product_quantyti}}">      
                             </td>
-                            <td><?php echo number_format($item->product_price*$item->product_quantyti).' VND'; ?></td>                             
+                            <td><?php echo number_format($item->product_price*$item->product_quantyti, 0, ',', '.').' đ'; ?></td>                             
                             <?php $total_money=$total_money+$item->product_price*$item->product_quantyti;?>                
                         </tr>
                         @endforeach
@@ -84,11 +84,15 @@
         
         <br>
         </div>
-        <?php echo "Tổng tiền: ".number_format($total_money).' VND' ; ?>
-        <br>
-        <p>Giảm giá: <?php echo number_format($discount).' VND'; ?></p>
-        <br>
-        <?php echo "<h2>Số tiền cần thanh toán: ".number_format($total_money-$discount).' VND </h2>' ;
+        <?php
+            echo "Tổng tiền: ".number_format($total_money, 0, ',', '.').' đ'; 
+            echo "<br>";
+            echo "Phí vận chuyển: ".number_format($fee_ship, 0, ',', '.').' đ';
+            echo "<br>";
+            echo "Giảm giá: ".number_format($discount, 0, ',', '.').' đ';
+            echo "<br>";
+        ?>
+        <?php echo "<h2>Số tiền cần thanh toán: ".number_format($total_money-$discount+$fee_ship, 0, ',', '.').' đ </h2>' ;
         ?>
     </div>
     </div>

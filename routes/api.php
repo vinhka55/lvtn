@@ -6,6 +6,21 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\Order;
 use App\Models\Visitors;
+use App\Http\Controllers\ShippingController;
+
+Route::get('/tinhthanhpho', function () {
+    return response()->json(DB::table('devvn_tinhthanhpho')->get());
+});
+
+Route::get('/quanhuyen/{matp}', function ($matp) {
+    return response()->json(DB::table('devvn_quanhuyen')->where('matp', $matp)->get());
+});
+
+Route::get('/xaphuongthitran/{maqh}', function ($maqh) {
+    return response()->json(DB::table('devvn_xaphuongthitran')->where('maqh', $maqh)->get());
+});
+
+Route::post('/feeship', 'App\Http\Controllers\ShippingController@addFeeShip')->name('addFeeShip');
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -160,3 +175,5 @@ Route::get('/visits', function (Request $request) {
 
     return response()->json($data);
 });
+
+

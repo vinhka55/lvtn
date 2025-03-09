@@ -85,7 +85,7 @@ class CommentController extends Controller
                             <div class="flex-grow-1 flex-shrink-1 col-9">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <p class="mb-1 text-success">
-                                        '.$name.' <span class="small"> '.Carbon::parse($rep->time)->format('d-m-Y')." Lúc ".Carbon::parse($rep->time)->toTimeString().'</span>
+                                        '.$name.' <span class="small"> '.Carbon::parse($rep->time)->toTimeString().' '.Carbon::parse($rep->time)->format('d-m-Y').'</span>
                                         </p>
                                     </div>
                                     <p class="small mb-0">
@@ -142,10 +142,7 @@ class CommentController extends Controller
         $reply_comment=new ReplyComment();
         $reply_comment->content=$req->content_reply;
         $reply_comment->id_parent_comment=$req->id_comment;
-        // if(Auth::check()) $reply_comment->user_id=0;
-        // else{
-        //     $reply_comment->user_id=Session::get('user_id');
-        // }
+ 
         $reply_comment->user_id=Session::get('user_id');
         if($reply_comment->user_id==null) $reply_comment->user_id = 0;
         $reply_comment->save();

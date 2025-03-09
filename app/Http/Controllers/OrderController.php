@@ -24,6 +24,7 @@ class OrderController extends Controller
     }
     public function order_place(Request $req)
     {
+        // \logger(Cart::total() + $req->ship);
         try {
             DB::beginTransaction();
             //Cập nhật lại số lượng coupon nếu có áp mã
@@ -46,7 +47,7 @@ class OrderController extends Controller
             $data_shipping['name']=$req->name;
             $data_shipping['email']=$req->email;
             $data_shipping['phone']=$req->phone;
-            $data_shipping['address']=$req->address_re;
+            $data_shipping['address']=$req->address;
             $data_shipping['notes']=$req->notes;
             $data_shipping['pay_method']=$req->pay;
             
@@ -54,20 +55,24 @@ class OrderController extends Controller
             Session::put('shipping_id',$shipping_id);
 
             //insert đơn hàng
-            $data_order=[]; 
-            
+            $data_order=[];            
             $data_order['order_code']=$req->order_code;
             $data_order['customer_id']=Session::get('user_id');
             $data_order['shipping_id']=Session::get('shipping_id');
             $data_order['payment']=$req->pay;
-            $data_order['total_money']=Cart::total();
+            $data_order['fee_ship']=$req->ship;
+            $data_order['total_money']=Cart::total() + $req->ship;
+            
+
             if(Session::has('discount')){
+                $discount=Session::get('discount');
                 $data_order['discount']=Session::get('discount');
                 $data_order['total_money'] = $data_order['total_money'] - $data_order['discount'];
             }else{
                 $data_order['discount']=0;
             }
             $data_order['status']="Đang chờ xử lý";
+            
             $order_id=DB::table('order')->insertGetId($data_order);
             $order_code=$req->order_code;
             
@@ -103,7 +108,7 @@ class OrderController extends Controller
             Session::put('dmm',$req->email);
             Mail::send('emails.confirm_checkout',compact('data_shipping','data_order','content','order_id','order_code'),function ($email)
             {           
-                $email->from('noreply@gmail.com', 'Công ty TNHH thực phẩm sạch Thiên An Phú');
+                $email->from('noreply@gmail.com', 'Công ty TNHH Thể Thao 247');
                 $email->to(Session::get('dmm'),Session::get('name_user'))->subject('Đơn hàng của bạn!');
             });
 
@@ -262,7 +267,6 @@ class OrderController extends Controller
     }
     public function my_order(Request $req)
     {
-
         $data= Order::where('customer_id',Session::get('user_id'))->orderBy('id','DESC')->paginate(5);
         return view('page.order.history')->with(compact('data'));
     }
@@ -271,13 +275,14 @@ class OrderController extends Controller
         $order_id=$id;
 
         $discount=Order::where('id',$id)->value('discount');
+        $fee_ship=Order::where('id',$id)->value('fee_ship');
 
         $shipping_id=DB::table('order')->where('id',$id)->value('shipping_id');
         $info_shipping=DB::table('shipping')->where('id',$shipping_id)->get();
 
         $info_product=OrderDetails::with('product')->where('order_id',$id)->get();
         //return view('admin.order.detail',['info_user'=>$info_user,'info_shipping'=>$info_shipping,'info_product'=>$info_product,'order'=>$order]);
-        return view('page.order.detail_my_order')->with(compact('info_shipping','info_product','discount','order_id'));
+        return view('page.order.detail_my_order')->with(compact('info_shipping','info_product','discount','fee_ship','order_id'));
     }
     public function customer_cancel_order(Request $req)
     {

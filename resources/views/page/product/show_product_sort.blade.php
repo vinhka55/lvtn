@@ -26,7 +26,7 @@
                         <div class="card">
                             <a href="{{route('detail_product',$item->id)}}"><img style="height:165px;" src="{{url('/')}}/public/uploads/product/{{$item->image}}" class="card-img-top" alt="product"></a>
                             <h3 class="card-text name-product">{{$item->name}}</h3>
-                            <p class="price-product">{{number_format($item->price)}} VND</p>
+                            <p class="price-product">{{number_format($item->price, 0, ',', '.')}} đ</p>
                             <div class="card-body">
                             <a href="{{route('detail_product',$item->id)}}">Chi tiết</a>
                             <i type="button" class="fas fa-eye ms-3" data-bs-toggle="modal" data-bs-target="#quickview-{{$item->id}}"></i>
@@ -40,7 +40,7 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            Giá: <?php echo number_format($item->price) ?> VND
+                                            Giá: <?php echo number_format($item->price, 0, ',', '.') ?> đ
                                         </div>
                                         <div class="modal-body">
                                             Xuất xứ: {{$item->origin}}

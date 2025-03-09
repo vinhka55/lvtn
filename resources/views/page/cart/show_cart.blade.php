@@ -35,6 +35,7 @@
                 @csrf
                 <?php														
                     $content=Cart::items()->original;
+                    // dd($content);
                 ?>
             <h1 class="text-light bg-success p-2 ps-3 m-0 fs-4"><i class="fa-solid fa-cart-shopping-fast"></i> GIỎ HÀNG</h1>
             <table class="table text">
@@ -62,7 +63,7 @@
                             Size: <span style="color:#eb3547;">{{$item['size']}}</span>
                         @endif
                     </td>
-                    <td>{{number_format($item['price'])}} VNĐ</td>
+                    <td>{{number_format($item['price'], 0, ',', '.')}} đ</td>
                     <td class="text-center">
                         <input value="{{$item['qty']}}" class="w-25 me-1 form-control-sm border-1" style="width:48px !important" type="number" min="1" name="quantity[{{$item['uid']}}]">
                         <input type="hidden" name="uid[{{$item['uid']}}]" value="{{$item['uid']}}">
@@ -70,7 +71,7 @@
                     <td>
                         <?php
                             $subtotal=$item['qty']*$item['price'];
-                            echo number_format($subtotal).' '.'VND';
+                            echo number_format($subtotal, 0, ',', '.').' '.'đ';
                         ?>
                     </td>
                     <td>
@@ -90,21 +91,20 @@
         <div class="col-md-4 col-12">
             <div class="row p-2 mx-0 mb-2 bg-warning bg-opacity-25">
                 <p class="p-0 m-0 fw-bold fs-6 text-secondary">TỔNG CỘNG</p>
-                <p class="h3 fw-bolder">{{number_format(Cart::total())}} VND</p>
-                <p class="h3 fw-bolder">Phí vận chuyển: 0 VND</p>
+                <p class="h3 fw-bolder">{{number_format(Cart::total(), 0, ',', '.')}} đ</p>
                 @if($coupon)
                         <p class="h3 fw-bolder">Giảm giá <span>
                         @foreach($coupon as $item)								
                             @if($item->condition=='percent')
                             <?php 
                             $discount= $item->rate*(Cart::total()+$tax)/100;
-                            echo number_format($discount). 'VND';
+                            echo number_format($discount, 0, ',', '.'). 'đ';
                             Session::put('discount',$discount);							
                             ?>
                             @else
                             <?php 
                             $discount= $item->rate;
-                            echo number_format($discount).' VND';	
+                            echo number_format($discount, 0, ',', '.').' đ';	
                             Session::put('discount',$discount);							
                             ?>
                             @endif
@@ -120,7 +120,7 @@
                 <p class="p-0 m-0 fw-bold fs-6 red" style="font-size:2rem !important;">
                     <?php
                         $total=Cart::total()-$discount;
-                        echo number_format($total).' VND';
+                        echo number_format($total, 0, ',', '.').' đ';
                     ?>
                 </p>
                 <button type="button" class="btn main-color"><a href="{{route('pay_product')}}" class="text-white">Tiếp Tục ></a></button>

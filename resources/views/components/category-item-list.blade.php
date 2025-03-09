@@ -49,7 +49,7 @@
                     ?>
                     <h3 class="card-text name-product text-center">{{$item->name}}</h3>
                     <p class="price-product red text-center">
-                        <span class="new-price">{{ number_format($item->price)}}đ</span> <span class="old-price">{{ number_format($item->old_price)}}đ</span>
+                        <span class="new-price">{{ number_format($item->price, 0, ',', '.')}}đ</span> <span class="old-price">{{ number_format($item->old_price, 0, ',', '.')}}đ</span>
                     </p>
                     <div class="card-body">
                         <a href="{{route('detail_product',$item->id)}}">Chi tiết</a>
@@ -64,7 +64,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <?php echo number_format($item->price) ?> VND
+                                        <?php echo number_format($item->price, 0, ',', '.') ?> đ
                                     </div>
                                     <div class="modal-body">
                                         Xuất xứ: {{$item->origin}}

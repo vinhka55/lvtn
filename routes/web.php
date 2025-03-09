@@ -1,9 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+// address 
+Route::post('/chon-huyen','App\Http\Controllers\ShippingController@choose_address')->name('choose_address');
+Route::post('/chon-xa','App\Http\Controllers\ShippingController@choose_ward')->name('choose_ward');
+
+//fee ship (trong admin)
+Route::get('/fee-ship','App\Http\Controllers\ShippingController@list_fee_ship')->name('list_fee_ship');
+Route::get('/get-fee-ship','App\Http\Controllers\ShippingController@getFeeship')->name('get_fee_ship');
+Route::get('get-fee-ship-by-city/{cityId}','App\Http\Controllers\ShippingController@getFeeshipByCity')->name('get_fee_ship_by_city');
+Route::post('/update-fee-ship','App\Http\Controllers\ShippingController@updateFeeship')->name('update_fee_ship');
+Route::post('/count-fee-ship','App\Http\Controllers\ShippingController@countFeeship')->name('count_fee_ship');
+
 
 //trang chủ
-Route::get('/','App\Http\Controllers\HomeController@index');
+Route::get('/','App\Http\Controllers\HomeController@index')->name('home');
 
 Route::get('/visits', [VisitController::class, 'index']);
 //hiển thị sản phẩm theo danh mục
@@ -45,6 +56,7 @@ Route::post('xoa-gallery','App\Http\Controllers\ProductController@delete_gallery
 Route::post('thay-doi-anh-gallery','App\Http\Controllers\ProductController@change_image_gallery')->name('change_image_gallery');
 Route::get('tim-kiem-san-pham-theo-gia/{type}/{slug}','App\Http\Controllers\ProductController@search_product_with_price')->name('search_product_with_price');
 Route::get('tim-kiem-san-pham-theo-so-luong-da-ban/{type}/{slug}','App\Http\Controllers\ProductController@search_product_with_sold')->name('search_product_with_sold');
+// Route::get('sort-products','App\Http\Controllers\ProductController@sortProducts')->name('sort_products');
 
 
 //cart 
