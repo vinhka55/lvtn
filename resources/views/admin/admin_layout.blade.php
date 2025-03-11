@@ -394,62 +394,7 @@ $('.delete-user').click(function(e) {
     })
 </script>
 
-<script type="text/javascript">
-    function select_gallery() {
-        var product_id=$('#product_id').val()
-        var _token = $('input[name="_token"]').val()
-        $.ajax({
-        url : "{{route('select_gallery')}}",
-            method: 'post',
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            data:{product_id:product_id},
-            success:function(data){
-                $('#select-gallery').html(data)
-            }, 
-            error: (xhr) => {
-                console.log(xhr.responseText); 
-                }
-        })
-    }
-    select_gallery()
-    function delete_gallery(id_gallery) {
-        $.ajax({
-            url : "{{route('delete_gallery')}}",
-            method: 'post',
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            data:{id_gallery:id_gallery},
-            success:function(data){
-                select_gallery()
-            }, 
-            error: (xhr) => {
-                console.log(xhr.responseText); 
-                }
-        })
-    }
-    function change_image_gallery(id_gallery) {
-        var image_data= $('#file-gallery-'+id_gallery).val()
-        var form_data=new FormData(document.getElementById('formID'))
-        form_data.append('image'+id_gallery,$('#file-gallery-'+id_gallery).val())
-        form_data.append('id_gallery',id_gallery)
-        console.log(form_data)
-        $.ajax({
-        url : "{{route('change_image_gallery')}}",
-            method: 'post',
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            data:form_data,
-            contentType: false,
-            cache : false,
-            processData: false,
-            success:function(data){
-                alert(data)
-                select_gallery()
-            }, 
-            error: (xhr) => {
-                console.log(xhr.responseText); 
-                }
-        })
-    }
-</script>
+
 <script>
     $('#search-with-status').change(function() {
         window.location.href=this.value

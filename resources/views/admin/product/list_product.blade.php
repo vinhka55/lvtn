@@ -83,7 +83,7 @@
                         <td><p class="text-ellipsis name"><img width="35%" src="{{url('/')}}/public/uploads/product/{{$item->image}}" alt="product"></p></td>
                         <td><a href="{{route('add_gallery',$item->id)}}">Thêm ảnh</a></td>
                         <td><p class="text-ellipsis name">{{$item->name}}</p></td>
-                        <td><p class="text-ellipsis name">{{number_format((int)$item->price)}}</p></td>                       
+                        <td><p class="text-ellipsis name">{{number_format((int)$item->price, 0, ',', '.')}}đ</p></td>                       
                         <td><span class="text-ellipsis desc">
                             <!-- @if($item->status=='1')<a title="click to edit" href="{{route('edit_status_product',$item->id)}}"><i class="far fa-thumbs-up"></i></a>
                             @else <a title="click to edit" href="{{route('edit_status_product',$item->id)}}"><i class="far fa-thumbs-down"></i></a>

@@ -1,5 +1,89 @@
 @extends("admin.admin_layout")
 @section("admin_page")
+<style>
+    .container {
+        width: 90%;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        padding: 10px;
+        background: #e9f5e9; /* Xanh nhạt */
+        border-radius: 8px;
+        color: #333;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        margin-top: 10px;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background: #f1f1f1;
+        font-weight: bold;
+    }
+
+    tr:hover {
+        background: #f9f9f9;
+    }
+
+    select, input[type="text"] {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    button {
+        padding: 8px 12px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: #0056b3;
+    }
+
+    .action-icons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .action-icons i {
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    .action-icons i:hover {
+        opacity: 0.7;
+    }
+
+    .delete-icon {
+        color: red;
+    }
+
+    .view-icon {
+        color: blue;
+    }
+</style>
 <div class="container">
     <div class="table-agile-info">
     <div class="panel panel-default">

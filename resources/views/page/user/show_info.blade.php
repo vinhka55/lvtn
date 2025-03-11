@@ -1,5 +1,6 @@
 @extends("welcome")
 @section("content")
+@section("title", "Information User" )
 <body class="personal-page" style="margin-top:50px;">
 <div class="contaier-fluid">
     <div class="row py-5 px-4">

@@ -61,6 +61,7 @@ class UserController extends Controller
         $user->name = $req->name;
         $user->phone = $req->phone;
         $user->email = $req->email;
+        session()->put('name_user', $req->name); // Cập nhật giá trị của 'name_user
         $user->save();
         return redirect('/thong-tin-tai-khoan');
     }

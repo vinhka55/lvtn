@@ -24,7 +24,6 @@ class OrderController extends Controller
     }
     public function order_place(Request $req)
     {
-        // \logger(Cart::total() + $req->ship);
         try {
             DB::beginTransaction();
             //Cập nhật lại số lượng coupon nếu có áp mã

@@ -149,11 +149,17 @@ Route::group(['prefix'=>'admin','middleware'=>['auth.AdminAndAuthor']],function(
 {
     Route::get('danh-sach-binh-luan','App\Http\Controllers\CommentController@list_comment')->name('list_comment');
     Route::post('thay-doi-trang-thai-comment','App\Http\Controllers\CommentController@change_status_comment')->name('change_status_comment');
-    Route::post('xoa-sub-comment','App\Http\Controllers\CommentController@delete_sub_comment')->name('delete_sub_comment');
     Route::post('xoa-comment','App\Http\Controllers\CommentController@delete_comment')->name('delete_comment');
 });
 Route::post('tra-loi-comment','App\Http\Controllers\CommentController@rep_comment')->name('rep_comment');
 
+// reply comment
+Route::group(['prefix'=>'admin','middleware'=>['auth.AdminAndAuthor']],function()
+{
+    Route::get('danh-sach-reply-comment','App\Http\Controllers\ReplyCommentController@get_reply_comments')->name('get_reply_comments');
+    Route::post('admin-them-reply-comment','App\Http\Controllers\ReplyCommentController@add_reply_comment')->name('add_reply_comment');
+    Route::post('xoa-sub-comment','App\Http\Controllers\ReplyCommentController@delete_sub_comment')->name('delete_sub_comment');
+});
 
 //login and login social
 Route::get('dang-nhap-bang-google-mail','App\Http\Controllers\LoginController@login_google')->name('login_google');

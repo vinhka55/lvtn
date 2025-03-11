@@ -172,7 +172,7 @@
                             <td><p class="text-ellipsis name">{{$item->product_name}}</p></td>
                             <td><p class="text-ellipsis name amount-product-{{$item->product->id}}">{{$item->product->count}} 
                             </p></td>
-                            <td><p class="text-ellipsis name">{{number_format($item->product_price)}}</p></td>
+                            <td><p class="text-ellipsis name">{{number_format($item->product_price, 0, ',', '.')}}</p></td>
                             <td><p class="text-ellipsis name">{{$item->product_size}}</p></td>
                             
                             <td>
@@ -265,15 +265,15 @@
         
         <br>
         </div>
-        <span>Tổng tiền: </span><span class="total-money-order">{{number_format($total_money)}} đ</span>
+        <span>Tổng tiền: </span><span class="total-money-order">{{number_format($total_money, 0, ',', '.')}} đ</span>
         <br>
         <?php
-            echo "Phí vận chuyển: ".number_format($feeShip)." đ";
+            echo "Phí vận chuyển: ".number_format($feeShip, 0, ',', '.')." đ";
             echo "<br>";
-            echo "Giảm giá: ".number_format($discount)." đ";
+            echo "Giảm giá: ".number_format($discount, 0, ',', '.')." đ";
         ?>
         <br>
-        <span>Số tiền cần thanh toán: </span><span class="all-this-order">{{number_format($total_money-$discount+$feeShip)}} đ</span>
+        <span>Số tiền cần thanh toán: </span><span class="all-this-order">{{number_format($total_money-$discount+$feeShip, 0, ',', '.')}} đ</span>
     </div>
     </div>
 </div>

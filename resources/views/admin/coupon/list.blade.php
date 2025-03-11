@@ -1,6 +1,9 @@
 @extends("admin.admin_layout")
 @section("admin_page")
 <style>
+    body{
+      
+    }
     .toggle-button {
         display: inline-block;
         width: 60px;
@@ -31,6 +34,23 @@
     .toggle-button.on::before {
         transform: translateX(30px);
     }
+    table {
+      
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    th, td {
+        font-family: "Roboto", sans-serif;
+        font-size: 100% !important;
+        color: #333 !important;
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+    th {
+        background-color: #f4f4f4;
+    }
 </style>
 <div class="table-agile-info">
   <div class="panel panel-default">
@@ -56,15 +76,9 @@
         </div>
       </div>
     </div>
-    <div class="table-responsive">
-      <table class="table table-striped b-t b-light">
+    <table class="table">
         <thead>
-          <tr>
-            <th style="width:20px;">
-              <label class="i-checks m-b-none">
-                <input type="checkbox"><i></i>
-              </label>
-            </th>
+        <tr>
             <th>Nội dung</th>
             <th>Mã</th>
             <th>Số lượng</th>
@@ -75,24 +89,25 @@
             <th>Hạn sử dụng</th>
             <th>Trạng thái</td>
             <th>Action</th>
-          </tr>
+        </tr>
         </thead>
         <tbody>             
                 @foreach($data as $item)
                     <tr>
-                        <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-                        <td><p class="text-ellipsis name">{{$item->name}}</p></td>    
-                        <td><p class="text-ellipsis name">{{$item->code}}</p></td>                      
-                        <td><p class="text-ellipsis name">{{$item->amount}}</p></td>
-                        <td><p class="text-ellipsis name">{{$item->used}}</p></td>     
-                        <td><p class="text-ellipsis name">{{$item->condition}}</p></td> 
-                        <td><p class="text-ellipsis name">
-                          @if($item->condition=='percent')
-                          {{$item->rate.' '.'%'}}
-                          @else
-                          {{number_format((int)$item->rate)}}
-                          @endif
-                        </p></td> 
+                        <td><p class=" name">{{$item->name}}</p></td>    
+                        <td><p class=" code">{{$item->code}}</p></td>                      
+                        <td><p class=" amount">{{$item->amount}}</p></td>
+                        <td><p class=" used">{{$item->used}}</p></td>     
+                        <td><p class=" condition">{{$item->condition}}</p></td> 
+                        <td>
+                            <p class=" money">
+                                @if($item->condition=='percent')
+                                    {{$item->rate.' '.'%'}}
+                                @else
+                                    {{number_format((int)$item->rate, 0, ',', '.')}}đ
+                                @endif
+                            </p>
+                        </td> 
                         <td>{{date("d/m/Y h:i:s", strtotime($item->duration_start));}}</td>  
                         <td>{{date("d/m/Y h:i:s", strtotime($item->duration_end));}}</td>  
                         <td> 
@@ -108,8 +123,7 @@
                     </tr>
                 @endforeach       
         </tbody>
-      </table>
-    </div>
+    </table>
   </div>
 </div>
 <script>

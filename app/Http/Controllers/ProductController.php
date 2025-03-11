@@ -189,8 +189,8 @@ class ProductController extends Controller
         foreach($gallery as $item){
             $output.='<tr>
                 <th scope="row">1</th>
-                <td>'.'<img width="25%" src="'.url('public/uploads/gallery').'/'.$item->image.'">
-                <input accept="image/*" name="image'.$item->id.'" onchange="change_image_gallery('.$item->id.')" type="hidden" id="file-gallery-'.$item->id.'"></td>
+                <td>'.'<img width="100%" src="'.url('public/uploads/gallery').'/'.$item->image.'">
+                <input accept="image/*" name="image'.$item->id.'" onchange="change_image_gallery('.$item->id.')" type="file" id="file-gallery-'.$item->id.'"></td>
                 <td>'.$item->product->name.'</td>
                 <td><button onclick="delete_gallery('.$item->id.')" class="btn btn-danger" data-gallery_image="'.$item->image.'" type="button">Xóa</button></td>
             </tr>';

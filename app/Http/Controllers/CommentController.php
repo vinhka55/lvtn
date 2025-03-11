@@ -147,10 +147,7 @@ class CommentController extends Controller
         if($reply_comment->user_id==null) $reply_comment->user_id = 0;
         $reply_comment->save();
     }
-    public function delete_sub_comment(Request $req ){
-        $reply_comment= ReplyComment::where('id',$req->id_sub_comment);
-        $reply_comment->delete();
-    }
+    
     public function delete_comment(Request $req ){
         $comment= Comment::where('id',$req->id_comment);
         $comment->delete();
