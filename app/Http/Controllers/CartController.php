@@ -108,7 +108,8 @@ class CartController extends Controller
                         $product_image = $value->thumb;
                         $product_qty = $value->qty;
                         $product_price = $value->price;
-                        Cart::add($product_id, $product_name, $product_qty, $product_price,0,$product_image);                     
+                        $product_size = $value->size;
+                        Cart::add($product_id, $product_name, $product_qty, $product_price,0,$product_image,$product_size);                     
                     }
                     Session::put('added_cart','ok');
                 }

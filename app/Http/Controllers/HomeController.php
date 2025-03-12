@@ -8,21 +8,25 @@ use App\Models\Product;
 use App\Models\CategoryProduct;
 use Carbon\Carbon;
 use App\Models\Visitors;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
     public function index(Request $req)
     {
-        
-        $bong_da=Product::with('sizes')->where('category_id',19)->where('status',1)->limit(6)->get();
-        $bong_ro=DB::table('product')->where('category_id',20)->where('status',1)->limit(6)->get();
-        $tennis=DB::table('product')->where('category_id',21)->where('status',1)->limit(6)->get();
-        $gym=DB::table('product')->where('category_id',22)->where('status',1)->limit(6)->get();
-        $boi=DB::table('product')->where('category_id',23)->where('status',1)->limit(6)->get();
-       
         $data= [];
-        array_push($data,$bong_da,$bong_ro,$tennis,$gym,$boi);
-        $categoryProduct = CategoryProduct::all(); 
+        $category = CategoryProduct::where('status',1)->get();
+        Log::info($category);
+        foreach ($category as $value) {
+            $products = Product::where('category_id', $value->id)
+                        ->where('status', 1)
+                        ->limit(6)
+                        ->get();   
+            // Chỉ thêm nếu có sản phẩm
+            if ($products->isNotEmpty()) {
+                $data[] = $products; // Thêm vào mảng
+            }
+        }
         $date = Carbon::today()->toDateString();
         // Kiểm tra xem đã có bản ghi của ngày hôm nay chưa
         $visit = Visitors::where('date_visitor', $date)->first();
@@ -35,7 +39,7 @@ class HomeController extends Controller
             ]);
         }
         
-        return view('page.home',['categoryProduct'=>$categoryProduct,'data'=>$data]);
+        return view('page.home',['data'=>$data]);
         // return view('page.home',['data'=>$data]);
     }
     public function search(Request $req)

@@ -49,9 +49,6 @@
     }
 </style>
 <div class="container-fluid my-1">
-    <!-- <div class="slider-top mt-3">
-        <img width="100%" src="https://thucphamhuunghi.com/plugins/hinh-anh/banner/horizontal-404x-768-768-q1.webp" alt="top banner">
-    </div> -->
     <div class="slide">
         <div class="one-slide one-slide--active" style="background-image: url('{{url('/')}}/public/assets/img/slide/index_slider_img_1.png');">
         </div>

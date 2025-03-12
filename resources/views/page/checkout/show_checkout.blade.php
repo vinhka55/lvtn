@@ -14,6 +14,9 @@
         border: 1px solid #ddd;
         border-radius: 5px;
     }
+    .label-tinh, .label-huyen, .label-xa {
+        min-width: 26%;
+    }
 </style>
 <div class="container mx-auto my-5 py-4">
     <div class="row m-0 p-0">
@@ -36,19 +39,19 @@
                 </div>
                 <div class="col-12">
                     <div class="form-group">
-                        <label for="tinh">Chọn Tỉnh/Thành phố:</label>
+                        <label for="tinh" class="label-tinh">Chọn Tỉnh/Thành phố:</label>
                         <select id="tinh">
                             <option value="">Chọn tỉnh/thành phố</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="huyen">Chọn Quận/Huyện:</label>
+                        <label for="huyen" class="label-huyen">Chọn Quận/Huyện:</label>
                         <select id="huyen" disabled>
                             <option value="">Chọn quận/huyện</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="xa">Chọn Xã/Phường/Thị trấn:</label>
+                        <label for="xa" class="label-xa">Chọn Xã/Phường/Thị trấn:</label>
                         <select id="xa" disabled>
                             <option value="">Chọn xã/phường/thị trấn</option>
                         </select>
@@ -93,7 +96,7 @@
                         <input type="radio" id="cash" name="pay" value="cash">
                         <label for="cash"> Tiền mặt</label><br>
                         <input type="radio" id="atm" name="pay" value="atm">
-                        <label for="atm"> ATM</label><br>
+                        <label for="atm"> Chuyển khoản</label><br>
                         <?php
                             //đoạn code tạo unique mã đơn hàng lấy trên mạng
                             $stamp = strtotime("now");
@@ -209,6 +212,89 @@ $(document).ready(function() {
             }
         });
     });
-})
+    // chọn phương thức thanh toán chuyển khoản 
+    $('#pay_online_method input').on('change', function() {
+        var order_code=$('#order_code').val()
+        $( ".id-bank" ).remove();
+        if($('input[name=pay]:checked', '#pay_online_method').val()=='atm')
+        {
+            $('#pay_online_method').append('<div class="id-bank border border-primary p-3"><p>Chủ tài khoản: Lê Hữu Vinh STK: 189200331 Ngân hàng: VPBANK </p><p>Chủ tài khoản: Lê Hữu Vinh STK: 123456778 Ngân hàng: VIETCOMBANK </p><p class="text-danger h4">Nội dung chuyển khoản là mã đơn hàng của bạn: '+order_code+'</p></div>')
+        }
+    })
+    let form = $('#form-checkout');
+    $('.checkout-now').click(function(){ 
+        $("#error-name-null").html("")
+        $("#error-phone-null").html("")
+        $("#error-email-null").html("")
+        $("#error-pay-null").html("")
+        if($('#name').val()==""){
+            $("#error-name-null").html("Tên không được bỏ trống")    
+        }
+        else if($('#phone').val()==""){
+            $("#error-phone-null").html("Sô điện thoại không được bỏ trống")
+        }
+        else if($('#email').val()==""){
+            $("#error-email-null").html("Email không được bỏ trống")
+        }
+        else if($('input[name="pay"]:checked','#pay_online_method').val()==undefined){
+            $("#error-pay-null").html("Chọn 1 phương thức thanh toán")
+        }
+        else{
+            var name=$('#name').val()
+            var phone=$('#phone').val()
+            var email=$('#email').val()
+            var address =$('#address-re').val() ? $('#address-re').val() + ', ' + $('#xa option:selected').text() + ', ' + $('#huyen option:selected').text() + ', ' + $('#tinh option:selected').text() : $('#xa option:selected').text() + ', ' + $('#huyen option:selected').text() + ', ' + $('#tinh option:selected').text()
+            var notes=$('#notes').val()
+            var _token = $('input[name="_token"]').val()
+            var order_code=$('#order_code').val()
+            var pay=$('input[name="pay"]:checked','#pay_online_method').val()
+            var ship = $('#shippingFee').text().replace(/\./g, '').replace('₫', '').trim()
+            console.log(ship);
+            
+            var data={name:name,email:email,phone:phone,address:address,notes:notes,_token:_token,pay:pay,order_code:order_code,ship:ship}
+        
+            swal({
+            title: "Bạn chắc chắn đặt hàng?",
+            text: "Bấm OK để xác nhận đặt hàng, nếu chưa chắc chắn hãy bấm Cancel",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            })
+            .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: "{{route('order_place')}}",
+                    method: 'POST',
+                    data: data,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Thêm token vào header
+                    },
+                    success:function(data){
+                        console.log(data)
+                    },
+                    error:function(xhr){
+                        console.log(xhr.responseText);
+                    }
+                });
+                swal({
+                    title: "Cảm ơn bạn đã mua hàng",
+                    icon: "success",
+                    buttons: ["Tiếp tục mua", "Lịch sử mua"],
+                    dangerMode: true,
+                    
+                    })
+                    .then((willDelete) => {
+                    if (willDelete) {
+                        window.location.href = "{{route('my_order')}}";
+                    } else {
+                        window.location.href = "{{route('home')}}";
+                    }
+                    });
+                //window.location.href = "{{url('/')}}/don-hang-cua-toi";
+                }
+            });          
+        }    
+    })
+})         
 </script>
 @stop

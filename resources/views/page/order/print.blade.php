@@ -1,137 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <title>Đơn hàng của tôi</title>
     <style>
-    *{ font-family: DejaVu Sans !important;}
-    @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin-ext');
-    body {font-family: 'Roboto', sans-serif;}
-  </style>
-  
+        body {
+            font-family: 'Arial', 'Tahoma', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        .card {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #f8f8f8;
+        }
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            color: #d32f2f;
+            text-align: right;
+        }
+        .back-btn {
+            text-decoration: none;
+            color: #007bff;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .back-btn i {
+            margin-right: 5px;
+        }
+        .product-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        @media print {
+            * {
+                font-family: 'Arial', sans-serif !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-    <div style="text-align: center;">
-        <p><b style="font-size:23px;">Cộng Hòa Xã Hội Chủ Nghĩa Việt Nam</b></p>
-        <p><b style="font-size:23px;">Độc lập-Tự do-Hạnh phúc</b></p>
-    </div>
-    
-    <div class="mt-5">
-        <p class="text-center" style="font-size:20px;">Công ty TNHH thực phẩm sạch VINH-HOA</p>
-        <p class="text-center" style="font-size:20px;">ĐƠN HÀNG ĐÃ MUA</p>
-    </div>
-    <p><b style="font-size:23px;">Mã đơn hàng: {{$order_code}}</b></p>
-    <!-- Thông tin giao hàng -->
-<div class="container">
-    <div class="table-agile-info">
-    <div class="panel panel-default">
-        <div class="panel-heading h3">
-        Thông tin giao hàng
-        </div>
-        <div class="table-responsive">
-        <table class="table table-striped b-t b-light">
-            <thead>
+        <h2>Thông tin giao hàng</h2>
+        @foreach($info_shipping as $item)
+            <div class="card">
+                <p><strong>Khách hàng:</strong>{{$item->name}}</p>
+                <p><strong>Số điện thoại:</strong> {{$item->phone}}</p>
+                <p><strong>Email:</strong> {{$item->email}}</p>
+                <p><strong>Địa chỉ:</strong> {{$item->address}}</p>
+                <p><strong>Thanh toán:</strong> {{$item->pay_method}}</p>
+            </div>
+        @endforeach
+        <h2>Chi tiết sản phẩm</h2>
+        <table>
             <tr>
-                <th>Tên khách hàng</td>
-                <th>Số điện thoại</th>
-                <th>Email</th>      
-                <th>Địa chỉ</th>
-                <th>Cách thanh toán</th>      
-                <th>Ghi chú</th>           
-            </tr>
-            </thead>
-            <tbody>                    
-                        
-                        <tr>
-                            
-                            <td><p class="text-ellipsis name">{{$info_shipping->name}}</p></td>
-                            <td><p class="text-ellipsis name">{{$info_shipping->phone}}</p></td>
-                            <td><p class="text-ellipsis name">{{$info_shipping->email}}</p></td> 
-                            <td><p class="text-ellipsis name">{{$info_shipping->address}}</p></td>
-                            <td><p class="text-ellipsis name">{{$info_shipping->pay_method}}</p></td>
-                            <td><p class="text-ellipsis name">{{$info_shipping->notes}}</p></td>                                              
-                        </tr>
-                        
-            </tbody>
-        </table>
-        </div>
-    </div>
-    </div>
-</div>
-
-<!-- Chi tiết sản phẩm -->
-<div class="container">
-    <div class="table-agile-info">
-    <div class="panel panel-default">
-        <div style="font-size:24px;">
-        <b>Chi tiết sản phẩm</b>
-        </div>
-        <div class="table-responsive">
-        <table class="table table-striped b-t b-light">
-            <thead>
-            <tr>
-
-                <th>Tên sản phẩm</td>
+                <th>Ảnh</th>
+                <th>Sản phẩm</th>
                 <th>Giá</th>
-                <th>Số lượng</th>  
-                <th>Tổng tiền</th>   
+                <th>Số lượng</th>
+                <th>Tổng</th>
             </tr>
-            </thead>
-            <tbody>     
-                        <?php $total_money=0; ?>            
-                        @foreach($info_product as $item)
-                        <?php $order_z=$item->order_id ?>
-                        <tr>                            
-                            <td><p class="text-ellipsis name text-center">{{$item->product_name}}</p></td>
-                            <td><p class="text-ellipsis name text-center">{{number_format($item->product_price)}}</p></td>                     
-                            <td>    
-                                <p class="text-ellipsis name text-center">{{$item->product_quantyti}}</p>  
-                                <!-- <input type="number" disabled class="order_product_qty_{{$item->id}}" name="product_sales_quantity" value="{{$item->product_quantyti}}">       -->
-                            </td>
-                            <td><?php echo number_format($item->product_price*$item->product_quantyti).' VND'; ?></td>                             
-                            <?php $total_money=$total_money+$item->product_price*$item->product_quantyti;?>                
-                        </tr>
-                        @endforeach 
-                        
-            </tbody>
+            <?php 
+                $total_money=0; 
+            ?> 
+            @foreach($info_product as $item)
+            <tr>
+                <td>
+                    <img class="product-img" src="{{url('/')}}/public/uploads/product/{{$item->product->image}}" alt="{{$item->product_name}}" >
+                </td>
+                <td>{{$item->product_name}}</td>
+                <td>{{number_format($item->product_price, 0, ',', '.')}} đ</td>
+                <td>{{$item->product_quantyti}}</td>
+                <td>
+                    <?php echo number_format($item->product_price*$item->product_quantyti, 0, ',', '.').' đ'; ?>
+                </td>
+                <?php 
+                    $total_money = $total_money + ($item->product_price * $item->product_quantyti);
+                ?>
+            </tr>
+            @endforeach
         </table>
-        
-        <br>
+        @foreach($order as $item)
+        <div class="card">
+            <p><strong>Tổng tiền:</strong>{{number_format($total_money, 0, ',', '.')}} đ</p>
+            <p><strong>Phí vận chuyển:</strong> {{number_format($item->fee_ship, 0, ',', '.')}} đ</p>
+            <p><strong>Giảm giá:</strong> {{number_format($item->discount, 0, ',', '.')}} đ</p>
+            <p class="total">Số tiền cần thanh toán: {{number_format($total_money - $item->discount + $item->fee_ship, 0, ',', '.')}} đ</p>
         </div>
-        <?php echo "<b>Tổng tiền:</b> ".number_format($total_money).' VND' ; ?>
-        <br>
-        <?php echo "<b>Thuế VAT 10%:</b> ".number_format($total_money*10/100).' VND' ; ?>
-        <br>
-        <?php
-            if(Session::get('discount')){
-                $discount=Session::get('discount');
-                echo "<b>Giảm giá:</b> ".number_format(Session::get('discount')).' VND' ; 
-            }
-            else{
-                $discount=0;
-                echo "<b>Giảm giá:</b> 0 VND";
-            }
-        ?>
-        <br>
-        <?php echo "<b>Số tiền cần thanh toán:</b> ".number_format($total_money+$total_money*10/100-$discount).' VND' ;
-        ?>
+        @endforeach
+        <div class="float-left">
+            <b>Người mua hàng</b>
+        </div>
+        <div class="float-right">
+            <b>Giám đốc</b>
+            <p class="text-center">Lê Hữu Vinh</p>
+        </div>
     </div>
-    </div>
-</div>
-<br>
-<div class="float-left">
-    <p><b>Người mua hàng</b></p>
-    
-</div>
-<div class="float-right">
-    <p><b>Giám đốc</b></p>
-    <p class="text-center">Lê Hữu Vinh</p>
-</div>
-</div>
 </body>
 </html>

@@ -84,8 +84,6 @@ class OrderController extends Controller
             //thêm thông báo cho admin khi khách mua thành công
             // $messege="1 đơn hàng mới giá";
             // event(new InboxPusherEventAdmin($messege));
-            
-
             //insert chi tiết đơn hàng      
             $content=Cart::items()->original;
             foreach($content as $item){
@@ -111,9 +109,7 @@ class OrderController extends Controller
                 $email->to(Session::get('dmm'),Session::get('name_user'))->subject('Đơn hàng của bạn!');
             });
 
-
             DB::commit();
-
             //return view('page.checkout.payment_done');
             Session::forget('discount');
             Session::forget('id_coupon');
@@ -126,13 +122,10 @@ class OrderController extends Controller
                 'msg' => $th->getMessage()
             ],500);
         }
-        
-
     }
     
     public function list_order()
-    {
-        
+    {   
         $data=DB::table('order')->join('user','order.customer_id','=','user.id')->select('order.*','user.name')->orderby('order.id','desc')->get();
         return view('admin.order.list',compact('data'));
     }

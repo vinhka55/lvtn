@@ -1,101 +1,122 @@
 @extends("welcome")
 @section("title","Detail Order")
 @section("content")
-<!-- Thông tin người đặt hàng -->
-<div class="container" style="margin-top:80px;">
-    <div class="table-agile-info">
-        <a href="{{url()->previous()}}"><i class="fa fa-arrow-left" aria-hidden="true"></i>Quay lại</a>
-    </div>
-</div>
-<!-- Thông tin giao hàng -->
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+        color: #333;
+    }
+    .card {
+        background: #fff;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+    th {
+        background: #f8f8f8;
+    }
+    .total {
+        font-size: 18px;
+        font-weight: bold;
+        color: #d32f2f;
+        text-align: right;
+    }
+    .back-btn {
+        text-decoration: none;
+        color: #007bff;
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .back-btn i {
+        margin-right: 5px;
+    }
+    .product-img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+    .print-order{
+        background-color: var(--main-color);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
+</style> 
+
 <div class="container">
-    <div class="table-agile-info">
-    <div class="panel panel-default">
-        <div class="panel-heading h3">
-        Thông tin giao hàng
-        </div>
-        <div class="table-responsive">
-        <table class="table table-striped b-t b-light">
-            <thead>
-            <tr>
-
-                <th>Tên khách hàng</td>
-                <th>Số điện thoại</th>
-                <th>Email</th>      
-                <th>Địa chỉ</th>
-                <th>Cách thanh toán</th>      
-                <th>Ghi chú</th>           
-            </tr>
-            </thead>
-            <tbody>                    
-                        @foreach($info_shipping as $item)
-                        <tr>
-                            
-                            <td><p class="text-ellipsis name">{{$item->name}}</p></td>
-                            <td><p class="text-ellipsis name">{{$item->phone}}</p></td>
-                            <td><p class="text-ellipsis name">{{$item->email}}</p></td> 
-                            <td><p class="text-ellipsis name">{{$item->address}}</p></td>
-                            <td><p class="text-ellipsis name">{{$item->pay_method}}</p></td>
-                            <td><p class="text-ellipsis name">{{$item->notes}}</p></td>                                              
-                        </tr>
-                        @endforeach    
-            </tbody>
-        </table>
-        </div>
+    <a href="{{url()->previous()}}" class="back-btn"><i class="fas fa-arrow-left"></i> Quay lại</a>
+    <h2>Thông tin giao hàng</h2>
+    <div class="card">
+        @foreach($info_shipping as $item)
+            <p><strong>Khách hàng:</strong> {{$item->name}}</p>
+            <p><strong>Số điện thoại:</strong> {{$item->phone}}</p>
+            <p><strong>Email:</strong> {{$item->email}}</p>
+            <p><strong>Địa chỉ:</strong> {{$item->address}}</p>
+            <p><strong>Thanh toán:</strong> {{$item->pay_method}}</p>
+        @endforeach
     </div>
+    <h2>Chi tiết sản phẩm</h2>
+    <table>
+        <tr>
+            <th>Ảnh</th>
+            <th>Sản phẩm</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Tổng</th>
+        </tr>
+        <?php 
+            $total_money=0; 
+        ?> 
+        @foreach($info_product as $item)
+        <tr>
+            <td>
+                <img class="product-img" src="{{url('/')}}/public/uploads/product/{{$item->product->image}}" alt="{{$item->product_name}}" >
+            </td>
+            <td>{{$item->product_name}}</td>
+            <td>{{number_format($item->product_price, 0, ',', '.')}} đ</td>
+            <td>{{$item->product_quantyti}}</td>
+            <td>
+                <?php echo number_format($item->product_price*$item->product_quantyti, 0, ',', '.').' đ'; ?>
+            </td>
+            <?php 
+                $total_money = $total_money + ($item->product_price * $item->product_quantyti);
+            ?>
+        </tr>
+        @endforeach
+    </table>
+    
+    <div class="card">
+        <p><strong>Tổng tiền:</strong>{{number_format($total_money, 0, ',', '.')}} đ</p>
+        <p><strong>Phí vận chuyển:</strong> {{number_format($fee_ship, 0, ',', '.')}} đ</p>
+        <p><strong>Giảm giá:</strong> {{number_format($discount, 0, ',', '.')}} đ</p>
+        <p class="total">Số tiền cần thanh toán: {{number_format($total_money-$discount+$fee_ship, 0, ',', '.')}} đ</p>
     </div>
-</div>
-
-<!-- Chi tiết sản phẩm -->
-<div class="container">
-    <div class="table-agile-info">
-    <div class="panel panel-default">
-        <div class="panel-heading h3">
-        Chi tiết sản phẩm
-        </div>
-        <div class="table-responsive">
-        <table class="table table-striped b-t b-light">
-            <thead>
-            <tr>
-
-                <th>Tên sản phẩm</td>
-                <th>Giá</th>
-                <th>Số lượng</th>  
-                <th>Tổng tiền</th>   
-            </tr>
-            </thead>
-            <tbody>     
-                        <?php $total_money=0; ?>            
-                        @foreach($info_product as $item)
-                        
-                        <tr>                            
-                            <td><p class="text-ellipsis name">{{$item->product_name}}</p></td>
-                            <td><p class="text-ellipsis name">{{number_format($item->product_price, 0, ',', '.')}} đ</p></td>                     
-                            <td>      
-                                <input type="number" disabled class="order_product_qty_{{$item->id}}" name="product_sales_quantity" value="{{$item->product_quantyti}}">      
-                            </td>
-                            <td><?php echo number_format($item->product_price*$item->product_quantyti, 0, ',', '.').' đ'; ?></td>                             
-                            <?php $total_money=$total_money+$item->product_price*$item->product_quantyti;?>                
-                        </tr>
-                        @endforeach
-                        
-            </tbody>
-        </table>
-        
-        <br>
-        </div>
-        <?php
-            echo "Tổng tiền: ".number_format($total_money, 0, ',', '.').' đ'; 
-            echo "<br>";
-            echo "Phí vận chuyển: ".number_format($fee_ship, 0, ',', '.').' đ';
-            echo "<br>";
-            echo "Giảm giá: ".number_format($discount, 0, ',', '.').' đ';
-            echo "<br>";
-        ?>
-        <?php echo "<h2>Số tiền cần thanh toán: ".number_format($total_money-$discount+$fee_ship, 0, ',', '.').' đ </h2>' ;
-        ?>
-    </div>
-    </div>
-    <a href="{{url('/')}}/in-don-hang/<?php echo $order_id; ?>" class="btn btn-info main-color" style="border:none">In đơn hàng</a>
+    <a href="{{url('/')}}/in-don-hang/<?php echo $order_id; ?>" class="btn print-order" style="border:none">In đơn hàng</a>
 </div>
 @stop
