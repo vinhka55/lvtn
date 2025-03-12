@@ -338,6 +338,14 @@
         background-color: var(--main-color);
         color: white;
     }
+    .verified-buyer {
+            background-color: #28a745;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
 </style>
 @foreach($product as $item)
     <div class="container">
@@ -461,7 +469,6 @@
         @else
             <div class="text-center w-100"><h3 class="text-danger">Đăng nhập để bình luận</h3></div>
         @endif
-
         <div class="show-comment row">
         </div>
         <!-- end comment -->
@@ -577,15 +584,12 @@ function changeImageByArrow(direction) {
             year: "numeric",
             month: "2-digit",
             day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
             hour12: false
         }).format(now);
 
         return vietnamTime.replace(/\//g, "-").replace(",", "");
     }
-    function handle_send_rep(id_comment) {
+    function handle_send_rep(id_comment,product_id) {
         $(".empty-rep").html("")
         var content_reply = $(".txtarea-content-rep").val()
         if(content_reply.length==0){
@@ -595,9 +599,11 @@ function changeImageByArrow(direction) {
         var _token = $('input[name="_token"]').val()
         var name = $('.name-' + id_comment).val()
         var avatar = $('.avatar-' + id_comment).val()
+        var product_id = product_id
         var data = {
             content_reply: content_reply,
             id_comment: id_comment,
+            product_id:product_id,
             _token: _token
         }
         
@@ -608,8 +614,7 @@ function changeImageByArrow(direction) {
             success: function(data) {
                 $(".comment-reply-" + id_comment).html("")
                 $(".comment-reply-" + id_comment).hide()
-                $(".append-reply-" + id_comment).append(
-                '<div class="row mt-2"><div class="col-3"><a class="me-3" href="#"><img class="rounded-circle shadow-1-strong img-user-rep-comment" src="' + '{{url("/")}}/public/uploads/avatar/' + avatar + '"alt="avatar" width="65" height="65" /> </a></div> <div class="flex-grow-1 flex-shrink-1 col-9"><div class="d-flex justify-content-between align-items-center"> <p class="mb-1 text-success">' + name + ' <span class="small"> ' + getVietnamTime() + '</span> </p></div><p class="small mb-0"> ' + content_reply + '</p></div></div></div>')             
+                $(".append-reply-" + id_comment).after(data)                         
             },
             error: function(xhr) {
                 console.log(xhr.responseText);
@@ -619,7 +624,7 @@ function changeImageByArrow(direction) {
     function cancel_send_rep(id_comment){
         $(".comment-reply-" + id_comment).hide()
     }
-    function rep(id_comment) {
+    function rep(id_comment,product_id) {
         if($('#user_id_hidden').val()==undefined){
             $(".comment-reply-" + id_comment).html(
             "<div class='text-center'><small class='text-danger '>Đăng nhập để trả lời comment</small></div>"
@@ -627,7 +632,7 @@ function changeImageByArrow(direction) {
         }
         else{
             $(".comment-reply-" + id_comment).html(
-            "<p><textarea class='txtarea-content-rep w-100'></textarea><p class='empty-rep text-danger'></p><button class='btn btn-send-rep-comment white' onclick='handle_send_rep(" + id_comment +
+            "<p><textarea class='txtarea-content-rep w-100'></textarea><p class='empty-rep text-danger'></p><button class='btn btn-send-rep-comment white' onclick='handle_send_rep(" + id_comment + ',' + product_id +
             ")'>Gửi</button><button class='btn btn-danger btn-cancel-rep-comment' onclick='cancel_send_rep(" + id_comment + ")'>Hủy</button></p>"
             )
             $(".comment-reply-" + id_comment).show()
