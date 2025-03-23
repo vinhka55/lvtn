@@ -20,7 +20,7 @@ class HomeController extends Controller
         foreach ($category as $value) {
             $products = Product::where('category_id', $value->id)
                         ->where('status', 1)
-                        ->limit(6)
+                        ->limit(8)
                         ->get();   
             // Chỉ thêm nếu có sản phẩm
             if ($products->isNotEmpty()) {

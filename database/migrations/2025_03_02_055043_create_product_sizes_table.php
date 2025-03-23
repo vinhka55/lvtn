@@ -13,13 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('product_sizes', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('product_id')->constrained('product')->onDelete('cascade');
-            $table->string('size');
-            $table->integer('quantity')->default(0); // Số lượng tồn kho cho size đó
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('product_sizes')) {
+            Schema::create('product_sizes', function (Blueprint $table) {
+                $table->id();
+                $table->Integer('product_id');
+                $table->foreign('product_id')->references('id')->on('product')->onDelete('cascade');
+                $table->string('size');
+                $table->integer('quantity')->default(0); // Số lượng tồn kho cho size đó
+                $table->timestamps();
+            });
+        }
     }
 
     /**

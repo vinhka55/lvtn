@@ -103,7 +103,7 @@
                         <td><p class="text-ellipsis">{{$item->count}}</p></td>
                         <td><p class="text-ellipsis">{{$item->count_sold}}</p></td>                       
                         <td>
-                        <a title="click to edit" href="{{route('edit_product',$item->id)}}" ><i class="fa fa-pencil-square-o text-success text-active"></i></a>
+                        <a title="click to edit" href="{{route('edit_product',$item->id)}}" ><i class="far fa-edit"></i></a>
                         <a title="click to delete" onclick="return confirm('Are you sure?')" href="{{route('delete_product',$item->id)}}"><i class="fas fa-trash-alt text-danger text"></i></a>
                         </td>
                     </tr>

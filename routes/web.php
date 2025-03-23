@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Kind;
 // address 
 Route::post('/chon-huyen','App\Http\Controllers\ShippingController@choose_address')->name('choose_address');
 Route::post('/chon-xa','App\Http\Controllers\ShippingController@choose_ward')->name('choose_ward');
@@ -46,6 +47,10 @@ Route::group(['prefix'=>'admin','middleware'=>['auth.AdminAndAuthor']],function(
     Route::get('xoa-san-pham/{id}','App\Http\Controllers\ProductController@delete')->name('delete_product');
     Route::get('sua-san-pham/{id}','App\Http\Controllers\ProductController@edit')->name('edit_product');
     Route::post('xu-ly-sua-san-pham','App\Http\Controllers\ProductController@handle_edit')->name('handle_edit_product');
+    Route::get('sua-san-pham/get-kinds/{category_id}', function ($category_id) {
+        $kinds = Kind::where('category_id', $category_id)->get();
+        return response()->json($kinds);
+    });
 });
 Route::get('san-pham/{id}','App\Http\Controllers\ProductController@detail')->name('detail_product');
 Route::get('danh-muc-san-pham/{slug}','App\Http\Controllers\ProductController@show_product_with_category')->name('show_product_with_category');
@@ -223,5 +228,11 @@ Route::post('loc-doanh-thu-theo-thoi-gian','App\Http\Controllers\StatisticContro
 Route::get('doanh-thu-30-ngay','App\Http\Controllers\StatisticController@get_statistic_30days')->name('get_statistic_30days');
 Route::post('doanh-thu-theo-khoang-thoi-gian','App\Http\Controllers\StatisticController@get_statistic_with_time')->name('get_statistic_with_time');
 
-
 Route::get('/status', 'App\Http\Controllers\UserController@userOnlineStatus');
+
+// Kind product
+Route::get('/get-kinds/{category_id}', function ($category_id) {
+    $kinds = Kind::where('category_id', $category_id)->get();
+    return response()->json($kinds);
+});
+

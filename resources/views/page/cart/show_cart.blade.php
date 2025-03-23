@@ -96,17 +96,17 @@
                         <p class="h3 fw-bolder">Giảm giá <span>
                         @foreach($coupon as $item)								
                             @if($item->condition=='percent')
-                            <?php 
-                            $discount= $item->rate*(Cart::total()+$tax)/100;
-                            echo number_format($discount, 0, ',', '.'). 'đ';
-                            Session::put('discount',$discount);							
-                            ?>
+                                <?php 
+                                    $discount= $item->rate*(Cart::total())/100;
+                                    echo number_format($discount, 0, ',', '.'). 'đ';
+                                    Session::put('discount',$discount);							
+                                ?>
                             @else
-                            <?php 
-                            $discount= $item->rate;
-                            echo number_format($discount, 0, ',', '.').' đ';	
-                            Session::put('discount',$discount);							
-                            ?>
+                                <?php 
+                                    $discount= $item->rate;
+                                    echo number_format($discount, 0, ',', '.').' đ';	
+                                    Session::put('discount',$discount);							
+                                ?>
                             @endif
                         @endforeach
                         </span></p>

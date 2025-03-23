@@ -13,21 +13,23 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('product', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('origin');
-            $table->string('price');
-            $table->dateTime('exp');
-            $table->integer('category_id');
-            $table->text('description');
-            $table->string('image');
-            $table->integer('count');
-            $table->integer('count_sold')->default(0);
-            $table->string('status');
-            $table->text('note');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('product')) {
+            Schema::create('product', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('origin');
+                $table->string('price');
+                $table->dateTime('exp');
+                $table->integer('category_id');
+                $table->text('description');
+                $table->string('image');
+                $table->integer('count');
+                $table->integer('count_sold')->default(0);
+                $table->string('status');
+                $table->text('note');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

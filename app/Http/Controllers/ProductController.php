@@ -40,6 +40,7 @@ class ProductController extends Controller
         $product->old_price=$req->price + rand(10,25) * 50000;
         $product->guarantee=$req->guarantee;
         $product->category_id=$req->category_id;
+        $product->kind_id=$req->kind_id;
         $product->description=$req->description;
         $product->image=$req->file("image"); 
         $product->count=$req->count;
@@ -94,13 +95,15 @@ class ProductController extends Controller
         $my_avatar=DB::table('user')->where('id',Session::get('user_id'))->value('avatar');
         $product=Product::with('category')->where('id',$id)->get();
         $category_id = DB::table('product')->where('id',$id)->value('category_id');
-        $productSameCategory = DB::table('product')->where('category_id',$category_id)->whereNotIn('id',[$id])->get();
+        $kind_id = DB::table('product')->where('id',$id)->value('kind_id');
+        // $productSameCategory = DB::table('product')->where('category_id',$category_id)->whereNotIn('id',[$id])->get();
+        $sameProduct = Product::where('category_id', $category_id)->where('kind_id',  $kind_id)->whereNotIn('id',[$id])->get();
         foreach ($product as $key => $value) {
             $value->view=$value->view+1;
             $value->save();
         }
         $gallerys=Gallery::where('product_id',$id)->get();
-        echo view('page.product.check_product',['product'=>$product,'productSameCategory'=>$productSameCategory,'my_avatar'=>$my_avatar,'gallerys'=>$gallerys]);
+        echo view('page.product.check_product',['product'=>$product,'sameProduct'=>$sameProduct,'my_avatar'=>$my_avatar,'gallerys'=>$gallerys]);
     }
     public function edit($id)
     {
@@ -115,6 +118,7 @@ class ProductController extends Controller
         $product->price=$req->price;
         $product->exp=$req->exp;
         $product->category_id=$req->category_id;
+        $product->kind_id=$req->kind_id;
         $product->description=$req->description;
         $product->image=$req->file("image");
         $product->count=$req->count;
@@ -145,7 +149,7 @@ class ProductController extends Controller
         $name_category = CategoryProduct::where('slug', $slug)->value('name');
 
         // Mặc định lấy tất cả sản phẩm theo category
-        $query = Product::where('category_id', $id);
+        $query = Product::with('kind')->where('category_id', $id);
 
         // Kiểm tra nếu có yêu cầu sắp xếp từ AJAX
         if ($request->ajax()) {
@@ -155,6 +159,10 @@ class ProductController extends Controller
                 $query->orderBy('price', 'desc');
             } elseif ($request->sort == 'sold') {
                 $query->orderBy('count_sold', 'desc');
+            } elseif ($request->sort == $name_category.$request->kind_id) {
+                $kindId = $request->kind_id;
+                // Lấy danh sách sản phẩm theo kind_id
+                $query = Product::where('kind_id', $kindId);
             }
             $products = $query->get();
             return view('page.product.product_list_sort', compact('products'))->render();

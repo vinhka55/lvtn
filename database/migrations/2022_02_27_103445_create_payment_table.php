@@ -13,12 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('payment', function (Blueprint $table) {
-            $table->id();
-            $table->string('method');
-            $table->string('status');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('payment')) {
+            Schema::create('payment', function (Blueprint $table) {
+                $table->id();
+                $table->string('method');
+                $table->string('status');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

@@ -13,14 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        if (!Schema::hasTable('coupon')) {
-            Schema::create('coupon', function (Blueprint $table) {
+        if (!Schema::hasTable('kinds')) {
+            Schema::create('kinds', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
-                $table->string('code');
-                $table->integer('amount');
-                $table->string('condition');
-                $table->string('rate');
+                $table->Integer('category_id');
                 $table->timestamps();
             });
         }
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coupon');
+        Schema::dropIfExists('kinds');
     }
 };

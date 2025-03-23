@@ -21,13 +21,13 @@
     }
     
     .image-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 400px;
-}
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 400px;
+    }
 
     /* Ảnh sản phẩm chính */
     .main-img {
@@ -473,10 +473,23 @@
         </div>
         <!-- end comment -->
         <!-- related product  -->
-        @include("components.related-products",["product" => $productSameCategory])
+        @include("components.related-products",["product" => $sameProduct])
     </div>
 @endforeach
-    
+@foreach($product as $item)
+    <script>
+        // Lấy thông tin sản phẩm chi tiết từ trang
+        const currentProduct = {
+            name: "{{ $item->name }}",
+            image: "{{ url('/') }}/public/uploads/product/{{ $item->image }}",
+            price: "{{ number_format($item->price, 0, ',', '.') }}đ",
+            origin: "Xuất xứ: {{ $item->origin }}",
+            count_sold:  "Đã bán: {{ $item->count_sold }}",
+            guarantee: "Bảo hành: {{ $item->guarantee }} tháng",
+            note: "Mô tả: {{ $item->note }}"
+        };
+    </script>
+@endforeach
 <script>
     let mainImage = document.getElementById("mainImage");
 

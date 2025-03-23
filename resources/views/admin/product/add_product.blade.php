@@ -115,13 +115,20 @@
     <!-- Sản phẩm thuộc danh mục nào? -->
     <div class="form-group" style="width: 50%;">
         <label for="desc-product" class="control-label col-lg-3">Category</label>
-        <select class="form-control input-sm m-bot15" name="category_id">
+        <select class="form-control input-sm m-bot15" name="category_id" id="category">
+            <option value="">Chọn danh mục</option> 
             @foreach($category as $item)
-            <option value="{{$item->id}}">{{$item->name}}</option> 
+                <option value="{{$item->id}}">{{$item->name}}</option> 
             @endforeach      
         </select>
     </div>
-
+    <!-- Chọn Kind -->
+    <div class="form-group" style="width: 50%;">
+        <label for="kind" class="control-label col-lg-3">Kind</label>
+        <select class="form-control input-sm m-bot15" name="kind_id" id="kind">
+            <option value="">-- Chọn loại --</option>
+        </select>
+    </div>
     <!-- Mổ tả sản phẩm -->
     <div class="form-group">
         <label for="desc" class="control-label">Mô tả sản phẩm</label>
@@ -203,5 +210,24 @@
         });
         document.getElementById('count').value = total;
     }
+    $('#category').change(function () {
+        let categoryId = $(this).val();
+        $('#kind').html('<option value="">-- Chọn loại --</option>'); // Reset dữ liệu
+
+        if (categoryId) {
+            $.ajax({
+                url: 'get-kinds/' + categoryId,
+                type: 'GET',
+                success: function (data) {
+                    data.forEach(function (kind) {
+                        $('#kind').append(`<option value="${kind.id}">${kind.name}</option>`);
+                    });
+                },
+                error: function () {
+                    alert('Không thể lấy dữ liệu, vui lòng thử lại.');
+                }
+            });
+        }
+    });
 </script>
 @stop

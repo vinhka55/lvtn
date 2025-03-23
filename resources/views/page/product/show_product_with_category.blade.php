@@ -185,7 +185,20 @@
     <span>Sắp xếp theo:</span>
     <a href="#" class="sort-btn active" data-sort="all">Tất cả</a>
     <a href="#" class="sort-btn" data-sort="sold">Bán chạy</a>
-    <a href="#" class="sort-btn" data-sort="discount">Giảm giá</a>
+    <div class="sort-price-dropdown">
+        <button class="sort-btn dropdown-toggle">
+            Loại <span class="sort-arrow">▼</span>
+        </button>
+        @php
+            $kinds = $products->map->kind->filter()->unique('id');
+        @endphp
+
+        <div class="dropdown-menu">
+            @foreach($kinds as $kind)
+                <a href="#" class="sort-option" data-kind_id="{{ $kind->id }}" data-sort="{{ $name_category }}{{$kind->id}}">{{$kind->name}}</a>
+            @endforeach
+        </div>
+    </div>
     <a href="#" class="sort-btn" data-sort="new">Mới</a>
     <div class="sort-price-dropdown">
         <button class="sort-btn dropdown-toggle">
@@ -202,7 +215,7 @@
     @include('page.product.product_list_sort', ['products' => $products])
 </div>
 <script>
-$(".sort-btn").on("click", function(e) {
+    $(".sort-btn").on("click", function(e) {
         e.preventDefault();
         $(".sort-btn").removeClass("active");
         $(this).addClass("active");
@@ -221,11 +234,11 @@ $(".sort-btn").on("click", function(e) {
     $(".sort-option").on("click", function(e) {
         e.preventDefault();
         let sortType = $(this).data("sort");
-
+        let kindId = $(this).data("kind_id"); // Lấy ID của kind
         $.ajax({
             url: window.location.href,
             type: "GET",
-            data: { sort: sortType },
+            data: { sort: sortType, kind_id: kindId },
             success: function(response) {
                 $("#product-list").html(response);
             }

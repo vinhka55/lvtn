@@ -13,16 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('shipping', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('phone');
-            $table->string('email');
-            $table->string('address');
-            $table->string('notes');
-            $table->string('pay_method');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('shipping')) {
+            Schema::create('shipping', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('phone');
+                $table->string('email');
+                $table->string('address');
+                $table->string('notes');
+                $table->string('pay_method');
+                $table->timestamps();
+            });
+        }
     }
 
     /**

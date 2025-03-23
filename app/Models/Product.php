@@ -22,5 +22,10 @@ class Product extends Model
     {
         return $this->hasMany("App\Models\ProductSize");
     }
+    // Quan hệ: Mỗi sản phẩm thuộc về một loại (Kind)
+    public function kind()
+    {
+        return $this->belongsTo(Kind::class, 'kind_id');
+    }
 
 }
