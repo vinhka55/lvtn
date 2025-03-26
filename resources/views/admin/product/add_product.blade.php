@@ -114,7 +114,7 @@
 
     <!-- Sản phẩm thuộc danh mục nào? -->
     <div class="form-group" style="width: 50%;">
-        <label for="desc-product" class="control-label col-lg-3">Category</label>
+        <label for="desc-product" class="control-label">Danh mục sản phẩm</label>
         <select class="form-control input-sm m-bot15" name="category_id" id="category">
             <option value="">Chọn danh mục</option> 
             @foreach($category as $item)
@@ -124,10 +124,30 @@
     </div>
     <!-- Chọn Kind -->
     <div class="form-group" style="width: 50%;">
-        <label for="kind" class="control-label col-lg-3">Kind</label>
+        <label for="kind" class="control-label">Loại sản phẩm</label>
         <select class="form-control input-sm m-bot15" name="kind_id" id="kind">
             <option value="">-- Chọn loại --</option>
         </select>
+    </div>
+    <!-- Sản phẩm phù hợp với giới tính nào -->
+    <div class="form-group" style="width: 50%;">
+        <label for="gender" class="control-label">Phù hợp với</label>
+        <select class="form-control input-sm m-bot15" name="gender" id="gender">
+            <option value="unisex" selected>-- Cả nam và nữ --</option>
+            <option value="male">-- Nam --</option>
+            <option value="female">-- Nữ--</option>
+        </select>
+    </div>
+    <!-- Sản phẩm phù hợp với những độ tuổi nào  -->
+    <div class="form-group" style="display: flex;" >
+        <div class="min-age">
+            <label for="min_age">Tuổi tối thiểu</label>
+            <input type="number" value="0" name="min_age" id="min_age" >
+        </div>
+        <div class="max-age">
+            <label for="max_age">Tuổi tối đa</label>
+            <input type="number" value="100" name="max_age" id="max_age" >
+        </div>
     </div>
     <!-- Mổ tả sản phẩm -->
     <div class="form-group">

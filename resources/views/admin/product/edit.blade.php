@@ -48,6 +48,27 @@
             </select>
         </div>
 
+        <!-- Sản phẩm phù hợp với giới tính nào -->
+        <div class="form-group" style="width: 50%;">
+            <label for="gender" class="control-label">Phù hợp với</label>
+            <select class="form-control input-sm m-bot15" name="gender" id="gender">
+                <option value="unisex" {{ $item->target_gender == 'unisex' ? 'selected' : '' }}>-- Cả nam và nữ --</option>
+                <option value="male" {{ $item->target_gender == 'male' ? 'selected' : '' }}>-- Nam --</option>
+                <option value="female" {{ $item->target_gender == 'female' ? 'selected' : '' }}>-- Nữ--</option>
+            </select>
+        </div>
+        <!-- Sản phẩm phù hợp với những độ tuổi nào  -->
+        <div class="form-group" style="display: flex;" >
+            <div class="min-age">
+                <label for="min_age">Tuổi tối thiểu</label>
+                <input type="number" value="{{$item->min_age}}" name="min_age" id="min_age" >
+            </div>
+            <div class="max-age">
+                <label for="max_age">Tuổi tối đa</label>
+                <input type="number" value="{{$item->max_age}}" name="max_age" id="max_age" >
+            </div>
+        </div>
+
         <!-- Mổ tả sản phẩm -->
         <div class="form-group">
             <label for="desc" class="control-label col-lg-3">Mô tả sản phẩm</label>

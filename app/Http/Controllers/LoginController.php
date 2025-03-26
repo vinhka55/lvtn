@@ -14,6 +14,7 @@ use Cart;
 use App\Rules\CaptchaRegister;
 use App\Events\InboxPusherEvent;
 use Toastr;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -105,23 +106,30 @@ class LoginController extends Controller
     public function register(Request $req)
     {
         $data=$req->validate([
-            'name'=>"required",
-            'email'=>"required|email",
-            'password'=>'min:6|required|same:repassword',
-            'repassword'=>'min:6',
-            'phone'=>"required",
             'g-recaptcha-response'=>'required',
         ]);
-        $new_user=[];
-        $new_user['name']=$req->name;
-        $new_user['email']=$req->email;
-        $new_user['password']=$req->password;
-        $new_user['phone']=$req->phone;
-        $new_user['ip_address']=$req->ip();
-        $user_id=DB::table('user')->insertGetId($new_user);
-        Session::put('user_id',$user_id);
-        Session::put('name_user',$req->name);
+        $user = User::create([
+            'name' => $req->name,
+            'email' => $req->email,
+            'password' => $req->password,
+            'phone' => $req->phone,
+            'age' => $req->age,
+            'gender' => $req->gender,
+            'ip_address' => $req->ip(),
+        ]);
 
+        Session::put('user_id',$user->id);
+        Session::put('name_user',$user->name);
+
+        // Lưu danh sách môn thể thao yêu thích
+        if ($req->has('preferences')) {
+            foreach ($req->preferences as $sport) {
+                DB::table('user_sports')->insert([
+                    'sport_id' => $sport,
+                    'user_id' => $user->id
+                ]);
+            }
+        }
         //Thông báo chào mừng thành viên mới
         event(new InboxPusherEvent("Chào mừng <b>".Session::get('name_user')."</b> đã đăng kí thành công. Hãy mua sắm ngay nào."));
         return redirect('/');

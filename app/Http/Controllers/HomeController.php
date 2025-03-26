@@ -6,17 +6,19 @@ use Illuminate\Http\Request;
 use DB;
 use App\Models\Product;
 use App\Models\CategoryProduct;
+use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Visitors;
 use Illuminate\Support\Facades\Log;
+use Session;
 
 class HomeController extends Controller
 {
     public function index(Request $req)
     {
+        // dd(Product::where('count', '>', 0)->where('category_id',19)->get());
         $data= [];
         $category = CategoryProduct::where('status',1)->get();
-        Log::info($category);
         foreach ($category as $value) {
             $products = Product::where('category_id', $value->id)
                         ->where('status', 1)
@@ -39,8 +41,66 @@ class HomeController extends Controller
             ]);
         }
         
-        return view('page.home',['data'=>$data]);
-        // return view('page.home',['data'=>$data]);
+        // recomment product 
+        $user = User::find(Session::get('user_id'));
+
+        // Lấy danh sách môn thể thao yêu thích của user
+        if($user){
+            $favoriteSports = $user->favoriteSports->pluck('id')->toArray();
+            $userAge = $user->age; // Tuổi của người dùng
+            $userGender = $user->gender; // Giới tính ('male', 'female', 'unisex')
+            // Lọc sản phẩm
+            // $productsByFavorite  = Product::whereHas('category', function ($query) use ($favoriteSports) {
+            //             $query->whereIn('category.id', $favoriteSports);
+            //             })
+            //             ->limit(4)
+            //             ->get();
+
+                        $productsByFavorite = collect(); // Tạo danh sách trống
+                        // Bước 1: Lấy ít nhất 1 sản phẩm từ mỗi môn yêu thích
+                        foreach ($favoriteSports as $sportId) {
+                            $sportProducts = Product::whereHas('category', function ($query) use ($sportId) {
+                                    $query->where('category.id', $sportId);
+                                })
+                                ->where('count','>',0)
+                                ->limit(1) // Lấy ít nhất 1 sản phẩm mỗi môn
+                                ->get();
+                        
+                            $productsByFavorite = $productsByFavorite->merge($sportProducts);
+                        }
+                        //Nếu chưa đủ 4 sản phẩm, bổ sung từ các môn đã lấy
+                        if ($productsByFavorite->count() < 4) {
+                            $additionalProducts = Product::whereHas('category', function ($query) use ($favoriteSports) {
+                                    $query->whereIn('category.id', $favoriteSports);
+                                })
+                                ->where('count','>',0)
+                                ->whereNotIn('id', $productsByFavorite->pluck('id')->toArray()) // Tránh trùng sản phẩm
+                                ->limit(4 - $productsByFavorite->count()) // Chỉ lấy thêm số lượng cần thiết
+                                ->get();
+
+                            $productsByFavorite = $productsByFavorite->merge($additionalProducts);
+                        }
+            $excludedProductIds = $productsByFavorite->pluck('id')->toArray(); // Lưu ID của các sản phẩm đã chọn để tránh trùng lặp
+            $excludedCategoryIds  = $productsByFavorite->pluck('category_id')->toArray();
+            $productsByAge = Product::whereNotIn('id', $excludedProductIds)
+                        ->whereNotIn('category_id', $excludedCategoryIds)
+                        ->where('count','>',0)
+                        ->where('min_age', '<=', $userAge)
+                        ->where('max_age', '>=', $userAge)
+                        ->limit(2)
+                        ->get();
+            $excludedProductIds = array_merge($excludedProductIds, $productsByAge->pluck('id')->toArray()); //Cập nhật danh sách ID đã lấy:
+            $excludedCategoryIds = array_merge($excludedCategoryIds, $productsByAge->pluck('category_id')->toArray());
+            $productsByGender = Product::whereNotIn('id', $excludedProductIds)
+                        ->whereNotIn('category_id', $excludedCategoryIds)
+                        ->where('count','>',0)
+                        ->where('target_gender', $userGender)
+                        ->limit(2)
+                        ->get(); 
+            $recommendedProducts = $productsByFavorite->merge($productsByAge)->merge($productsByGender);          
+            return view('page.home',compact('data','recommendedProducts'));
+        }
+        return view('page.home',compact('data'));
     }
     public function search(Request $req)
     {

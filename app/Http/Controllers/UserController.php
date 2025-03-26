@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Admin;
 use App\Models\User;
+use App\Models\UserSport;
 use App\Models\Roles;
 use Auth;
 use Cache;
@@ -61,8 +62,31 @@ class UserController extends Controller
         $user->name = $req->name;
         $user->phone = $req->phone;
         $user->email = $req->email;
+        $user->age = $req->age;
+        $user->gender = $req->gender;
         session()->put('name_user', $req->name); // Cập nhật giá trị của 'name_user
         $user->save();
+
+        $selectedSports = $req->input('preferences', []); // Danh sách môn thể thao user chọn
+        // Lấy danh sách môn thể thao đã lưu trước đó của user
+        $existingSports = UserSport::where('user_id', $user->id)->pluck('sport_id')->toArray();
+
+        // Tìm những môn cần thêm mới
+        $sportsToAdd = array_diff($selectedSports, $existingSports);
+        
+        // Tìm những môn cần xóa đi
+        $sportsToRemove = array_diff($existingSports, $selectedSports);
+
+        // Xóa các môn bị bỏ chọn
+        UserSport::where('user_id', $user->id)->whereIn('sport_id', $sportsToRemove)->delete();
+
+        // Thêm các môn mới
+        foreach ($sportsToAdd as $sportId) {
+            UserSport::create([
+                'user_id' => $user->id,
+                'sport_id' => $sportId
+            ]);
+        }
         return redirect('/thong-tin-tai-khoan');
     }
     public function userOnlineStatus()

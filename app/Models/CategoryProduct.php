@@ -27,5 +27,8 @@ class CategoryProduct extends Model
     {
         return $this->hasMany(Kind::class, 'category_id');
     }
-
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_sports','sport_id', 'user_id');
+    }
 }

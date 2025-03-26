@@ -45,6 +45,9 @@ class ProductController extends Controller
         $product->image=$req->file("image"); 
         $product->count=$req->count;
         $product->note=$req->note;
+        $product->target_gender = $req->get('gender') ?? 'unisex';
+        $product->min_age = $req->min_age; 
+        $product->max_age = $req->max_age; 
         if($product->image){
             $name_image= $product->image->getClientOriginalName();
             $product->image->move("public/uploads/product",$name_image);
@@ -124,7 +127,9 @@ class ProductController extends Controller
         $product->count=$req->count;
         $product->status=$req->status;
         $product->note=$req->note;
-        //echo $req->file("image");return;
+        $product->target_gender = $req->get('gender') ?? 'unisex';
+        $product->min_age = $req->min_age; 
+        $product->max_age = $req->max_age; 
         if($product->image!=null){
             $name_image= $product->image->getClientOriginalName();
             $product->image->move("public/uploads/product",$name_image);

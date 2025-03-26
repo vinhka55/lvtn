@@ -24,9 +24,14 @@ class User extends Authenticatable
         'password',
         'phone',
         'avatar',
-        'last_seen',
+        'age',
+        'gender',
+        'ip_address',
     ];
-
+    public function favoriteSports()
+    {
+        return $this->belongsToMany(CategoryProduct::class, 'user_sports','user_id', 'sport_id');
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
