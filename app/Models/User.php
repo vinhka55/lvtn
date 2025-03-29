@@ -32,6 +32,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(CategoryProduct::class, 'user_sports','user_id', 'sport_id');
     }
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
     /**
      * The attributes that should be hidden for serialization.
      *

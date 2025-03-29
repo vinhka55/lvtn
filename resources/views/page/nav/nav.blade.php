@@ -31,6 +31,9 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">Liên hệ</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" target="_blank" aria-current="page" href="{{ url('/posts') }}">Forum</a>
+                    </li>
                 </ul>           
             </div>
             <div class="search-cart-user-top-menu">

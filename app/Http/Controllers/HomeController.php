@@ -49,37 +49,31 @@ class HomeController extends Controller
             $favoriteSports = $user->favoriteSports->pluck('id')->toArray();
             $userAge = $user->age; // Tuổi của người dùng
             $userGender = $user->gender; // Giới tính ('male', 'female', 'unisex')
-            // Lọc sản phẩm
-            // $productsByFavorite  = Product::whereHas('category', function ($query) use ($favoriteSports) {
-            //             $query->whereIn('category.id', $favoriteSports);
-            //             })
-            //             ->limit(4)
-            //             ->get();
 
-                        $productsByFavorite = collect(); // Tạo danh sách trống
-                        // Bước 1: Lấy ít nhất 1 sản phẩm từ mỗi môn yêu thích
-                        foreach ($favoriteSports as $sportId) {
-                            $sportProducts = Product::whereHas('category', function ($query) use ($sportId) {
-                                    $query->where('category.id', $sportId);
-                                })
-                                ->where('count','>',0)
-                                ->limit(1) // Lấy ít nhất 1 sản phẩm mỗi môn
-                                ->get();
-                        
-                            $productsByFavorite = $productsByFavorite->merge($sportProducts);
-                        }
-                        //Nếu chưa đủ 4 sản phẩm, bổ sung từ các môn đã lấy
-                        if ($productsByFavorite->count() < 4) {
-                            $additionalProducts = Product::whereHas('category', function ($query) use ($favoriteSports) {
-                                    $query->whereIn('category.id', $favoriteSports);
-                                })
-                                ->where('count','>',0)
-                                ->whereNotIn('id', $productsByFavorite->pluck('id')->toArray()) // Tránh trùng sản phẩm
-                                ->limit(4 - $productsByFavorite->count()) // Chỉ lấy thêm số lượng cần thiết
-                                ->get();
+            $productsByFavorite = collect(); // Tạo danh sách trống
+            // Bước 1: Lấy ít nhất 1 sản phẩm từ mỗi môn yêu thích
+            foreach ($favoriteSports as $sportId) {
+                $sportProducts = Product::whereHas('category', function ($query) use ($sportId) {
+                        $query->where('category.id', $sportId);
+                    })
+                    ->where('count','>',0)
+                    ->limit(1) // Lấy ít nhất 1 sản phẩm mỗi môn
+                    ->get();
+            
+                $productsByFavorite = $productsByFavorite->merge($sportProducts);
+            }
+            //Nếu chưa đủ 4 sản phẩm, bổ sung từ các môn đã lấy
+            if ($productsByFavorite->count() < 4) {
+                $additionalProducts = Product::whereHas('category', function ($query) use ($favoriteSports) {
+                        $query->whereIn('category.id', $favoriteSports);
+                        })
+                        ->where('count','>',0)
+                        ->whereNotIn('id', $productsByFavorite->pluck('id')->toArray()) // Tránh trùng sản phẩm
+                        ->limit(4 - $productsByFavorite->count()) // Chỉ lấy thêm số lượng cần thiết
+                        ->get();
 
-                            $productsByFavorite = $productsByFavorite->merge($additionalProducts);
-                        }
+                $productsByFavorite = $productsByFavorite->merge($additionalProducts);
+            }
             $excludedProductIds = $productsByFavorite->pluck('id')->toArray(); // Lưu ID của các sản phẩm đã chọn để tránh trùng lặp
             $excludedCategoryIds  = $productsByFavorite->pluck('category_id')->toArray();
             $productsByAge = Product::whereNotIn('id', $excludedProductIds)

@@ -2,6 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Kind;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentPostController;
+Route::resource('posts', PostController::class);
+Route::post('/posts/{post}/comments', [CommentPostController::class, 'store']);
+Route::get('/my-posts', [PostController::class, 'myPosts'])->name('posts.my');
+Route::get('/all-posts', [PostController::class, 'allPosts'])->name('posts.all');
+Route::get('/posts-with-categoty', [PostController::class, 'postsWithCategory'])->name('posts.category');
+
 // address 
 Route::post('/chon-huyen','App\Http\Controllers\ShippingController@choose_address')->name('choose_address');
 Route::post('/chon-xa','App\Http\Controllers\ShippingController@choose_ward')->name('choose_ward');
