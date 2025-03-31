@@ -68,11 +68,19 @@ class CartController extends Controller
     }
     public function update(Request $req)
     {
-        $data=$req->all();
-        foreach($data['quantity'] as $key=>$val){
-            Cart::update($key, $val);
+        // $data=$req->all();
+        // foreach($data['quantity'] as $key=>$val){
+        //     Cart::update($key, $val);
+        // }
+        Cart::update($req->uid,$req->quantity);
+        if(Session::has('discount')){
+            $discount = Session::get('discount');
         }
-        return redirect()->back();
+        return response()->json([
+            'success' => true,
+            'total_money' => Cart::total(),
+            'discount' => $discount
+        ]);
     }
     public function pay()
     {

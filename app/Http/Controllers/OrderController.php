@@ -11,6 +11,7 @@ use App\Models\Order;
 use App\Models\Coupon;
 use App\Models\OrderDetails;
 use App\Models\Product;
+use App\Models\ProductSize;
 use Carbon\Carbon;
 use Mail;
 use Log;
@@ -30,7 +31,6 @@ class OrderController extends Controller
             if(Session::has('id_coupon')){        
                 $coupon_used=Coupon::where('id',Session::get('id_coupon'))->value('used');
                 $amount_coupon=Coupon::where('id',Session::get('id_coupon'))->value('amount');
-                //$id_user_used=$id_user_used.','.Session::get('user_id');
                 if($coupon_used<$amount_coupon){
                     $coupon_used=$coupon_used+1;
                     $coupon=Coupon::find(Session::get('id_coupon'));
@@ -38,7 +38,6 @@ class OrderController extends Controller
                     $coupon->id_user_used=$coupon->id_user_used.','.Session::get('user_id');
                     $coupon->save();
                 }
-                //Session::forget('id_coupon');
             }
             
             //insert thông tin nhận hàng
@@ -81,10 +80,7 @@ class OrderController extends Controller
             event(new InboxPusherEvent($messege));
             
             event(new InboxAdminPusherEvent());
-            //thêm thông báo cho admin khi khách mua thành công
-            // $messege="1 đơn hàng mới giá";
-            // event(new InboxPusherEventAdmin($messege));
-            //insert chi tiết đơn hàng      
+            //thêm thông báo cho admin khi khách mua thành công    
             $content=Cart::items()->original;
             foreach($content as $item){
                 $data=[];
@@ -99,6 +95,12 @@ class OrderController extends Controller
                 $count=DB::table('product')->where('id',$data['product_id'])->value('count');
                 $new_count=$count-$data['product_quantyti'];
                 DB::table('product')->where('id',$data['product_id'])->update(['count'=>$new_count]);
+                //cập nhật lại số lượng sản phẩm của mỗi size
+                $itemProductSize = ProductSize::where('product_id',$data['product_id'])->where('size',$data['product_size'])->first();
+                if ($itemProductSize) {
+                    $itemProductSize->quantity -= $data['product_quantyti'];
+                    $itemProductSize->save();
+                } 
             }
 
             //send mail to customer
@@ -108,9 +110,7 @@ class OrderController extends Controller
                 $email->from('noreply@gmail.com', 'Công ty TNHH Thể Thao 247');
                 $email->to(Session::get('dmm'),Session::get('name_user'))->subject('Đơn hàng của bạn!');
             });
-
             DB::commit();
-            //return view('page.checkout.payment_done');
             Session::forget('discount');
             Session::forget('id_coupon');
             Cart::clear();

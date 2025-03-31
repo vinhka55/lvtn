@@ -65,10 +65,13 @@
                     </td>
                     <td>{{number_format($item['price'], 0, ',', '.')}} đ</td>
                     <td class="text-center">
-                        <input value="{{$item['qty']}}" class="w-25 me-1 form-control-sm border-1" style="width:48px !important" type="number" min="1" name="quantity[{{$item['uid']}}]">
+                        <!-- <input value="{{$item['qty']}}" class="w-25 me-1 form-control-sm border-1" style="width:48px !important" type="number" min="1" name="quantity[{{$item['uid']}}]"> -->
+                        <input value="{{$item['qty']}}" class="w-25 me-1 form-control-sm border-1 update-qty" 
+                        style="width:48px !important" type="number" min="1" 
+                        name="quantity[{{$item['uid']}}]" data-id="{{$item['uid']}}" data-price="{{$item['price']}}">
                         <input type="hidden" name="uid[{{$item['uid']}}]" value="{{$item['uid']}}">
                     </td>
-                    <td>
+                    <td id="subtotal-{{$item['uid']}}">
                         <?php
                             $subtotal=$item['qty']*$item['price'];
                             echo number_format($subtotal, 0, ',', '.').' '.'đ';
@@ -91,55 +94,53 @@
         <div class="col-md-4 col-12">
             <div class="row p-2 mx-0 mb-2 bg-warning bg-opacity-25">
                 <p class="p-0 m-0 fw-bold fs-6 text-secondary">TỔNG CỘNG</p>
-                <p class="h3 fw-bolder">{{number_format(Cart::total(), 0, ',', '.')}} đ</p>
+                <p class="h3 fw-bolder" id="money-order">{{number_format(Cart::total(), 0, ',', '.')}} đ</p>
+                <div id="show-discount-money"></div>
                 @if($coupon)
-                        <p class="h3 fw-bolder">Giảm giá <span>
-                        @foreach($coupon as $item)								
-                            @if($item->condition=='percent')
-                                <?php 
-                                    $discount= $item->rate*(Cart::total())/100;
-                                    echo number_format($discount, 0, ',', '.'). 'đ';
-                                    Session::put('discount',$discount);							
-                                ?>
-                            @else
-                                <?php 
-                                    $discount= $item->rate;
-                                    echo number_format($discount, 0, ',', '.').' đ';	
-                                    Session::put('discount',$discount);							
-                                ?>
-                            @endif
-                        @endforeach
-                        </span></p>
-                        @else
-                            <?php $discount=0;
-                            Session::put('discount',0);
-                            ?>					
-                        @endif
+                        <p class="h3 fw-bolder">Giảm giá:
+                            <span>
+                                @foreach($coupon as $item)								
+                                    @if($item->condition=='percent')
+                                        <?php 
+                                            $discount= $item->rate*(Cart::total())/100;
+                                            echo number_format($discount, 0, ',', '.'). 'đ';
+                                            Session::put('discount',$discount);							
+                                        ?>
+                                    @else
+                                        <?php 
+                                            $discount= $item->rate;
+                                            echo number_format($discount, 0, ',', '.').' đ';	
+                                            Session::put('discount',$discount);							
+                                        ?>
+                                    @endif
+                                @endforeach
+                            </span>
+                        </p>
+                    @else
+                        <?php $discount=0;
+                        Session::put('discount',0);
+                        ?>					
+                    @endif
                 <hr>
-                <p class="p-0 m-0 fw-bold fs-6 text-secondary">THÀNH TIỀN</p>
-                <p class="p-0 m-0 fw-bold fs-6 red" style="font-size:2rem !important;">
-                    <?php
-                        $total=Cart::total()-$discount;
-                        echo number_format($total, 0, ',', '.').' đ';
-                    ?>
-                </p>
+                <div id="final-money"></div>
+                @if($coupon)
+                    <p class="p-0 m-0 fw-bold fs-6 text-secondary">THÀNH TIỀN</p>
+                    <p class="p-0 m-0 fw-bold fs-6 red" style="font-size:2rem !important;" id="show-final-money">
+                        <?php
+                            $total=Cart::total()-$discount;
+                            echo number_format($total, 0, ',', '.').' đ';
+                        ?>
+                    </p>
+                @endif
                 <button type="button" class="btn main-color"><a href="{{route('pay_product')}}" class="text-white">Tiếp Tục ></a></button>
             </div>
             <div class="row p-2 mx-0 mb-2 bg-info bg-opacity-25">
+                <!-- Hiển thị kết quả kiểm tra mã giảm giá -->
+                <p id="coupon-result"></p>
                 <div class="input-group mb-3">
-                    <form action="{{route('discount')}}" method="post" width="100%">
-                        {{ csrf_field() }}
-                        <p class="text-danger">{{Session::get('error')}}</p>
-                        @if(Session::has('incorrect_coupon'))
-                        <p class="text-danger">{{Session::get('incorrect_coupon')}}</p>
-                        {{Session::put('incorrect_coupon',null)}}
-                        @endif
-                        <ul style="padding-left: 0">
-                            @foreach ($errors->all() as $error)
-                                <li style="color: red;">{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                        <input type="text" name="code_coupon" class="form-control" placeholder="Nhập Mã Khuyến Mãi">
+                    <form method="post" width="100%" id="coupon-form">
+                        @csrf
+                        <input type="text" id="code_coupon" name="code_coupon" class="form-control" placeholder="Nhập Mã Khuyến Mãi" required>
                         <button class="btn main-color text-light mt-1" type="submit" id="button-addon2" style="z-index:0">Áp Dụng</button>
                     </form>
                 </div>
@@ -154,4 +155,64 @@
     <a href="{{url('/')}}">Tiếp tục mua sắm <i class="fas fa-arrow-alt-circle-right"></i></a>
 </div>
 @endif
+<script>
+$(document).ready(function () {
+    $("#coupon-form").on("submit", function (e) {
+        e.preventDefault(); // Ngăn form tải lại trang
+
+        let couponCode = $("#code_coupon").val(); // Lấy mã giảm giá
+        let moneyOrderText = $("#money-order").text(); // Lấy nội dung trong thẻ p
+        let moneyOrder = parseInt(moneyOrderText.replace(/\D/g, "")); // Loại bỏ dấu "." và "đ"
+        $.ajax({
+            url: "{{route('discount')}}", // Đúng route xử lý mã giảm giá
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                code_coupon: couponCode,
+                money_order: moneyOrder
+            },
+            dataType: "json", // Quan trọng: Đảm bảo nhận JSON đúng
+            success: function (response) {           
+                if (response.success) {
+                    $("#coupon-result").html('<span style="color: green;">' + response.message + '</span>');
+                    $("#show-discount-money").html('<p class="h3 fw-bolder">Giảm giá: ' + Number(response.money_discount).toLocaleString('vi-VN') + 'đ</p>')
+                    $("#final-money").html('<p class="p-0 m-0 fw-bold fs-6 text-secondary">THÀNH TIỀN</p><p class="p-0 m-0 fw-bold fs-6 red" style="font-size:2rem !important;">' + (moneyOrder - response.money_discount).toLocaleString('vi-VN') + 'đ</p>' )
+                } else {
+                    $("#coupon-result").html('<span style="color: red;">' + response.message + '</span>');
+                }
+            },
+            error: function (response) {                
+                $("#coupon-result").html('<span style="color: red;">Mã giảm giá sai</span>');
+            }
+        });
+    });
+    $(document).on("change", ".update-qty", function () {
+        let uid = $(this).data("id");
+        let newQty = $(this).val();
+        let priceOne = $(this).data("price");
+        
+        $.ajax({
+            url: "{{ route('update_cart') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                uid: uid,
+                quantity: newQty
+            },
+            dataType: "json",
+            success: function (response) {            
+                if (response.success) {
+                    $("#show-final-money").html(Number(response.total_money - response.discount).toLocaleString('vi-VN')+ "đ");
+                    $("#subtotal-"+uid).html(Number(newQty*priceOne).toLocaleString('vi-VN') + "đ")
+                    $("#money-order").html(Number(response.total_money).toLocaleString('vi-VN')+ "đ")
+                }
+            },
+            error: function () {
+                alert("Cập nhật thất bại!");
+            }
+        });
+    });
+
+});
+</script>
 @stop

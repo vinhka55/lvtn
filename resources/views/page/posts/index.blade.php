@@ -185,7 +185,7 @@
             gap: 36px;
         }
     }
-        /* Điện thoại lớn (576px - 768px) */
+    /* Điện thoại lớn (576px - 768px) */
     @media screen and (min-width: 576px) and (max-width: 767px) {
         .menu {
             width: 100%;

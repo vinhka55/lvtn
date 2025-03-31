@@ -39,8 +39,7 @@
             <div class="search-cart-user-top-menu">
             <!-- tim kiem san pham -->
             <div class="form-search-product">
-                <form class="d-flex mx-2" action="{{route('search_product')}}" method="post">
-                    @csrf
+                <form class="d-flex mx-2" action="{{route('search_product')}}" method="get">               
                     <input class="form-control me-2" name="search" id="search-product" type="search" placeholder="Search" aria-label="Search">
                     <div id="return-result-search"></div>
                     <button class="btn btn-outline-light" type="submit"><i class="fas fa-search"></i></button>             

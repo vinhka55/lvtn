@@ -72,6 +72,10 @@
         </select>
     </div>
     <div class="form-group">
+        <label for="money_order">Tổng tiền đơn hàng</label>
+        <input type="number" name="money_order" class="form-control" id="money_order" min="0">
+    </div>
+    <div class="form-group">
         <label for="rate">Số tiền giảm giá</label>
         <input type="text" name="rate" class="form-control" id="rate">
     </div>

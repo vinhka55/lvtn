@@ -96,10 +96,36 @@ class HomeController extends Controller
         }
         return view('page.home',compact('data'));
     }
-    public function search(Request $req)
+    public function search(Request $request)
     {
-        $data=DB::table('product')->where('name','like','%'.$req->search.'%')->get();
-        return view('page.product.search_product',['data'=>$data]);
+        // $data=DB::table('product')->where('name','like','%'.$req->search.'%')->get();
+        // return view('page.product.search_product',['data'=>$data]);
+
+        // Mặc định lấy tất cả sản phẩm theo key search
+        $query = Product::with('kind')->where('name','like','%'.$request->search.'%');
+
+        // Kiểm tra nếu có yêu cầu sắp xếp từ AJAX
+        if ($request->ajax()) {
+            if ($request->sort == 'price_asc') {
+                $query->orderBy('price', 'asc');
+            } elseif ($request->sort == 'price_desc') {
+                $query->orderBy('price', 'desc');
+            } elseif ($request->sort == 'sold') {
+                $query->orderBy('count_sold', 'desc');
+            } elseif ($request->sort == $name_category.$request->kind_id) {
+                $kindId = $request->kind_id;
+                // Lấy danh sách sản phẩm theo kind_id
+                $query = Product::where('kind_id', $kindId);
+            }else if ($request->sort == 'new'){
+                $query->orderBy('created_at', 'desc');
+            }
+            $products = $query->get();
+            return view('page.product.product_list_sort', compact('products'))->render();
+        }
+
+        $products = $query->get();
+
+        return view('page.product.search_product', compact('products'));
     }
     public function autocomplete_search(Request $req)
     {

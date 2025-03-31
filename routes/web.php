@@ -67,8 +67,8 @@ Route::post('select-gallery','App\Http\Controllers\ProductController@select_gall
 Route::post('xu-ly-them-gallery','App\Http\Controllers\ProductController@handle_add_image_gallery')->name('handle_add_image_gallery');
 Route::post('xoa-gallery','App\Http\Controllers\ProductController@delete_gallery')->name('delete_gallery');
 Route::post('thay-doi-anh-gallery','App\Http\Controllers\ProductController@change_image_gallery')->name('change_image_gallery');
-Route::get('tim-kiem-san-pham-theo-gia/{type}/{slug}','App\Http\Controllers\ProductController@search_product_with_price')->name('search_product_with_price');
-Route::get('tim-kiem-san-pham-theo-so-luong-da-ban/{type}/{slug}','App\Http\Controllers\ProductController@search_product_with_sold')->name('search_product_with_sold');
+// Route::get('tim-kiem-san-pham-theo-gia/{type}/{slug}','App\Http\Controllers\ProductController@search_product_with_price')->name('search_product_with_price');
+// Route::get('tim-kiem-san-pham-theo-so-luong-da-ban/{type}/{slug}','App\Http\Controllers\ProductController@search_product_with_sold')->name('search_product_with_sold');
 // Route::get('sort-products','App\Http\Controllers\ProductController@sortProducts')->name('sort_products');
 
 
@@ -112,7 +112,7 @@ Route::post('huy-don-hang','App\Http\Controllers\OrderController@customer_cancel
 Route::get('thong-tin-tai-khoan','App\Http\Controllers\InfoUserController@show_info')->name('info_user');
 
 //search product
-Route::post('tim-kiem-san-pham','App\Http\Controllers\HomeController@search')->name('search_product');
+Route::get('tim-kiem-san-pham','App\Http\Controllers\HomeController@search')->name('search_product');
 Route::post('tim-kiem-san-pham-autocomplete','App\Http\Controllers\HomeController@autocomplete_search')->name('autocomplete_search');
 
 
@@ -150,10 +150,6 @@ Route::post('thay-doi-thong-tin-ca-nhan','App\Http\Controllers\UserController@us
 
 //print pdf file
 Route::get('in-don-hang/{order_id}','App\Http\Controllers\PdfController@print_order')->name('print_order');
-
-//payment online
-Route::post('thanh-toan-momo','App\Http\Controllers\PaymentOnlineController@momo')->name('momo');
-Route::get('xu-ly-thanh-toan-momo','App\Http\Controllers\PaymentOnlineController@handle_momo')->name('handle_momo');
 
 //comment   
 Route::post('danh-sach-binh-luan-tung-san-pham','App\Http\Controllers\CommentController@show_comment')->name('show_comment');

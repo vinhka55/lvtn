@@ -210,7 +210,7 @@
         </div>
     </div>
 </div>
-
+ 
 <div id="product-list">
     @include('page.product.product_list_sort', ['products' => $products])
 </div>
@@ -241,7 +241,7 @@
             data: { sort: sortType, kind_id: kindId },
             success: function(response) {
                 $("#product-list").html(response);
-            }
+            } 
         });
     });
 </script>

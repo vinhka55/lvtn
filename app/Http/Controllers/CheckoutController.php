@@ -15,7 +15,6 @@ session_start();
 
 class CheckoutController extends Controller
 {
-    
     public function pay()
     {
         $id_customer=Session::get('user_id');
@@ -45,7 +44,6 @@ class CheckoutController extends Controller
     {   
         try {
             DB::beginTransaction();
-
             $content=Cart::items()->original;
             return $content;
             //Cập nhật lại số lượng coupon nếu có áp mã

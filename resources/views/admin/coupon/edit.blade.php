@@ -75,6 +75,10 @@
         </select>
     </div>
     <div class="form-group">
+        <label for="money-order">Số tiền đơn hàng</label>
+        <input type="number" name="money_order" class="form-control" id="money_order" value="{{$item->money_order}}">
+    </div>
+    <div class="form-group">
         <label for="rate">Số tiền giảm giá</label>
         <input type="text" name="rate" class="form-control" id="rate" value="{{$item->rate}}">
     </div>
