@@ -97,6 +97,13 @@
                         <label for="cash"> Tiền mặt</label><br>
                         <input type="radio" id="atm" name="pay" value="atm">
                         <label for="atm"> Chuyển khoản</label><br>
+                        <!-- <form action="{{ route('vnpay.payment') }}" method="POST">
+    @csrf
+    <label>Nhập số tiền:</label>
+    <input type="number" name="amount" required>
+    <button type="submit">Thanh toán VNPay</button>
+</form> -->
+
                         <?php
                             //đoạn code tạo unique mã đơn hàng lấy trên mạng
                             $stamp = strtotime("now");

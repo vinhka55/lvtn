@@ -129,6 +129,33 @@ class OrderController extends Controller
         $data=DB::table('order')->join('user','order.customer_id','=','user.id')->select('order.*','user.name')->orderby('order.id','desc')->get();
         return view('admin.order.list',compact('data'));
     }
+    public function searchWithStatusAjax(Request $req)
+    {
+        $status = $req->status;
+        if($status == 'all'){
+            $data = DB::table('order')
+                ->orderBy('id', 'desc')
+                ->get();
+        }else{
+            $data = DB::table('order')
+                ->where('status', $status)
+                ->orderBy('id', 'desc')
+                ->get();
+        }
+        // Trả về HTML để render lại tbody
+        return view('admin.order.order_rows', compact('data'))->render();
+    }
+    public function ajaxSortByPrice(Request $req)
+    {
+        $order = $req->type == 'asc' ? 'asc' : 'desc';
+
+        $data = DB::table('order')
+            ->orderBy('total_money', $order)
+            ->get();
+        // Trả về HTML để render lại tbody
+        return view('admin.order.order_rows', compact('data'))->render();
+    }
+
     public function detail_order($orderId)
     {
         
@@ -292,40 +319,11 @@ class OrderController extends Controller
             DB::table('product')->where('id',$value->product_id)->update(['count' => $product_cancel->count]);
         }
     }
-    public function search_in_order(Request $request)
+    public function ajaxSearchByKey(Request $request)
     {
         $key_search=$request->key;
-        $order=Order::where('payment','LIKE','%'.$key_search.'%')->orWhere('status','LIKE','%'.$key_search.'%')
+        $data=Order::where('payment','LIKE','%'.$key_search.'%')->orWhere('status','LIKE','%'.$key_search.'%')
         ->orWhere('reason','LIKE','%'.$key_search.'%')->orWhere('order_code','LIKE','%'.$key_search.'%')->get();
-        return view('admin.order.search_with_keyword',compact('order'));
-    }
-    public function down_price_order(Request $request)
-    {   
-        $order=Order::orderBy('total_money','desc')->get();
-        return view('admin.order.search_down_price',compact('order'));
-    }
-    public function up_price_order(Request $request)
-    {       
-        $order=Order::orderBy('total_money','asc')->get();
-        return view('admin.order.search_up_price',compact('order'));
-    }
-    public function search_with_status($status)
-    {
-        if($status=='dang-cho-xu-ly'){
-            $order=Order::where('status','Đang chờ xử lý')->get();
-        }
-        else if($status=='dang-van-chuyen'){
-            $order=Order::where('status','Đang vận chuyển')->get();
-        }
-        else if($status=='da-xu-ly'){
-            $order=Order::where('status','Đã xử lý')->get();
-        }
-        else if($status=='da-thanh-toan-cho-nhan-hang'){
-            $order=Order::where('status','Đã thanh toán-chờ nhận hàng')->get();
-        }
-        else{
-            $order=Order::where('status','Đơn đã hủy')->get();
-        }
-        return view('admin.order.search_with_status',compact('order'));
+        return view('admin.order.order_rows',compact('data'))->render();
     }
 }

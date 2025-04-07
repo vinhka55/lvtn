@@ -4,8 +4,7 @@
 @include("components.coupon")
 @include("page.header.header")
 
-<div class="container-fluid p-3">  
-    
+<div class="container-fluid p-3">    
     <div class="row" style="margin-bottom:12px">
         @if(isset($recommendedProducts) && count($recommendedProducts) > 0)
             <h1 class="name-category">Dành cho bạn</h1>
