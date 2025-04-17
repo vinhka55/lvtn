@@ -41,11 +41,11 @@ class AdminController extends Controller
         $all_news_count=$all_news->count();
 
         //sản phẩm dc xem nhiều
-        $product_many_view=Product::orderBy('view','desc')->take(10)->get();
+        $product_best_seller=Product::orderBy('count_sold','desc')->take(10)->get();
 
         //bài viết được xem nhiều
         $news_many_view=News::orderBy('view','desc')->take(10)->get();
 
-        return view('admin.dashboard',compact('visitor_this_month_count','visitor_last_month_count','visitor_one_year_count','visitors_all_count','all_product_count','all_order_count','all_news_count','product_many_view','news_many_view'));
+        return view('admin.dashboard',compact('visitor_this_month_count','visitor_last_month_count','visitor_one_year_count','visitors_all_count','all_product_count','all_order_count','all_news_count','product_best_seller','news_many_view'));
     }
 }

@@ -10,6 +10,7 @@ use App\Models\Coupon;
 use App\Models\City;
 use App\Models\Province;
 use App\Models\Wards;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -41,5 +42,6 @@ class AppServiceProvider extends ServiceProvider
         view()->share('setting', $setting);
         view()->share('coupon', $coupon);
         view()->share('city',$city); 
+        Paginator::useBootstrap();
     }
 }

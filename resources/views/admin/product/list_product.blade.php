@@ -1,7 +1,7 @@
 @extends("admin.admin_layout")
 @section("admin_page")
 <style>
-.toggle-button {
+    .toggle-button {
         display: inline-block;
         width: 60px;
         height: 30px;
@@ -39,9 +39,11 @@
     </div>
     <div class="row w3-res-tb">
       <div class="col-sm-5 m-b-xs">
-        <select class="input-sm form-control w-sm inline v-middle">
-          <option value="trang-thai">Trạng thái</option>
-          <option value="sort-a-to-z">Tên a->z</option>
+        <select id="filterCategory" class="input-sm form-control w-sm inline v-middle">
+          <option value="all-sports">Tất cả môn</option>
+          @foreach($category as $cate)
+            <option value="{{ $cate->id }}">{{ $cate->name }}</option>
+          @endforeach
         </select>
         <a href="" class="btn btn-sm btn-default">Chọn</a>                
       </div>
@@ -49,9 +51,9 @@
       </div>
       <div class="col-sm-3">
         <div class="input-group">
-          <input type="text" class="input-sm form-control" placeholder="Search">
+          <input type="text" class="input-sm form-control" id="searchInput" placeholder="Search">
           <span class="input-group-btn">
-            <button class="btn btn-sm btn-default" type="button">Tìm kiếm</button>
+            <button class="btn btn-sm btn-default" id="searchButton" type="button">Tìm kiếm</button>
           </span>
         </div>
       </div>
@@ -76,42 +78,14 @@
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>                   
-                    @foreach($product as $item)
-                    <tr>
-                        <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-                        <td><p class="text-ellipsis name"><img width="35%" src="{{url('/')}}/public/uploads/product/{{$item->image}}" alt="product"></p></td>
-                        <td><a href="{{route('add_gallery',$item->id)}}">Thêm ảnh</a></td>
-                        <td><p class="text-ellipsis name">{{$item->name}}</p></td>
-                        <td><p class="text-ellipsis name">{{number_format((int)$item->price, 0, ',', '.')}}đ</p></td>                       
-                        <td><span class="text-ellipsis desc">
-                            <!-- @if($item->status=='1')<a title="click to edit" href="{{route('edit_status_product',$item->id)}}"><i class="far fa-thumbs-up"></i></a>
-                            @else <a title="click to edit" href="{{route('edit_status_product',$item->id)}}"><i class="far fa-thumbs-down"></i></a>
-                            @endif -->
-                            @php
-                                if($item->status == 1 ) echo '<div class="toggle-button on" onclick="toggleButton(this,'.$item->id.')"></div>';
-                                else echo '<div class="toggle-button" onclick="toggleButton(this,'.$item->id.')"></div>'; 
-                            @endphp
-                        </span></td>
-                        <td><span class="text-ellipsis desc">
-                            @foreach($category as $cate)
-                                @if($cate->id==$item->category_id)
-                                {{$cate->name}}
-                                @endif
-                            @endforeach
-                        </span></td>
-                        <td><p class="text-ellipsis">{{$item->count}}</p></td>
-                        <td><p class="text-ellipsis">{{$item->count_sold}}</p></td>                       
-                        <td>
-                        <a title="click to edit" href="{{route('edit_product',$item->id)}}" ><i class="far fa-edit"></i></a>
-                        <a title="click to delete" onclick="return confirm('Are you sure?')" href="{{route('delete_product',$item->id)}}"><i class="fas fa-trash-alt text-danger text"></i></a>
-                        </td>
-                    </tr>
-                    @endforeach        
+        <tbody id="productTableBody">                   
+        @include('admin.product.ajax_product_table')        
         </tbody>
       </table>
     </div>
-    <div class="text-center">{{ $product->links() }}</div> 
+    <div class="text-center origin-panigation" id="paginationLinks">
+      {{ $product->links() }}
+    </div> 
   </div>
 </div>
 <script>
@@ -130,5 +104,107 @@
             }
         });
     }
+    let currentCategoryId = null;
+    $('#filterCategory').on('change', function() {
+        currentCategoryId = $(this).val();
+        // Cập nhật URL
+        const url = new URL(window.location.href);
+        url.searchParams.set('category_id', currentCategoryId);
+        window.history.pushState({}, '', url);
+        $.ajax({
+            url: "{{ route('filter_product_by_category') }}",
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            method: 'POST',
+            data: {
+                category_id: currentCategoryId
+            },
+            success: function(response) {
+                $('#productTableBody').html(response.html);
+                $('#paginationLinks').html(response.pagination);
+                // ✅ Cập nhật URL khi chọn danh mục
+                const url = new URL(window.location.href);
+                url.searchParams.delete('page'); // khi chọn danh mục mới thì về page 1
+                window.history.pushState({}, '', url);
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText);
+            }
+        });
+    });
+    // Bắt sự kiện click phân trang
+    $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        let page = $(this).attr('href').split('page=')[1];
+
+        if (currentCategoryId) {
+          $.ajax({
+              url: "{{ route('filter_product_by_category') }}?page=" + page,
+              method: 'POST',
+              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+              data: { category_id: currentCategoryId },
+              success: function(response) {
+                  $('#productTableBody').html(response.html);
+                  $('#paginationLinks').html(response.pagination);
+                  const url = new URL(window.location.href);
+                  url.searchParams.set('page', page);
+                  window.history.pushState({}, '', url);
+              }
+          });
+        }
+        else if (currentSearchKeyword) {
+          $.ajax({
+              url: "{{ route('search_product_ajax') }}?page=" + page,
+              method: 'POST',
+              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+              data: { keyword: currentSearchKeyword },
+              success: function(response) {
+                  $('#productTableBody').html(response.html);
+                  $('#paginationLinks').html(response.pagination);
+
+                  const url = new URL(window.location.href);
+                  url.searchParams.set('search', currentSearchKeyword);
+                  url.searchParams.set('page', page);
+                  window.history.pushState({}, '', url);
+              }
+          });
+        }
+        else {
+          $.ajax({
+              url: "{{ route('list_product') }}?page=" + page,
+              method: 'GET',
+              success: function(response) {
+                  $('#productTableBody').html(response.html);
+                  $('#paginationLinks').html(response.pagination);
+                  const url = new URL(window.location.href);
+                  url.searchParams.set('page', page);
+                  window.history.pushState({}, '', url);
+              }
+          });
+        }
+    });
+    let currentSearchKeyword = '';
+
+  $('#searchButton').on('click', function() {
+      currentSearchKeyword = $('#searchInput').val();
+
+      $.ajax({
+          url: "{{ route('search_product_ajax') }}",
+          method: 'POST',
+          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+          data: { keyword: currentSearchKeyword },
+          success: function(response) {
+              $('#productTableBody').html(response.html);
+              $('#paginationLinks').html(response.pagination);
+
+              const url = new URL(window.location.href);
+              url.searchParams.set('search', currentSearchKeyword);
+              url.searchParams.delete('page');
+              window.history.pushState({}, '', url);
+          },
+          error: function(xhr) {
+              console.log(xhr.responseText);
+          }
+      });
+  });
 </script>
 @stop

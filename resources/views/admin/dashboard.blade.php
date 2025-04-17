@@ -46,10 +46,10 @@
     </div>
 
     <div class="col-md-6">
-        <h3 class="text-center" style="margin-bottom: 16px">Sản phẩm được xem nhiều</h3>
+        <h3 class="text-center" style="margin-bottom: 16px">Sản phẩm bán chạy</h3>
         <ul style="list-style:none;">
-            @foreach ($product_many_view as $item)
-                <li style="text-align: center;"><a target="_blank" style="color: #f0970a" href="{{route('detail_product',$item->id)}}">{{$item->name}} | <i class="fas fa-eye"></i> {{$item->view}} </a></li>
+            @foreach ($product_best_seller as $item)
+                <li style="text-align: center;"><a target="_blank" style="color: #1aeb21" href="{{route('detail_product',$item->id)}}">{{$item->name}} | {{$item->count_sold}} </a></li>
             @endforeach
         </ul>
     </div>
@@ -57,7 +57,7 @@
         <h3 class="text-center" style="margin-bottom: 16px">Bài viết được xem nhiều</h3>
         <ul style="list-style:none;">
             @foreach ($news_many_view as $item)
-                <li style="text-align: center;"><a target="_blank" style="color: #f0970a" href="{{route('detail_news',$item->slug)}}">{{$item->title}} | <i class="fas fa-eye"></i> {{$item->view}} </a></li>
+                <li style="text-align: center;"><a target="_blank" style="color: #1aeb21" href="{{route('detail_news',$item->slug)}}">{{$item->title}} | <i class="fas fa-eye"></i> {{$item->view}} </a></li>
             @endforeach
         </ul>
     </div>

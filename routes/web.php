@@ -59,6 +59,9 @@ Route::group(['prefix'=>'admin','middleware'=>['auth.AdminAndAuthor']],function(
         $kinds = Kind::where('category_id', $category_id)->get();
         return response()->json($kinds);
     });
+    Route::post('filter-product-by-category', 'App\Http\Controllers\ProductController@filterByCategory')->name('filter_product_by_category');
+    Route::post('admin/product/search', 'App\Http\Controllers\ProductController@searchProductAjax')->name('search_product_ajax');
+    
 });
 Route::get('san-pham/{id}','App\Http\Controllers\ProductController@detail')->name('detail_product');
 Route::get('danh-muc-san-pham/{slug}','App\Http\Controllers\ProductController@show_product_with_category')->name('show_product_with_category');

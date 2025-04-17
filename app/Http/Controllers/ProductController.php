@@ -69,13 +69,58 @@ class ProductController extends Controller
         $product->save();
         echo 'not ok';
     }
-    public function list() 
+    public function list(Request $request) 
     {
         $this->AuthLogin();
-        $product=DB::table('product')->orderBy('id', 'desc')->paginate(5);
+        $product = DB::table('product')->orderBy('id', 'desc')->paginate(5);
+        $category = DB::table('category')->get();
         
-        return view('admin.product.list_product',['product'=>$product]);
+        if ($request->ajax()) {
+            $html = view('admin.product.ajax_product_table', compact('product', 'category'))->render();
+            $pagination = $product->links()->render();
+            return response()->json([
+                'html' => $html,
+                'pagination' => $pagination
+            ]);
+        }
+
+        return view('admin.product.list_product', compact('product', 'category'));
     }
+    public function filterByCategory(Request $request)
+    {
+        $category_id = $request->category_id;
+        if ($category_id == 'all-sports') {
+            $products = DB::table('product')->orderBy('id', 'desc')->paginate(5);
+        } else {
+            $products = DB::table('product')->where('category_id', $category_id)->orderBy('id', 'desc')->paginate(5);
+        }
+
+        // Trả HTML về để render
+        $html = view('admin.product.ajax_product_list', compact('products'))->render();
+        $pagination = $products->links()->render();
+        return response()->json([
+            'html' => $html,
+            'pagination' => $pagination
+        ]);
+    }
+    public function searchProductAjax(Request $request)
+    {
+        $keyword = $request->keyword;
+
+        $product = Product::with('category')
+            ->where('name', 'like', '%' . $keyword . '%')
+            ->orderBy('id', 'desc')
+            ->paginate(5);
+
+        $html = view('admin.product.ajax_product_table', compact('product'))->render();
+        $pagination = $product->links()->render();
+
+        return response()->json([
+            'html' => $html,
+            'pagination' => $pagination
+        ]);
+    }
+
     public function edit_status(Request $req)
     {
         $id=$req->id;
