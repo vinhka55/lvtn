@@ -26,9 +26,16 @@ class PostController extends Controller
         ->limit(5)
         ->pluck('post_id'); // Lấy danh sách ID
 
-        $topPosts = Post::whereIn('id', $topPostIds)
-        ->orderByRaw('FIELD(id, ' . implode(',', $topPostIds->toArray()) . ')')
-        ->get();
+        if ($topPostIds->isNotEmpty()) {
+            $topPosts = Post::whereIn('id', $topPostIds)
+                ->orderByRaw('FIELD(id, ' . implode(',', $topPostIds->toArray()) . ')')
+                ->get();
+        } else {
+            $topPosts = Post::latest()->limit(5)->get();
+        }
+        // $topPosts = Post::whereIn('id', $topPostIds)
+        // ->orderByRaw('FIELD(id, ' . implode(',', $topPostIds->toArray()) . ')')
+        // ->get();
 
         return view('page.posts.index', compact('posts','topPosts','my_avatar'));
     }

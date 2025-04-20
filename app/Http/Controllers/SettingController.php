@@ -18,18 +18,6 @@ class SettingController extends Controller
     }
     
     function handle(Request $req){
-        // function getNameImages($s){
-        //     for ($i=strlen($s)-1; $i >= 0 ; $i--) { 
-        //         if($s[$i]=="\\"){
-        //             $nameImg = '';
-        //             for ($j=$i+1; $j < strlen($s) ; $j++) { 
-        //                 $nameImg=$nameImg.$s[$j];
-        //             }
-        //             return $nameImg;
-        //         }               
-        //     }
-        // }
-        // return $req->logo;
         $information = Setting::find(1);
         $information->name = $req->name;
         $information->email = $req->email;

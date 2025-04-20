@@ -21,6 +21,7 @@
     @include("page.social.social")
     @include("page.nav.nav")
     @yield("content")
+    @include("components.chatbot")
 </body>
 @include("page.footer.footer")
 </html>
