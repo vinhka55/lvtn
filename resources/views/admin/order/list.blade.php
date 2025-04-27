@@ -138,8 +138,8 @@
                         <option value="all" selected>====Chọn tình trạng====</option>
                         <option value="đang chờ xử lý">Đang chờ xử lý</option>
                         <option value="đang vận chuyển">Đang vận chuyển</option>
-                        <option value="đã xử lý">Đã xử lý</option>
                         <option value="đã thanh toán-chờ nhận hàng">Đã thanh toán-chờ nhận hàng</option>
+                        <option value="đã xử lý">Đã xử lý</option>
                         <option value="đơn đã hủy">Đơn đã hủy</option>
                     </select>
                 </th> 

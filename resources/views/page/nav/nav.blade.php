@@ -1,3 +1,24 @@
+<style>
+.hot-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(30%, -30%); /* đẩy ra ngoài 1 chút */
+    background-color: red;
+    color: white;
+    font-size: 10px;
+    padding: 2px 5px;
+    border-radius: 50px;
+    font-weight: bold;
+    animation: tilt-shaking 0.5s infinite alternate;
+}
+
+/* Keyframe lắc nhẹ */
+@keyframes tilt-shaking {
+    0% { transform: translate(30%, -30%) rotate(-10deg); }
+    100% { transform: translate(30%, -30%) rotate(10deg); }
+}
+</style>
 <div class="header">
     <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-nav-bar">
         <div class="container-fluid">          
@@ -31,8 +52,9 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">Liên hệ</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item position-relative">
                         <a class="nav-link active" target="_blank" aria-current="page" href="{{ url('/posts') }}">Forum</a>
+                        <span class="hot-badge">HOT</span>
                     </li>
                 </ul>           
             </div>

@@ -17,6 +17,57 @@
     .label-tinh, .label-huyen, .label-xa {
         min-width: 26%;
     }
+    .btn-payment {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        margin-top: 20px;
+    }
+    .btn-pay {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 28px;
+        font-size: 16px;
+        font-weight: 600;
+        border: none; /* Xóa border */
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .checkout-now {
+        background-color: #28a745; /* xanh lá */
+        color: white;
+    }
+
+    .checkout-now:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+    }
+
+    .vnpay-button {
+        outline: none;
+        border-radius: 8px;
+        padding: 10px 20px; /* Cho đẹp hơn */
+        background-color: #007bff; /* Màu xanh VNPay */
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    .vnpay-button:hover {
+        background-color: #0056b3; /* Hover đậm hơn */
+        transform: translateY(-2px);
+    }
+
+    .form-vnpay {
+        margin: 0; /* bỏ margin mặc định của form */
+        padding: 0; /* bỏ padding mặc định của form */
+    }
 </style>
 <div class="container mx-auto my-5 py-4">
     <div class="row m-0 p-0">
@@ -97,26 +148,33 @@
                         <label for="cash"> Tiền mặt</label><br>
                         <input type="radio" id="atm" name="pay" value="atm">
                         <label for="atm"> Chuyển khoản</label><br>
-                        <!-- <form action="{{ route('vnpay.payment') }}" method="POST">
-    @csrf
-    <label>Nhập số tiền:</label>
-    <input type="number" name="amount" required>
-    <button type="submit">Thanh toán VNPay</button>
-</form> -->
-
                         <?php
-                            //đoạn code tạo unique mã đơn hàng lấy trên mạng
+                            //đoạn code tạo unique mã đơn hàng
                             $stamp = strtotime("now");
                             $order_code = 'order_'.$stamp;
                         ?>	 
                         <input type="hidden" value="{{$order_code}}" id="order_code">							 
-                    </form>			
+                    </form>	
+                    <div class="btn-payment">
+                        <!-- Thanh toán bình thường -->
+                        <button class="btn-pay checkout-now">Thanh toán</button>
+                        <!-- Thanh toán vnpay  -->
+                        <form action="{{ route('vnpay.payment') }}" method="POST" class="form-vnpay">
+                            @csrf
+                            <input type="hidden" name="amount">
+                            <input type="hidden" name="order_code" value="{{$order_code}}">
+                            <input type="hidden" name="name_vnpay">
+                            <input type="hidden" name="email_vnpay">
+                            <input type="hidden" name="phone_vnpay">
+                            <input type="hidden" name="address_vnpay">
+                            <input type="hidden" name="notes_vnpay">
+                            <input type="hidden" name="ship">
+                            <button type="submit" name="redirect" class="vnpay-button btn-pay">VNPay</button>
+                        </form>	
+                    </div>              	
                     <p><small id="error-pay-null" class="text-danger"></small></p>
                     @endforeach
-                    <div class="nut-thanh-toan" style="display:flex;">
-                        <!-- Thanh toán bình thường -->
-                        <button class="btn btn-primary checkout-now">Thanh toán ngay</button>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -301,6 +359,24 @@ $(document).ready(function() {
                 }
             });          
         }    
+    })
+    $('form[action="{{ route('vnpay.payment') }}"]').submit(function(event) {
+        // Lấy text tổng tiền
+        let totalText = $('#totalAmount').text();
+        
+        // Xử lý: bỏ dấu chấm, bỏ chữ ₫ và khoảng trắng
+        let amount = totalText.replace(/\./g, '').replace('₫', '').trim();
+        let name = $('#name').val();
+        // Gán vào input hidden
+        $(this).find('input[name="amount"]').val(amount);
+        $(this).find('input[name="name_vnpay"]').val(name);
+        $(this).find('input[name="email_vnpay"]').val($('#email').val());
+        $(this).find('input[name="phone_vnpay"]').val($('#phone').val()); 
+        $(this).find('input[name="notes_vnpay"]').val($('#notes').val()); 
+        $(this).find('input[name="ship"]').val($('#shippingFee').text().replace(/\./g, '').replace('₫', '').trim()); 
+        var address =$('#address-re').val() ? $('#address-re').val() + ', ' + $('#xa option:selected').text() + ', ' + $('#huyen option:selected').text() + ', ' + $('#tinh option:selected').text() : $('#xa option:selected').text() + ', ' + $('#huyen option:selected').text() + ', ' + $('#tinh option:selected').text()
+
+        $(this).find('input[name="address_vnpay"]').val(address);
     })
 })         
 </script>

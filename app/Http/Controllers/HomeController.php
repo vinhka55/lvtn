@@ -46,6 +46,7 @@ class HomeController extends Controller
 
         // Lấy danh sách môn thể thao yêu thích của user
         if($user){
+            
             $favoriteSports = $user->favoriteSports->pluck('id')->toArray();
             $userAge = $user->age; // Tuổi của người dùng
             $userGender = $user->gender; // Giới tính ('male', 'female', 'unisex')
@@ -94,6 +95,7 @@ class HomeController extends Controller
             $recommendedProducts = $productsByFavorite->merge($productsByAge)->merge($productsByGender);          
             return view('page.home',compact('data','recommendedProducts'));
         }
+
         return view('page.home',compact('data'));
     }
     public function search(Request $request)

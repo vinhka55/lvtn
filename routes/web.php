@@ -245,8 +245,8 @@ Route::get('/get-kinds/{category_id}', function ($category_id) {
     return response()->json($kinds);
 });
 // payment online by vnpay
-Route::post('/payment/vnpay', 'VNPayController@createPayment')->name('vnpay.payment');
-Route::get('/payment/vnpay/return', 'VNPayController@vnpayReturn')->name('vnpay.return');
+Route::post('/payment/vnpay', 'App\Http\Controllers\VNPayController@createPayment')->name('vnpay.payment');
+Route::get('/vnpay_return', 'App\Http\Controllers\VNPayController@vnpayReturn')->name('vnpay.return');
 
 //chatbot simple
 Route::post('/chatbot', 'App\Http\Controllers\ChatbotController@handle')->name('send_question');

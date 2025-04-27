@@ -46,6 +46,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <link rel="stylesheet" href="{{url('/')}}/public/backend/css/admin.css">
 <style>
     .sub {display: none;}
+    #sidebar {
+        height: 100vh; /* Chiều cao đầy đủ của màn hình */
+        overflow-y: auto; /* Cho phép cuộn dọc khi quá dài */
+    }
 </style>
 
 </head>
@@ -412,16 +416,6 @@ $('.delete-user').click(function(e) {
 @include('script.scriptCountNotificationsAdmin')
 <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
 <script>
-    //function add message
-    // function count_notifications() {
-    //     $.ajax({
-    //         url:"{{route('count_notifications_admin')}}",
-    //         method:'get',
-    //         success:function(data){
-    //                 $('#count-notifications-admin').html(data)           
-    //         }
-    //     })
-    // } 
     $(document).ready(function(){
     // Khởi tạo một đối tượng Pusher với app_key
     var pusher = new Pusher('9156c186f5a7eb69923c', {
@@ -456,6 +450,7 @@ $('.delete-user').click(function(e) {
             }
         });
     })
+
 </script>
 </body>
 </html>
