@@ -85,10 +85,10 @@
                   @endforeach	
                 </tbody>
               </table>
-                <div class="flex m-2">
+                <!-- <div class="flex m-2">
                     <button type='submit' class='btn btn-primary'>Cập nhật giỏ hàng</button>
                     <a href="{{route('delete-all-product-in-cart')}}" class="btn btn-primary btn-delete-all-cart">Xóa tất cả</a>
-                </div>
+                </div> -->
                 </form>
         </div>
         <div class="col-md-4 col-12">

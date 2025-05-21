@@ -6,36 +6,12 @@
     <a href="{{route('list_order')}}"><i class="fa fa-arrow-left" aria-hidden="true"></i>Quay lại</a>
     <div class="panel panel-default">
         <div class="panel-heading">
-        Thông tin người mua
-        </div>
-        <div class="row w3-res-tb">
-        <div class="col-sm-5 m-b-xs">
-            <select class="input-sm form-control w-sm inline v-middle">
-            <option value="trang-thai">Trạng thái</option>
-            <option value="sort-a-to-z">Tên a->z</option>
-            </select>
-            <a href="" class="btn btn-sm btn-default">Chọn</a>                
-        </div>
-        <div class="col-sm-4">
-        </div>
-        <div class="col-sm-3">
-            <div class="input-group">
-            <input type="text" class="input-sm form-control" placeholder="Search">
-            <span class="input-group-btn">
-                <button class="btn btn-sm btn-default" type="button">Tìm kiếm</button>
-            </span>
-            </div>
-        </div>
+            Thông tin người mua
         </div>
         <div class="table-responsive">
         <table class="table table-striped b-t b-light">
             <thead>
             <tr>
-                <th style="width:20px;">
-                <label class="i-checks m-b-none">
-                    <input type="checkbox"><i></i>
-                </label>
-                </th>
                 <th>Tên khách hàng</td>
                 <th>Số điện thoại</th>
                 <th>Email</th>           
@@ -44,7 +20,6 @@
             <tbody>                    
                         @foreach($info_user as $item)
                         <tr>
-                            <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
                             <td><p class="text-ellipsis name">{{$item->name}}</p></td>
                             <td><p class="text-ellipsis name">{{$item->phone}}</p></td>
                             <td><p class="text-ellipsis name">{{$item->email}}</p></td>                       
@@ -62,36 +37,12 @@
     <div class="table-agile-info">
     <div class="panel panel-default">
         <div class="panel-heading">
-        Thông tin giao hàng
-        </div>
-        <div class="row w3-res-tb">
-        <div class="col-sm-5 m-b-xs">
-            <select class="input-sm form-control w-sm inline v-middle">
-            <option value="trang-thai">Trạng thái</option>
-            <option value="sort-a-to-z">Tên a->z</option>
-            </select>
-            <a href="" class="btn btn-sm btn-default">Chọn</a>                
-        </div>
-        <div class="col-sm-4">
-        </div>
-        <div class="col-sm-3">
-            <div class="input-group">
-            <input type="text" class="input-sm form-control" placeholder="Search">
-            <span class="input-group-btn">
-                <button class="btn btn-sm btn-default" type="button">Tìm kiếm</button>
-            </span>
-            </div>
-        </div>
+            Thông tin giao hàng
         </div>
         <div class="table-responsive">
         <table class="table table-striped b-t b-light">
             <thead>
             <tr>
-                <th style="width:20px;">
-                <label class="i-checks m-b-none">
-                    <input type="checkbox"><i></i>
-                </label>
-                </th>
                 <th>Tên khách hàng</td>
                 <th>Số điện thoại</th>
                 <th>Email</th>      
@@ -103,7 +54,6 @@
             <tbody>                    
                         @foreach($info_shipping as $item)
                         <tr>
-                            <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
                             <td><p class="text-ellipsis name">{{$item->name}}</p></td>
                             <td><p class="text-ellipsis name">{{$item->phone}}</p></td>
                             <td><p class="text-ellipsis name">{{$item->email}}</p></td> 
@@ -124,36 +74,13 @@
     <div class="table-agile-info">
     <div class="panel panel-default">
         <div class="panel-heading">
-        Chi tiết sản phẩm
-        </div>
-        <div class="row w3-res-tb">
-        <div class="col-sm-5 m-b-xs">
-            <select class="input-sm form-control w-sm inline v-middle">
-            <option value="trang-thai">Trạng thái</option>
-            <option value="sort-a-to-z">Tên a->z</option>
-            </select>
-            <a href="" class="btn btn-sm btn-default">Chọn</a>                
-        </div>
-        <div class="col-sm-4">
-        </div>
-        <div class="col-sm-3">
-            <div class="input-group">
-            <input type="text" class="input-sm form-control" placeholder="Search">
-            <span class="input-group-btn">
-                <button class="btn btn-sm btn-default" type="button">Tìm kiếm</button>
-            </span>
-            </div>
-        </div>
+            Chi tiết sản phẩm
         </div>
         <div class="table-responsive">
         <table class="table table-striped b-t b-light">
             <thead>
-            <tr>
-                <th style="width:20px;">
-                <label class="i-checks m-b-none">
-                    <input type="checkbox"><i></i>
-                </label>
-                </th>
+            <tr>   
+                <th>Hình ảnh</th>                          
                 <th>Tên sản phẩm</td>
                 <th>Còn trong kho</td>
                 <th>Giá</th>
@@ -167,8 +94,8 @@
             <tbody>     
                         <?php $total_money=0; ?>            
                         @foreach($info_product as $item)
-                        <tr>
-                            <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
+                        <tr> 
+                            <td><img src="{{asset('public/uploads/product/'.$item->product->image)}}" alt="" width="100px" height="100px"></td>              
                             <td><p class="text-ellipsis name">{{$item->product_name}}</p></td>
                             <td><p class="text-ellipsis name amount-product-{{$item->product->id}}">{{$item->product->count}} 
                             </p></td>
@@ -276,5 +203,118 @@
         <span>Số tiền cần thanh toán: </span><span class="all-this-order">{{number_format($total_money-$discount+$feeShip, 0, ',', '.')}} đ</span>
     </div>
     </div>
-</div>
+</div> 
 @stop
+<style>
+    body {
+        background-color: #f3f4f6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+    }
+
+    .container {
+        margin-top: 20px;
+    }
+
+    .panel {
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+
+    .panel-heading {
+        font-size: 20px;
+        font-weight: bold;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e5e7eb;
+        margin-bottom: 20px;
+        background-color: #d1fae5; /* xanh nhạt hơn */
+        color: #065f46; /* xanh đậm */
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table th, .table td {
+        text-align: center;
+        padding: 12px 8px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .table th {
+        background-color: #f0fdf4;
+        color: #111827; /* đen đậm */
+        font-weight: 600;
+    }
+
+    .text-ellipsis {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .qty-product-detail-order {
+        width: 60px;
+        padding: 6px;
+        border: 1px solid #d1d5db;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .select-status-order {
+        width: 250px;
+        padding: 6px;
+        border: 1px solid #d1d5db;
+        border-radius: 5px;
+        background-color: #f9fafb;
+    }
+
+    .total-money-order, .all-this-order {
+        font-weight: bold;
+        font-size: 18px;
+        color: #16a34a; /* xanh lá */
+    }
+
+    .fa-arrow-left {
+        margin-right: 6px;
+    }
+
+    a {
+        display: inline-block;
+        margin-bottom: 15px;
+        font-weight: 500;
+        color: #2563eb;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    a:hover {
+        color: #1d4ed8;
+        text-decoration: underline;
+    }
+
+    .action-delete-product i {
+        font-size: 18px;
+        transition: 0.3s;
+    }
+
+    .action-delete-product i:hover {
+        color: #b91c1c;
+        transform: scale(1.2);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .select-status-order {
+            width: 100%;
+        }
+    }
+</style>

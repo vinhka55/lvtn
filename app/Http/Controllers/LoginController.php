@@ -69,21 +69,25 @@ class LoginController extends Controller
     }
     public function handle_login(Request $req)
     {
-        $this->validate($req,[
-            'email'=>"required|email",
-            'password'=>"required",
+        $req->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:6|max:20',
         ]);
-        $data=DB::table('user')->where('email',$req->email)->where('password',$req->password)->get();
-        if(count($data)!=0){
-                foreach($data as $item){
-                Session::put('user_id',$item->id);
-                Session::put('name_user',$item->name);
-                Toastr::success('Đăng nhập thành công', 'Thành công');
-                return redirect('/');
-                }
-        }else{
-            echo 'sai pass or mail';
-        }   
+    
+        $data = DB::table('user')->where('email', $req->email)->where('password', $req->password)->get();
+    
+        if (count($data) != 0) {
+            foreach ($data as $item) {
+                Session::put('user_id', $item->id);
+                Session::put('name_user', $item->name);
+            }
+            return response()->json(['status' => 'success']);
+        } else {
+            return response()->json([
+                'status' => 'fail',
+                'message' => 'Sai email hoặc password'
+            ]);
+        }
     }
     public function logout()
     {

@@ -1,4 +1,7 @@
 
+<style>
+    
+</style>
 <div class="related-products">
     @foreach($products as $item)
         <div class="product">

@@ -314,7 +314,6 @@ $(document).ready(function() {
             var order_code=$('#order_code').val()
             var pay=$('input[name="pay"]:checked','#pay_online_method').val()
             var ship = $('#shippingFee').text().replace(/\./g, '').replace('₫', '').trim()
-            console.log(ship);
             
             var data={name:name,email:email,phone:phone,address:address,notes:notes,_token:_token,pay:pay,order_code:order_code,ship:ship}
         

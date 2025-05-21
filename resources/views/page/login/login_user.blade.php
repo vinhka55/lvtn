@@ -119,12 +119,13 @@
             <!--login form-->
             <div class="login-form">
               <h2 class="p-2 m-0 bg-success text-white">Đăng nhập</h2>						
-              <form action="{{route('handle_login_customer')}}" method="post">
+              <form method="post" id="loginForm">
                 @csrf
                 <input class="form-control mt-1" type="email" name="email" placeholder="Email Address" required/>
                 <input class="form-control mt-1" type="password" name="password" placeholder="Password" required/>
                 <button  type="submit" class="mt-1">Login</button>							
               </form>
+              <div id="loginMessage"></div>
             </div>
             <!--/login form-->
           </div>
@@ -217,4 +218,30 @@
     <!--/form-->
 </div>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>
+    $('#loginForm').submit(function(e) {
+        e.preventDefault(); // Ngăn load lại trang
+
+        $.ajax({
+        url: '{{ route("handle_login_customer") }}',
+        method: 'POST',
+        data: $(this).serialize(),
+        success: function(response) {
+            if (response.status === 'success') {
+                window.location.href = '{{ route("home") }}';
+            } else {
+            $('#loginMessage').html('<div class="text-danger">'+response.message+'</div>');
+            }
+        },
+        error: function(xhr) {
+            let errors = xhr.responseJSON.errors;
+            let errorMessages = '';
+            for (let key in errors) {
+                errorMessages += '<div class="text-danger">'+errors[key][0]+'</div>';
+            }
+            $('#loginMessage').html(errorMessages);
+        }
+        });
+    });
+</script>
 @stop

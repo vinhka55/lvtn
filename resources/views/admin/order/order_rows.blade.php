@@ -34,9 +34,9 @@
             </p>
         </td>   
         <td>{{$item->reason}}</td>        
-        <td><a href="{{route('detail_order',$item->id)}}"><i class="fa fa-eye" aria-hidden="true"></i></a></td>             
-        <td style="width:10%;">       
-            <a title="click to delete" onclick="return confirm('Are you sure?')" href="{{route('delete_order',$item->id)}}"><i class="fas fa-trash-alt text-danger text"></i></a>
+        <td>
+            <a class="icon-link-detail" href="{{route('detail_order',$item->id)}}"><i class="fa fa-eye" aria-hidden="true"></i></a>                        
+            <a class="icon-link-delete" title="click to delete" onclick="return confirm('Are you sure?')" href="{{route('delete_order',$item->id)}}"><i class="fas fa-trash-alt text-danger text"></i></a>
         </td>
     </tr>
     @endforeach

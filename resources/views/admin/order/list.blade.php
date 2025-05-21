@@ -109,6 +109,9 @@
     .row.w3-res-tb {
         margin-bottom: 20px;
     }
+    .icon-link-detail, .icon-link-delete {
+        padding: 0 3px;
+    }
 </style>
 
 <div class="container">
@@ -116,7 +119,7 @@
     <div class="row w3-res-tb">
         <div class="col-sm-4">
             <div class="input-group">
-                <input type="text" name="key" class="form-control" placeholder="Nhập mã đơn hàng" id="search-order" value="{{ request()->input('key') }}">
+                <input type="text" name="key" placeholder="Nhập mã đơn hàng" id="search-order" value="{{ request()->input('key') }}"/>
                 <button id="btn-search-order"><i class="fas fa-search"></i></button>
             </div>
         </div>
@@ -144,8 +147,7 @@
                     </select>
                 </th> 
                 <th>Lý do hủy</th>          
-                <th>Xem</th>
-                <th>Thao tác</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody id="order-table-body">                       

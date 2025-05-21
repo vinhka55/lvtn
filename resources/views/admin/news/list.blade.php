@@ -8,7 +8,7 @@
     <div class="row w3-res-tb">
       <div class="col-sm-5 m-b-xs">
         <select class="input-sm form-control w-sm inline v-middle">
-          <option value="trang-thai">Trạng thái</option>
+          <option value="trang-thai">Danh mục</option>
           <option value="sort-a-to-z">Tên a->z</option>
         </select>
         <a href="" class="btn btn-sm btn-default">Chọn</a>                
@@ -28,26 +28,19 @@
       <table class="table table-striped b-t b-light">
         <thead>
           <tr>
-            <th style="width:20px;">
-              <label class="i-checks m-b-none">
-                <input type="checkbox"><i></i>
-              </label>
-            </th>
-            <th>Hình ảnh</td>
-            
+            <th>Hình ảnh</td> 
             <th>Tiêu đề</th>        
             <th>Miêu tả</th>
             <th>Từ khóa</th>
             <th>Trạng thái</th>
             <th>Danh mục</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>                     
                     @foreach($all_news as $item)
                     <tr>
-                        <td><label class="i-checks m-b-none"><input type="checkbox" name="post[]"><i></i></label></td>
-                        <td><p class="text-ellipsis name"><img width="35%" src="{{url('/')}}/public/uploads/news/{{$item->image}}" alt="image news"></p></td>
-                        
+                        <td><p class="text-ellipsis name"><img width="35%" src="{{url('/')}}/public/uploads/news/{{$item->image}}" alt="image news"></p></td>                       
                         <td><p class="text-ellipsis name">{{$item->title}}</p></td>                    
                         <td><p class="text-ellipsis name">{!!$item->description!!}</p></td>                       
                         <td><p class="text-ellipsis name">{{$item->meta_keyword}}</p></td>                                                                      
@@ -67,8 +60,8 @@
                             </p>
                         </td>
                         <td>
-                        <a title="click to edit" href="{{route('edit_news',$item->id)}}" ><i class="fa fa-pencil-square-o text-success text-active"></i></a>
-                        <a title="click to delete" onclick="return confirm('Are you sure?')" href="{{route('delete_news',$item->id)}}"><i class="fa fa-times text-danger text"></i></a>
+                        <a title="click to edit" href="{{route('edit_news',$item->id)}}" ><i class="far fa-edit"></i></a>
+                        <a title="click to delete" onclick="return confirm('Are you sure?')" href="{{route('delete_news',$item->id)}}"><i class="fas fa-trash-alt text-danger text"></i></a>
                         </td>
                     </tr>
                     @endforeach           

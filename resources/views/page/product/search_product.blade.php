@@ -12,7 +12,7 @@
     .related-products {
         display: flex;
         flex-wrap: wrap;
-        justify-contennt: space-between;
+        justify-content: space-between;
         max-width: 800px;
         margin: 20px auto;
     }
@@ -24,6 +24,11 @@
         text-align: center;
         border-radius: 5px;
         background-color: #fff;
+        display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    min-height: 400px; /* set chiều cao tối thiểu để các box đều nhau */
     }
     .product .price {
         font-size: 16px;

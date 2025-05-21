@@ -90,7 +90,7 @@ class CommentController extends Controller
                         ->where('order_detail.product_id', $product_id)
                         ->whereIn('order.status', ['Đã xử lý', 'Đã thanh toán-chờ nhận hàng']) // Chỉ tính đơn hàng hợp lệ
                         ->exists();
-                        \Log::info("hasPurchasedInRep",[$hasPurchasedInRep]);
+                        // \Log::info("hasPurchasedInRep",[$hasPurchasedInRep]);
                         $output.='
                         <div class="row mt-2">
                             <div class="col-3">

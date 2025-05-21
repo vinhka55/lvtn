@@ -15,6 +15,7 @@ Route::get('/posts-with-categoty', [PostController::class, 'postsWithCategory'])
 //address 
 Route::post('/chon-huyen','App\Http\Controllers\ShippingController@choose_address')->name('choose_address');
 Route::post('/chon-xa','App\Http\Controllers\ShippingController@choose_ward')->name('choose_ward');
+Route::post('/edit-shipping','App\Http\Controllers\ShippingController@editInformationShipping')->name('edit_shipping');
 
 //fee ship (trong admin)
 Route::get('/fee-ship','App\Http\Controllers\ShippingController@list_fee_ship')->name('list_fee_ship');

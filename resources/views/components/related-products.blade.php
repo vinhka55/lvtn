@@ -151,6 +151,30 @@
     .name{
         color: var(--main-color);
     }
+    .related-product {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px 0;
+    height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.product {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    min-height: 420px;
+}
+
+.product-actions {
+    margin-top: auto;
+}
 </style>
 <!-- sản phẩm liên quan  -->
 <h3 class="main-color white title-related-products">Sản phẩm liên quan</h3>

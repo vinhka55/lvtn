@@ -117,8 +117,8 @@
                             @endphp
                         </td>
                         <td>
-                            <a title="click to edit" href="{{route('edit_coupon',$item->id)}}" ><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                            <a title="click to delete" onclick="return confirm('Bạn chắc chắn muốn xóa?')" href="{{route('delete_coupon',$item->id)}}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                            <a title="click to edit" href="{{route('edit_coupon',$item->id)}}" ><i class="far fa-edit" aria-hidden="true"></i></a>
+                            <a title="click to delete" onclick="return confirm('Bạn chắc chắn muốn xóa?')" href="{{route('delete_coupon',$item->id)}}"><i class="fas fa-trash text-danger" aria-hidden="true"></i></a>
                         </td>
                     </tr>
                 @endforeach       

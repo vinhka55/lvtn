@@ -43,66 +43,91 @@ class HomeController extends Controller
         
         // recomment product 
         $user = User::find(Session::get('user_id'));
-
         // Lấy danh sách môn thể thao yêu thích của user
-        if($user){
-            
+        if($user){     
             $favoriteSports = $user->favoriteSports->pluck('id')->toArray();
-            $userAge = $user->age; // Tuổi của người dùng
-            $userGender = $user->gender; // Giới tính ('male', 'female', 'unisex')
+            $userAge = $user->age;
+            $userGender = $user->gender;
 
-            $productsByFavorite = collect(); // Tạo danh sách trống
-            // Bước 1: Lấy ít nhất 1 sản phẩm từ mỗi môn yêu thích
+            $productsByFavorite = collect();
+
+            // 1. Gợi ý theo sở thích (ngẫu nhiên từ top 20 sản phẩm bán chạy nhất trong mỗi môn)
             foreach ($favoriteSports as $sportId) {
-                $sportProducts = Product::whereHas('category', function ($query) use ($sportId) {
+                $topProducts = Product::whereHas('category', function ($query) use ($sportId) {
                         $query->where('category.id', $sportId);
                     })
-                    ->where('count','>',0)
-                    ->limit(1) // Lấy ít nhất 1 sản phẩm mỗi môn
+                    ->where('count', '>', 0)
+                    ->orderByDesc('count_sold')
+                    ->limit(20)
                     ->get();
-            
-                $productsByFavorite = $productsByFavorite->merge($sportProducts);
+
+                // Random 1 sản phẩm trong top 20
+                if ($topProducts->count() > 0) {
+                    $randomProduct = $topProducts->random(1);
+                    $productsByFavorite = $productsByFavorite->merge($randomProduct);
+                }
             }
-            //Nếu chưa đủ 4 sản phẩm, bổ sung từ các môn đã lấy
+
+            // Nếu chưa đủ 4, lấy thêm ngẫu nhiên từ các môn đã yêu thích
             if ($productsByFavorite->count() < 4) {
+                $remaining = 4 - $productsByFavorite->count();
+
                 $additionalProducts = Product::whereHas('category', function ($query) use ($favoriteSports) {
                         $query->whereIn('category.id', $favoriteSports);
-                        })
-                        ->where('count','>',0)
-                        ->whereNotIn('id', $productsByFavorite->pluck('id')->toArray()) // Tránh trùng sản phẩm
-                        ->limit(4 - $productsByFavorite->count()) // Chỉ lấy thêm số lượng cần thiết
-                        ->get();
+                    })
+                    ->where('count', '>', 0)
+                    ->whereNotIn('id', $productsByFavorite->pluck('id')->toArray())
+                    ->orderByDesc('count_sold')
+                    ->limit(20)
+                    ->get();
+
+                $additionalProducts = $additionalProducts->shuffle()->take($remaining);
 
                 $productsByFavorite = $productsByFavorite->merge($additionalProducts);
             }
-            $excludedProductIds = $productsByFavorite->pluck('id')->toArray(); // Lưu ID của các sản phẩm đã chọn để tránh trùng lặp
-            $excludedCategoryIds  = $productsByFavorite->pluck('category_id')->toArray();
-            $productsByAge = Product::whereNotIn('id', $excludedProductIds)
-                        ->whereNotIn('category_id', $excludedCategoryIds)
-                        ->where('count','>',0)
-                        ->where('min_age', '<=', $userAge)
-                        ->where('max_age', '>=', $userAge)
-                        ->limit(2)
-                        ->get();
-            $excludedProductIds = array_merge($excludedProductIds, $productsByAge->pluck('id')->toArray()); //Cập nhật danh sách ID đã lấy:
+
+            $excludedProductIds = $productsByFavorite->pluck('id')->toArray();
+            $excludedCategoryIds = $productsByFavorite->pluck('category_id')->toArray();
+
+            // 2. Gợi ý theo độ tuổi
+            $topAgeProducts = Product::whereNotIn('id', $excludedProductIds)
+                ->whereNotIn('category_id', $excludedCategoryIds)
+                ->where('count', '>', 0)
+                ->where('min_age', '<=', $userAge)
+                ->where('max_age', '>=', $userAge)
+                ->orderByDesc('count_sold')
+                ->limit(20)
+                ->get();
+
+            $productsByAge = $topAgeProducts->shuffle()->take(2);
+            $excludedProductIds = array_merge($excludedProductIds, $productsByAge->pluck('id')->toArray());
             $excludedCategoryIds = array_merge($excludedCategoryIds, $productsByAge->pluck('category_id')->toArray());
-            $productsByGender = Product::whereNotIn('id', $excludedProductIds)
-                        ->whereNotIn('category_id', $excludedCategoryIds)
-                        ->where('count','>',0)
-                        ->where('target_gender', $userGender)
-                        ->limit(2)
-                        ->get(); 
-            $recommendedProducts = $productsByFavorite->merge($productsByAge)->merge($productsByGender);          
-            return view('page.home',compact('data','recommendedProducts'));
+
+            // 3. Gợi ý theo giới tính
+            $topGenderProducts = Product::whereNotIn('id', $excludedProductIds)
+                ->whereNotIn('category_id', $excludedCategoryIds)
+                ->where('count', '>', 0)
+                ->where(function ($query) use ($userGender) {
+                    $query->where('target_gender', $userGender)
+                        ->orWhere('target_gender', 'unisex'); // cả nam và nữ
+                })
+                ->orderByDesc('count_sold')
+                ->limit(20)
+                ->get();
+            $productsByGender = $topGenderProducts->shuffle()->take(2);
+
+            // Gộp tất cả
+            $recommendedProducts = $productsByFavorite
+                                    ->merge($productsByAge)
+                                    ->merge($productsByGender);
+
+            return view('page.home', compact('data', 'recommendedProducts'));
         }
 
         return view('page.home',compact('data'));
     }
     public function search(Request $request)
     {
-        // $data=DB::table('product')->where('name','like','%'.$req->search.'%')->get();
-        // return view('page.product.search_product',['data'=>$data]);
-
         // Mặc định lấy tất cả sản phẩm theo key search
         $query = Product::with('kind')->where('name','like','%'.$request->search.'%');
 
@@ -114,18 +139,14 @@ class HomeController extends Controller
                 $query->orderBy('price', 'desc');
             } elseif ($request->sort == 'sold') {
                 $query->orderBy('count_sold', 'desc');
-            } elseif ($request->sort == $name_category.$request->kind_id) {
-                $kindId = $request->kind_id;
-                // Lấy danh sách sản phẩm theo kind_id
-                $query = Product::where('kind_id', $kindId);
-            }else if ($request->sort == 'new'){
+            } elseif ($request->sort == 'new'){
                 $query->orderBy('created_at', 'desc');
             }
             $products = $query->get();
             return view('page.product.product_list_sort', compact('products'))->render();
         }
 
-        $products = $query->get();
+        $products = $query->orderBy('id','desc')->get();
 
         return view('page.product.search_product', compact('products'));
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Models\Feeship;
+use Illuminate\Support\Facades\Session;
 
 class ShippingController extends Controller
 {
@@ -92,5 +93,18 @@ class ShippingController extends Controller
         } else {
             return response()->json(['success' => true, 'fee' => 0]);
         }
+    }
+    function editInformationShipping(Request $request){
+        \Log::info($request->all());
+        DB::table('shipping')
+        ->where('id', $request->input('id'))
+        ->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+        ]);
+        Session::forget('change_shipping');
+        return response()->json(['message' => 'Thông tin nhận hàng đã được cập nhật lại, xin cảm ơn!']);
     }
 }
